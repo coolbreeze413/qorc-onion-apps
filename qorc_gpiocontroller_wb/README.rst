@@ -1,28 +1,37 @@
 How To
 ======
 
-Build FPGA
-----------
+Build FPGA and M4
+-----------------
 
 From the project root dir, execute:
 
 ::
   
-  ql_symbiflow -compile -d ql-eos-s3 -P pu64 -v fpga/rtl/*.v -t top -p fpga/rtl/quickfeather.pcf -dump jlink binary
+  make -C GCC_Project
 
-This will create both a :code:`top.bin` which can be flashed, as well as :code:`top.jlink` which can be used with J-Link, in the project root dir.
+This will generate:
+
+- m4app binary: :code:`GCC_Project/output/bin/qorc_gpiocontroller_wb.bin`
+- appfpga binary: :code:`fpga/rtl/AL4S3B_FPGA_Top.bin`
 
 
-Build M4
---------
+Build only FPGA (optional)
+--------------------------
+
+It is recommended to always use the :code:`make` to build both M4 and FPGA, as only the changed files are 
+actually built.
+
+If you really want to build only the FPGA binary, you can do so as below.
 
 From the project root dir, execute:
 
 ::
   
-  make -C m4/GCC_Project
+  ql_symbiflow -compile -src fpga/rtl -d ql-eos-s3 -P pu64 -v AL4S3B_FPGA_Top.v AL4S3B_FPGA_IP.v AL4S3B_FPGA_QL_Reserved.v AL4S3B_FPGA_Registers.v GPIO_controller.v -t AL4S3B_FPGA_Top -p quickfeather.pcf -dump binary
 
-This will generate a :code:`m4.bin` in m4/GCC_Project/output/bin which can be flashed.
+This will create the appfpga binary: :code:`fpga/rtl/AL4S3B_FPGA_Top.bin`
+
 
 
 Flash FPGA and M4
@@ -34,10 +43,18 @@ From the project root dir, execute:
 
 ::
   
-  qfprog --port /dev/ttyACM0 --m4app m4/GCC_Project/output/bin/m4.bin --appfpga top.bin --mode m4-fpga
+  qfprog --port /dev/ttyACM0 --m4app GCC_Project/output/bin/qorc_gpiocontroller_wb.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4
   
+If you are flashing with a USB-UART connected to the EOSS3 UART port, then replace the ttyACMx with appropriate ttyUSBx, for example:
+
+::
+
+  qfprog --port /dev/ttyUSB0 --m4app GCC_Project/output/bin/qorc_gpiocontroller_wb.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4
   
-Ensure that you have connected a USB-UART adapter connected to the EOSS3 UART pins (IO_44/IO_45), and you have a terminal connected to that port.
+
+Before running the code in the next section, if you want to use the CLI to test, ensure that 
+you have connected a USB-UART adapter connected to the EOSS3 UART pins (IO_44/IO_45), 
+and you have a serial terminal connected to that port at 115200 8N1.
 
 
 Run Code
@@ -48,51 +65,79 @@ Once the board is flashed, and reset, you should see a banner like below on the 
 ::
 
   ##########################
-  Quicklogic QuickFeather FPGA GPIO CONTROLLER EXAMPLE
-  SW Version: qorc-onion-apps/qf_hello-fpga-gpio-ctlr
-  Feb 19 2021 10:08:44
+  OnionApps FPGA GPIO Controller Example
+  SW Version: qorc-onion-apps/qorc_gpiocontroller_wb
+  Feb 19 2021 18:57:15
   ##########################
-
-
-
-  Hello GPIO!!
-
+  
+  
+  
+  Hello GPIO CONTROLLER!
+  
   #*******************
+  
   Command Line Interface
-  App SW Version: qorc-onion-apps/qf_hello-fpga-gpio-ctlr
+  
+  App SW Version: qorc-onion-apps/qorc_gpiocontroller_wb
+  
   #*******************
-  [0] >
+  
+  [0] > 
+
   
 
 Enter the GPIO Controller submenu using :code:`gpioctlr` and then type :code:`help` in the gpioctlr submenu for commands.
 
 ::
-
+  
   [0] > gpioctlr
+  
   [1] gpioctlr > help
+  
   help-path: gpioctlr
-  setout     - set gpio as output with value specified
-  setin      - set gpio as input
-  getval     - read gpio value
-  exit       - exit/leave menu
-  help       - show help
-  ?          - show help
+  
+  setout         - setout IO_X VAL
+  
+  setin          - setin IO_X
+  
+  getval         - getval IO_X (must be setin first)
+  
+  exit           - exit/leave menu
+  
+  help           - show help
+  
+  ?              - show help
+  
   help-end:
-  
-  
-To set a GPIO as output with specific value, use :code: `setout IO_NUMBER VALUE_TO_SET`
 
-For setting IO_22 to value 1 for example (this is connected to RED LED on the PygmyBB4/QF)
+  
+  
+To set a GPIO as output with specific value, use :code: `setout IO_PADNUMBER VALUE_TO_SET`
+
+For example, to set IO_22 to value 1 (this is connected to RED LED on the PygmyBB4/QF):
 
 ::
 
   [1] gpioctlr > setout 22 1
   io = 22
   val = 1
-  [1] gpioctlr > 
 
-To read GPIO value, we need to ensure that this IO has been set as input first using :code:`setin IO_NUMBER` and 
-then we can read the value using :code:`getval IO_NUMBER`
+The RED LED should have turned on.
+
+To set IO_22 to value 0:
+
+::
+
+  [1] gpioctlr > setout 22 0
+  io = 22
+  val = 0
+
+The RED LED should have turned off.
+
+
+
+To read GPIO value, we need to ensure that this IO has been set as input first using :code:`setin IO_PADNUMBER` and 
+then we can read the value using :code:`getval IO_PADNUMBER`
 
 For reading IO_5 for example, we set it to input mode first:
 
@@ -118,14 +163,19 @@ Now connect the Jumper Wire from IO_5 to GND instead, and read the value:
   io = 5
   val = 1
   read value = 0
-  
+
 
 Details
 -------
 
+Note that the :code:`IO_PADNUMBER` is the actual pad number of the EOSS3 and is clearly marked on the PygmyBB4 pins.
+
+In the schematic also, we can see this pad number mentioned, for example, IO_22 can be seen connected to R_LED.
+
 In brief, the GPIO Controller is instantiated in the FPGA, and defines 3 registers to control IO_0 - IO_31.
 
-The OFFSETS of these registers are as in the code:
+The OFFSETS of these registers are:
+[fpga/rtl/GPIO_controller.v]
 
 ::
 
@@ -134,17 +184,20 @@ The OFFSETS of these registers are as in the code:
   localparam  REG_ADDR_GPIO_OE    =  8'h08        ; 
 
 
-The GPIO Controller itself is defined to have an OFFSET of as in the code:
+The GPIO Controller itself is defined to have an OFFSET as below:
+[fpga/rtl/AL4S3B_FPGA_IP.v]
 
 ::
 
   parameter       GPIO_BASE_ADDRESS           = 17'h04000     ;
-  
+
+
 Finally, the FPGA BASE ADDRESS (when accessed from the AHB side of M4) is :code:`0x40020000`
+[HAL/inc/eoss3_dev.h]
 
 Using this information, we see that the basic design is :
 
-- Control GPIO as output or input be setting 1 or 0 respectively to the appropriate bit in :code:`REG_ADDR_GPIO_OE (0x40024008)`
+- Control GPIO as output or input by setting 1 or 0 respectively to the appropriate bit in :code:`REG_ADDR_GPIO_OE (0x40024008)`
 
 - If set as output, set the appropriate bit as 1 or 0 for High/Low in :code:`REG_ADDR_GPIO_OUT (0x40024004)`
 

@@ -85,8 +85,7 @@ _tmp2=$(subst /,\,${_tmp})
 # Resolve this once, now, thus we assign with := not =
 export PROJ_DIR := ${_tmp2}
 
-$(info PROJ_DIR = ${PROJ_DIR})
-export PROJ_ROOT=$(PROJ_DIR)\..\..\..\..
+export PROJ_ROOT=$(PROJ_DIR)\..\..\..
 export OUTPUT_PATH=output
 export DEPEND_PATH=output\depend
 #COMPILER_LIBS_PATH=C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\arm\CMSIS\Lib\IAR
@@ -136,7 +135,7 @@ export CP=cp
 export MV=mv
 export ECHO=echo
 export PROJ_DIR=$(shell pwd)
-export PROJ_ROOT=$(PROJ_DIR)/../../../..
+export PROJ_ROOT=$(PROJ_DIR)/../../..
 export OUTPUT_PATH=$(PROJ_DIR)/output
 export DEPEND_PATH=$(PROJ_DIR)/output/depend
 
@@ -173,8 +172,15 @@ export ELF2BIN="$(QORC_TC_PATH)/arm-none-eabi-objcopy"
 ################
 endif
 ################
-
+$(info )
 $(info PROJ_NAME = ${PROJ_NAME})
+$(info )
+$(info PROJ_DIR = ${PROJ_DIR})
+$(info )
+$(info APP_DIR = ${APP_DIR})
+$(info )
+$(info )
+$(info )
 
 #Ouput binary name
 export OUTPUT_FILE=${PROJ_NAME}

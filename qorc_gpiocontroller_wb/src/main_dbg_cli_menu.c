@@ -30,6 +30,8 @@
 #include <stdbool.h>
 #include "dbg_uart.h"
 
+#include "ol_fpga_gpioctlr_hal.h"
+
 
 #if FEATURE_CLI_DEBUG_INTERFACE
 
@@ -53,63 +55,44 @@ const struct cli_cmd_entry qorc_gpioctlr[] =
 uint32_t scratch32;
 
 
-uint8_t gpionum_output = 0;
-uint8_t gpioval_output = 0;
+uint8_t io_pad_num;
+uint8_t io_pad_val;
+
 static void set_gpio_output(const struct cli_cmd_entry *pEntry)
 {
     (void)pEntry;
 
-    CLI_uint8_getshow( "io", &gpionum_output);
+    CLI_uint8_getshow( "io", &io_pad_num);
     
-    scratch32 = *(uint32_t*)(0x40024008);
+    CLI_uint8_getshow( "val", &io_pad_val);
 
-    *(uint32_t*)(0x40024008) = scratch32 | (0x1 << gpionum_output);
-
-    CLI_uint8_getshow( "val", &gpioval_output);
-
-    scratch32 = *(uint32_t*)(0x40024004);
-
-    if(gpioval_output > 0)
-    {
-        *(uint32_t*)(0x40024004) = scratch32 | (0x1 << gpionum_output);
-    }
-    else
-    {
-        *(uint32_t*)(0x40024004) = scratch32 & ~(0x1 << gpionum_output);
-    }    
+    hal_ol_fpga_gpioctlr_set_output(io_pad_num, io_pad_val);
 
     return;
 }
 
 
-uint8_t gpionum_input = 0;
 static void set_gpio_input(const struct cli_cmd_entry *pEntry)
 {
     (void)pEntry;
 
-    CLI_uint8_getshow( "io", &gpionum_input);
-    
-    scratch32 = *(uint32_t*)(0x40024008);
+    CLI_uint8_getshow( "io", &io_pad_num);
 
-    *(uint32_t*)(0x40024008) = scratch32 | (0x1 << gpionum_output);
+    hal_ol_fpga_gpioctlr_set_input(io_pad_num);
+    
     return;
 }
 
 
-uint8_t gpioval_input = 0;
 static void get_gpio_value(const struct cli_cmd_entry *pEntry)
 {
     (void)pEntry;
 
-    CLI_uint8_getshow( "io", &gpionum_input);
+    CLI_uint8_getshow( "io", &io_pad_num);
+
+    io_pad_val = hal_ol_fpga_gpioctlr_get_value(io_pad_num);
     
-    CLI_uint8_getshow( "val", &gpioval_input);
-
-    scratch32 = *(uint32_t*)(0x40024000);
-
-    gpioval_input = (scratch32 >> gpionum_input) & 0x1;
-
-    CLI_printf("read value = %d\n", gpioval_input);
+    CLI_printf("read value = %d\n", io_pad_val);
  
     return;
 }

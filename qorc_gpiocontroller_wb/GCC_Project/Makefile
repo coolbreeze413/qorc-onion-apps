@@ -6,7 +6,7 @@ include config.mk
 
 VPATH:=$(OUTPUT_PATH)
 
-all: _makedirs_ external_srcs appdir
+all: _makedirs_ external_srcs appdir appfpga
 	-${HIDE}$(RM) $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*
 	make -f makefiles/Makefile_output
 	-${HIDE}$(MKDIR) $(OUTPUT_PATH)$(DIR_SEP)bin
@@ -26,6 +26,14 @@ _makedirs_:
 .PHONY: external_srcs
 external_srcs: Startup HAL FreeRTOS Libraries BSP
 	@echo "External sources built"
+
+.PHONY: appfpga
+appfpga:
+	make -f makefiles/Makefile_appfpga
+clean_appfpga:
+	make -f makefiles/Makefile_appfpga clean
+	
+CLEAN_TARGET += appfpga
 
 .PHONY: appdir
 appdir:

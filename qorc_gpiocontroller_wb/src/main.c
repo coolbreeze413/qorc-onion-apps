@@ -33,10 +33,10 @@
 /*    Include the generic headers required for QORC */
 #include "eoss3_hal_gpio.h"
 #include "eoss3_hal_rtc.h"
-#include "eoss3_hal_fpga_usbserial.h"
 #include "ql_time.h"
 #include "s3x_clock_hal.h"
 #include "s3x_clock.h"
+#include"eoss3_hal_timer.h"
 #include "s3x_pi.h"
 #include "dbg_uart.h"
 
@@ -60,23 +60,45 @@ static void nvic_init(void);
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "qorc-onion-apps/qf_hello-fpga-gpio-ctlr";
+    SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc_gpiocontroller_wb";
     
     qf_hardwareSetup();
     nvic_init();
 
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "Quicklogic QuickFeather FPGA GPIO CONTROLLER EXAMPLE\n");
+    dbg_str( "OnionApps FPGA GPIO Controller Example\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
     dbg_str( __DATE__ " " __TIME__ "\n" );
     dbg_str( "##########################\n\n");
 
-    dbg_str( "\n\nHello GPIO!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
+    dbg_str( "\n\nHello GPIO CONTROLLER!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
 
     CLI_start_task( my_main_menu );
+
+    HAL_Delay_Init();
+
+    // Visual Init Sequence Test.
+    hal_ol_fpga_gpioctlr_set_output(22, 1);
+    hal_ol_fpga_gpioctlr_set_output(18, 1);
+    HAL_DelayUSec(400000);
+    hal_ol_fpga_gpioctlr_set_output(22, 0);
+    hal_ol_fpga_gpioctlr_set_output(18, 0);
+    HAL_DelayUSec(400000);
+    hal_ol_fpga_gpioctlr_set_output(22, 1);
+    hal_ol_fpga_gpioctlr_set_output(18, 1);
+    HAL_DelayUSec(400000);
+    hal_ol_fpga_gpioctlr_set_output(22, 0);
+    hal_ol_fpga_gpioctlr_set_output(18, 0);
+    HAL_DelayUSec(400000);
+    hal_ol_fpga_gpioctlr_set_output(22, 1);
+    hal_ol_fpga_gpioctlr_set_output(18, 1);
+    HAL_DelayUSec(400000);
+    hal_ol_fpga_gpioctlr_set_output(22, 0);
+    hal_ol_fpga_gpioctlr_set_output(18, 0);
+
 
     /* Start the tasks and timer running. */
     vTaskStartScheduler();

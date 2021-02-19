@@ -1,7 +1,7 @@
 
 `timescale 1ns / 10ps
 
-module top ( 
+module AL4S3B_FPGA_Top ( 
             // GPIO
             GPIO_io
             );
