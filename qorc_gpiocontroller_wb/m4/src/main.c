@@ -60,7 +60,7 @@ static void nvic_init(void);
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_helloworldm4";
+    SOFTWARE_VERSION_STR = "qorc-onion-apps/qf_hello-fpga-gpio-ctlr";
     
     qf_hardwareSetup();
     nvic_init();
