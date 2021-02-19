@@ -1,3 +1,27 @@
+Intro
+=====
+
+This example application demonstrates one of the use-cases of the eFPGA core in the EOSS3.
+The M4 Subsystem in the EOSS3 has access to a GPIO Controller, which has support for only 
+8 pads to be used as a GPIO. 
+If those pads are already muxed to different functions, it becomes restrictive in the number 
+of GPIOs available in the system.
+
+The eFPGA on the EOSS3 can access all of the 46 pads (IO_0 to IO_45) and use it according 
+to any design on the eFPGA.
+
+In this application, we take the first 32 pads (IO_0 to IO_31) and enable usage as GPIO pins 
+via the eFPGA design. 
+
+To control the GPIOs exposed in this way, from the M4, we use the AHB-Wishbone Interconnect 
+between the M4 Subsystem and the eFPGA, hence making it possible to use it like any other 
+peripheral on the M4 Subsystem.
+
+Using a set of 32-bit registers, exposed over the AHB-Wishbone Interconnect, M4 code can 
+just set bits on the registers and control the IO pads as either input (to read the logic value) 
+or as output (to set the logic value).
+
+
 How To
 ======
 
@@ -166,13 +190,22 @@ Now connect the Jumper Wire from IO_5 to GND instead, and read the value:
 
 
 Details
--------
+=======
 
 Note that the :code:`IO_PADNUMBER` is the actual pad number of the EOSS3 and is clearly marked on the PygmyBB4 pins.
 
 In the schematic also, we can see this pad number mentioned, for example, IO_22 can be seen connected to R_LED.
 
 In brief, the GPIO Controller is instantiated in the FPGA, and defines 3 registers to control IO_0 - IO_31.
+
+These registers are accessed like normal 32-bit registers from M4 code using the AHB-Wishbone interconnect.
+
+From the M4 side, it looks like memory mapped AHB registers, just like any other peripheral.
+
+The AHB-Wishbone Bridge converts the AHB read/write transactions into Wishbone read/write transactions.
+
+We implement the Wishbone read/write transaction decoding in the eFPGA verilog code, and interpret 
+the register read/write into logic for GPIO Control.
 
 The OFFSETS of these registers are:
 [fpga/rtl/GPIO_controller.v]
