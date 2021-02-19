@@ -84,7 +84,16 @@ and you have a serial terminal connected to that port at 115200 8N1.
 Run Code
 --------
 
-Once the board is flashed, and reset, you should see a banner like below on the serial terminal:
+Once the board is flashed, and reset, you should see a pattern of 3 PINK BLINKs (after the 
+flashing BLUE LED pattern put out by the bootloader as usual) indicating the code has loaded and 
+started execution (FPGA and M4)
+
+This pattern of 3 PINK BLINKs is executed using the eFPGA based GPIO Controller Design itself.
+
+This can be see in the code of `main.c <src/main.c#L83-L100>`__
+
+
+This is followed by a banner like the below on the serial terminal:
 
 ::
 
