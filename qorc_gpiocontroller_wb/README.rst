@@ -71,12 +71,12 @@ Enter the GPIO Controller submenu using :code:`gpioctlr` and then type :code:`he
   [0] > gpioctlr
   [1] gpioctlr > help
   help-path: gpioctlr
-  setgpioout     - set gpio as output with value specified
-  setgpioin      - set gpio as input
-  getgpioval     - read gpio value
-  exit           - exit/leave menu
-  help           - show help
-  ?              - show help
+  setout     - set gpio as output with value specified
+  setin      - set gpio as input
+  getval     - read gpio value
+  exit       - exit/leave menu
+  help       - show help
+  ?          - show help
   help-end:
   
   
