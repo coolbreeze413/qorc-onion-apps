@@ -5,6 +5,8 @@
 #define __OL_FPGA_GPIOCTLR_H_
 
 // include files
+#include "Fw_global_config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,9 +20,9 @@
 
 #define OL_FPGA_GPIOCTLR_MODULE_OFFSET              0x00004000
 
-#define OL_FPGA_GPIOCTLR_REG_OFFSET_OUTPUT_ENABLE   0x00008
-#define OL_FPGA_GPIOCTLR_REG_OFFSET_OUTPUT_VALUE    0x00004
-#define OL_FPGA_GPIOCTLR_REG_OFFSET_INPUT_VALUE     0x00000
+#define OL_FPGA_GPIOCTLR_REG_OFFSET_OUTPUT_ENABLE   0x0008
+#define OL_FPGA_GPIOCTLR_REG_OFFSET_OUTPUT_VALUE    0x0004
+#define OL_FPGA_GPIOCTLR_REG_OFFSET_INPUT_VALUE     0x0000
 
 
 #define OL_FPGA_GPIOCTLR_REG_ADDR_OUTPUT_ENABLE     (uint32_t*)(OL_FPGA_PERIPH_BASE_ADDR + \

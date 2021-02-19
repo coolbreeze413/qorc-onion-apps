@@ -90,7 +90,7 @@ started execution (FPGA and M4)
 
 This pattern of 3 PINK BLINKs is executed using the eFPGA based GPIO Controller Design itself.
 
-This can be see in the code of `main.c <src/main.c#L83-L100>`__
+This can be see in the code of `src/main.c [Line 83 - Line 100] <src/main.c#L83-L100>`__
 
 
 This is followed by a banner like the below on the serial terminal:

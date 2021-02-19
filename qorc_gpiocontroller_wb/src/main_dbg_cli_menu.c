@@ -101,7 +101,7 @@ static void get_gpio_value(const struct cli_cmd_entry *pEntry)
 
 const struct cli_cmd_entry my_main_menu[] = {
     
-    CLI_CMD_SUBMENU( "gpioctlr", qorc_gpioctlr, "FPGA led controller" ),
+    CLI_CMD_SUBMENU( "gpioctlr", qorc_gpioctlr, "FPGA GPIO Controller" ),
     
     CLI_CMD_TERMINATE()
 };

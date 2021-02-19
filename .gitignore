@@ -1,3 +1,6 @@
 **/build
-**/.bin
+**/*.bin
+**/GCC_Project/output
 **/Makefile.symbiflow
+**/rtl/*.bin
+**/rtl/*_bit.h
