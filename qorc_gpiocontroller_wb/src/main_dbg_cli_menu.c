@@ -30,7 +30,7 @@
 #include <stdbool.h>
 #include "dbg_uart.h"
 
-#include "ol_fpga_gpioctlr_hal.h"
+#include "hal_fpga_onion_gpioctlr.h"
 
 
 #if FEATURE_CLI_DEBUG_INTERFACE
@@ -66,7 +66,7 @@ static void set_gpio_output(const struct cli_cmd_entry *pEntry)
     
     CLI_uint8_getshow( "val", &io_pad_val);
 
-    hal_ol_fpga_gpioctlr_set_output(io_pad_num, io_pad_val);
+    hal_fpga_onion_gpioctlr_set_output(io_pad_num, io_pad_val);
 
     return;
 }
@@ -78,7 +78,7 @@ static void set_gpio_input(const struct cli_cmd_entry *pEntry)
 
     CLI_uint8_getshow( "io", &io_pad_num);
 
-    hal_ol_fpga_gpioctlr_set_input(io_pad_num);
+    hal_fpga_onion_gpioctlr_set_input(io_pad_num);
     
     return;
 }
@@ -90,7 +90,7 @@ static void get_gpio_value(const struct cli_cmd_entry *pEntry)
 
     CLI_uint8_getshow( "io", &io_pad_num);
 
-    io_pad_val = hal_ol_fpga_gpioctlr_get_value(io_pad_num);
+    io_pad_val = hal_fpga_onion_gpioctlr_get_value(io_pad_num);
     
     CLI_printf("read value = %d\n", io_pad_val);
  

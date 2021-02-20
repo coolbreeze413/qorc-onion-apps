@@ -42,6 +42,8 @@
 
 #include "cli.h"
 
+#include "hal_fpga_onion_gpioctlr.h"
+
 
 extern const struct cli_cmd_entry my_main_menu[];
 
@@ -81,23 +83,23 @@ int main(void)
     HAL_Delay_Init();
 
     // Visual Init Sequence Test.
-    hal_ol_fpga_gpioctlr_set_output(22, 1);
-    hal_ol_fpga_gpioctlr_set_output(18, 1);
+    hal_fpga_onion_gpioctlr_set_output(22, 1);
+    hal_fpga_onion_gpioctlr_set_output(18, 1);
     HAL_DelayUSec(400000);
-    hal_ol_fpga_gpioctlr_set_output(22, 0);
-    hal_ol_fpga_gpioctlr_set_output(18, 0);
+    hal_fpga_onion_gpioctlr_set_output(22, 0);
+    hal_fpga_onion_gpioctlr_set_output(18, 0);
     HAL_DelayUSec(400000);
-    hal_ol_fpga_gpioctlr_set_output(22, 1);
-    hal_ol_fpga_gpioctlr_set_output(18, 1);
+    hal_fpga_onion_gpioctlr_set_output(22, 1);
+    hal_fpga_onion_gpioctlr_set_output(18, 1);
     HAL_DelayUSec(400000);
-    hal_ol_fpga_gpioctlr_set_output(22, 0);
-    hal_ol_fpga_gpioctlr_set_output(18, 0);
+    hal_fpga_onion_gpioctlr_set_output(22, 0);
+    hal_fpga_onion_gpioctlr_set_output(18, 0);
     HAL_DelayUSec(400000);
-    hal_ol_fpga_gpioctlr_set_output(22, 1);
-    hal_ol_fpga_gpioctlr_set_output(18, 1);
+    hal_fpga_onion_gpioctlr_set_output(22, 1);
+    hal_fpga_onion_gpioctlr_set_output(18, 1);
     HAL_DelayUSec(400000);
-    hal_ol_fpga_gpioctlr_set_output(22, 0);
-    hal_ol_fpga_gpioctlr_set_output(18, 0);
+    hal_fpga_onion_gpioctlr_set_output(22, 0);
+    hal_fpga_onion_gpioctlr_set_output(18, 0);
 
 
     /* Start the tasks and timer running. */

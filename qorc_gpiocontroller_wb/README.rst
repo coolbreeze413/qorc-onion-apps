@@ -52,7 +52,7 @@ From the project root dir, execute:
 
 ::
   
-  ql_symbiflow -compile -src fpga/rtl -d ql-eos-s3 -P pu64 -v AL4S3B_FPGA_Top.v AL4S3B_FPGA_IP.v AL4S3B_FPGA_QL_Reserved.v AL4S3B_FPGA_Registers.v GPIO_controller.v -t AL4S3B_FPGA_Top -p quickfeather.pcf -dump binary
+  ql_symbiflow -compile -src fpga/rtl -d ql-eos-s3 -P pu64 -v AL4S3B_FPGA_Top.v AL4S3B_FPGA_IP.v AL4S3B_FPGA_QL_Reserved.v AL4S3B_FPGA_Registers.v AL4S3B_FPGA_ONION_GPIO_controller.v -t AL4S3B_FPGA_Top -p quickfeather.pcf -dump binary
 
 This will create the appfpga binary: :code:`fpga/rtl/AL4S3B_FPGA_Top.bin`
 
@@ -90,7 +90,7 @@ started execution (FPGA and M4)
 
 This pattern of 3 PINK BLINKs is executed using the eFPGA based GPIO Controller Design itself.
 
-This can be see in the code of `src/main.c [Line 83 - Line 100] <src/main.c#L83-L100>`__
+This can be see in the code of `src/main.c [Line 85 - Line 102] <src/main.c#L85-L102>`__
 
 
 This is followed by a banner like the below on the serial terminal:

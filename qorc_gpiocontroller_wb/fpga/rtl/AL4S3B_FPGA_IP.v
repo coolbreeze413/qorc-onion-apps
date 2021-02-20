@@ -198,7 +198,7 @@ AL4S3B_FPGA_Registers #(
 
 
 // GPIO
-GPIO_controller 
+AL4S3B_FPGA_ONION_GPIO_controller 
     # (
         .MODULE_OFFSET      ( GPIO_BASE_ADDRESS )
     )
