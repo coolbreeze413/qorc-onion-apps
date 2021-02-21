@@ -42,18 +42,10 @@ parameter       APERSIZE                        = 10            ;
 parameter       ONION_GPIO_CTLR_BASE_ADDRESS    = 17'h04000     ;
 parameter       QL_RESERVED_BASE_ADDRESS        = 17'h05000     ;
 
-
-// KK: not touching for now, needs some cleanup
-parameter       FPGA_REG_ID_VALUE_ADR           = 10'h000       ; 
-parameter       FPGA_REV_NUM_ADR                = 10'h004       ; 
-
-parameter       AL4S3B_DEVICE_ID                = 16'h0         ;
-parameter       AL4S3B_REV_LEVEL                = 32'h0         ;
-parameter       AL4S3B_SCRATCH_REG              = 32'h12345678  ;
-
-parameter       AL4S3B_DEF_REG_VALUE            = 32'hFAB_DEF_AC; // Distinguish access to undefined area
-
+// define default value returned when accessing unused address space in the FPGA IP
 parameter       DEFAULT_READ_VALUE              = 32'hBAD_FAB_AC; // Bad FPGA Access
+
+// parameters specific to QL_RESERVED IP Module
 parameter       DEFAULT_CNTR_WIDTH              =  3            ;
 parameter       DEFAULT_CNTR_TIMEOUT            =  7            ;
 
@@ -124,7 +116,7 @@ assign WBs_CYC_ONION_GPIO_CTLR  = (  WBs_ADR[APERWIDTH-1:APERSIZE] == ONION_GPIO
 
 
 // Combine the ACK's from each IP module
-assign WBs_ACK              =   WBs_ACK_ONION_GPIO_CTLR | 
+assign WBs_ACK              =   WBs_ACK_ONION_GPIO_CTLR |
                                 WBs_ACK_QL_Reserved;
 
 
@@ -162,11 +154,8 @@ AL4S3B_FPGA_ONION_GPIO_controller
         .GPIO_io            ( GPIO_io                       )
     );
 
-
-// KK: not touching this one as of now.
 // Reserved Resources Block
 // Note: This block should be used in each QL FPGA design
-
 AL4S3B_FPGA_QL_Reserved
     #(
         .ADDRWIDTH                 ( ADDRWIDTH_QL_RESERVED          ),
@@ -187,16 +176,15 @@ AL4S3B_FPGA_QL_Reserved
     u_AL4S3B_FPGA_QL_Reserved
     (
          // AHB-To_FPGA Bridge I/F
-        .WBs_CLK_i                 ( WB_CLK                         ),
-        .WBs_RST_i                 ( WB_RST                         ),
-
         .WBs_ADR_i                 ( WBs_ADR[ADDRWIDTH_QL_RESERVED+1:2] ),
-        .WBs_CYC_QL_Reserved_i     ( WBs_CYC_QL_Reserved            ),
-        .WBs_CYC_i                 ( WBs_CYC                        ),
-        .WBs_STB_i                 ( WBs_STB                        ),
-        .WBs_DAT_o                 ( WBs_DAT_o_QL_Reserved          ),
-        .WBs_ACK_i                 ( WBs_ACK                        ),
-        .WBs_ACK_o                 ( WBs_ACK_QL_Reserved            )
+        .WBs_CYC_QL_Reserved_i     ( WBs_CYC_QL_Reserved                ),
+        .WBs_CYC_i                 ( WBs_CYC                            ),
+        .WBs_STB_i                 ( WBs_STB                            ),
+        .WBs_CLK_i                 ( WB_CLK                             ),
+        .WBs_RST_i                 ( WB_RST                             ),
+        .WBs_DAT_o                 ( WBs_DAT_o_QL_Reserved              ),
+        .WBs_ACK_i                 ( WBs_ACK                            ),
+        .WBs_ACK_o                 ( WBs_ACK_QL_Reserved                )
     );
 
 endmodule

@@ -1,19 +1,17 @@
 `timescale 1ns / 10ps
 module AL4S3B_FPGA_QL_Reserved ( 
 
-                         // AHB-To_FPGA Bridge I/F
-                         //
-                         WBs_ADR_i            ,
-                         WBs_CYC_QL_Reserved_i,
-                         WBs_CYC_i            ,
-                         WBs_STB_i            ,
-                         WBs_CLK_i            ,
-                         WBs_RST_i            ,
-                         WBs_DAT_o            ,
-                         WBs_ACK_i            ,
-                         WBs_ACK_o
-
-                         );
+    // AHB-To_FPGA Bridge I/F
+    WBs_ADR_i            ,
+    WBs_CYC_QL_Reserved_i,
+    WBs_CYC_i            ,
+    WBs_STB_i            ,
+    WBs_CLK_i            ,
+    WBs_RST_i            ,
+    WBs_DAT_o            ,
+    WBs_ACK_i            ,
+    WBs_ACK_o
+);
 
 
 //------Port Parameters----------------

@@ -101,6 +101,32 @@ int main(void)
     hal_fpga_onion_gpioctlr_set_output(22, 0);
     hal_fpga_onion_gpioctlr_set_output(18, 0);
 
+#if 0 // USED ONLY FOR TESTING SOME FPGA WB INTERFACE EDGE CASES
+
+    // undefined ip-module address space in FPGA IP     : 0xBADFABAC
+    // undefined register space in existing ip-module   : 0xDEFFABAC
+    // defined stuff - as per ip-module
+
+    // access register outside of defined IP Modules:
+    dbg_str_hex32("read unused addr, 0x40021000      ", *(uint32_t*)(0x40021000));
+    dbg_str_hex32("read unused addr, 0x40026000      ", *(uint32_t*)(0x40026000));
+
+    // access register in gpio ctlr outside of defined registers:
+    dbg_str_hex32("read used gpiotctlr, 0x40024000   ", *(uint32_t*)(0x40024000));
+    dbg_str_hex32("read used gpiotctlr, 0x40024004   ", *(uint32_t*)(0x40024004));
+    dbg_str_hex32("read used gpiotctlr, 0x40024008   ", *(uint32_t*)(0x40024008));
+    dbg_str_hex32("read unused gpiotctlr, 0x4002400C ", *(uint32_t*)(0x4002400C));
+    dbg_str_hex32("read unused gpiotctlr, 0x40024010 ", *(uint32_t*)(0x40024010));
+
+    // access QL_RESERVED
+    dbg_str_hex32("read QL_RESERVED, 0x400251FC      ", *(uint32_t*)(0x400251FC));
+    dbg_str_hex32("read QL_RESERVED, 0x400251F8      ", *(uint32_t*)(0x400251F8));
+
+    // access register in QL_RESERVED outside of defined registers:
+    dbg_str_hex32("read QL_RESERVED, 0x40025000      ", *(uint32_t*)(0x40025000));
+
+#endif
+
 
     /* Start the tasks and timer running. */
     vTaskStartScheduler();

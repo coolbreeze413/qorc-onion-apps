@@ -2,40 +2,38 @@
 `timescale 1ns / 10ps
 
 module AL4S3B_FPGA_ONION_GPIO_controller ( 
-                // AHB-To_FPGA Bridge I/F
-                WBs_ADR_i,
-                WBs_CYC_i,
-                WBs_BYTE_STB_i,
-                WBs_WE_i,
-                WBs_STB_i,
-                WBs_DAT_i,
-                WBs_CLK_i,
-                WBs_RST_i,
-                WBs_DAT_o,
-                WBs_ACK_o,
-						
-				// GPIO signals
-				GPIO_io
+    
+    // AHB-To_FPGA Bridge I/F
+    WBs_ADR_i,
+    WBs_CYC_i,
+    WBs_BYTE_STB_i,
+    WBs_WE_i,
+    WBs_STB_i,
+    WBs_DAT_i,
+    WBs_CLK_i,
+    WBs_RST_i,
+    WBs_DAT_o,
+    WBs_ACK_o,
+            
+    // GPIO signals
+    GPIO_io
 );
 
 
 // MODULE Parameters =====================================================================
 
 // This is the value that is returned when a non-implemented register is read.
-parameter   DEFAULT_REG_VALUE   = 32'hFAB_DEF_AC;
+parameter   DEFAULT_REG_VALUE   = 32'hDEF_FAB_AC;
 
 
 // MODULE Internal Parameters ============================================================
 // Allow for up to 256 registers in this module
-localparam  ADDRWIDTH   =  8;
+localparam  ADDRWIDTH   =  10;
 
 // register offsets.
-//  Address offsets shown below are byte offsets, so the 2 LSB's (on the right) should be 0's.
-localparam  REG_ADDR_GPIO_IN    =  8'h00        ; 
-localparam  REG_ADDR_GPIO_OUT   =  8'h04        ; 
-localparam  REG_ADDR_GPIO_OE    =  8'h08        ; 
-
-
+localparam  REG_ADDR_GPIO_IN    =  10'h000        ;
+localparam  REG_ADDR_GPIO_OUT   =  10'h004        ;
+localparam  REG_ADDR_GPIO_OE    =  10'h008        ;
 
 
 // MODULE PORT Declarations and Data Types ===============================================
