@@ -62,14 +62,14 @@ static void nvic_init(void);
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc_fpga_m4_gpioctrl";
+    SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc_fpga_gpioctrl";
     
     qf_hardwareSetup();
     nvic_init();
 
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "OnionApps FPGA GPIO Controller Example\n");
+    dbg_str( "ONION FPGA GPIO Controller Experiment\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
