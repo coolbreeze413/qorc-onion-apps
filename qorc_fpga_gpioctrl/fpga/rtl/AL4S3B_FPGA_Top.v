@@ -25,14 +25,14 @@ inout   wire        [31:0]           GPIO_io        ;       // IO_0 - IO_31 as G
 // MODULE INTERNAL Signals ===============================================================
 
 // FPGA Global Signals
-wire            CLK_IP          ;
-wire            RST_IP          ;
+wire            CLK_IP          ; // Selected FPGA Clock
+wire            RST_IP          ; // Selected FPGA Reset
 
-wire            Sys_Clk0        ; // Selected FPGA Clock
-wire            Sys_Clk0_Rst    ; // Selected FPGA Reset
+wire            Sys_Clk0        ;
+wire            Sys_Clk0_Rst    ;
 
-wire            Sys_Clk1        ; // Selected FPGA Clock
-wire            Sys_Clk1_Rst    ; // Selected FPGA Reset
+wire            Sys_Clk1        ;
+wire            Sys_Clk1_Rst    ;
 
 // Wishbone Bus Signals
 wire    [16:0]  WBs_ADR         ; // Wishbone Address Bus

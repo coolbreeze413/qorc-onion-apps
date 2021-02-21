@@ -1,0 +1,10 @@
+// QuickFeather uses the QFN package, others mostly use the BGA package.
+// can do   : set_io    SIGNAL_NAME     QFN_PIN_NUM
+// or       : set_io    SIGNAL_NAME     IO_PAD_NUM
+// RED LED, for example is on IO_22, which is QFN_PIN_NUM 34
+// so, set_io redled IO_22 OR set_io redled 34 are equivalent
+// by using the IO_PAD_NUM -> we don't need to change PCF across chip package variants!
+
+set_io redled       IO_22
+set_io greenled     IO_21
+set_io blueled      IO_18
