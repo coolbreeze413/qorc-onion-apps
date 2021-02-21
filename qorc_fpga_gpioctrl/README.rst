@@ -36,7 +36,7 @@ From the project root dir, execute:
 
 This will generate:
 
-- m4app binary: :code:`GCC_Project/output/bin/qorc_fpga_m4_gpioctrl.bin`
+- m4app binary: :code:`GCC_Project/output/bin/qorc_fpga_gpioctrl.bin`
 - appfpga binary: :code:`fpga/rtl/AL4S3B_FPGA_Top.bin`
 
 
@@ -67,13 +67,13 @@ From the project root dir, execute:
 
 ::
   
-  qfprog --port /dev/ttyACM0 --m4app GCC_Project/output/bin/qorc_fpga_m4_gpioctrl.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4
+  qfprog --port /dev/ttyACM0 --m4app GCC_Project/output/bin/qorc_fpga_gpioctrl.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4
   
 If you are flashing with a USB-UART connected to the EOSS3 UART port, then replace the ttyACMx with appropriate ttyUSBx, for example:
 
 ::
 
-  qfprog --port /dev/ttyUSB0 --m4app GCC_Project/output/bin/qorc_fpga_m4_gpioctrl.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4
+  qfprog --port /dev/ttyUSB0 --m4app GCC_Project/output/bin/qorc_fpga_gpioctrl.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4
   
 
 Before running the code in the next section, if you want to use the CLI to test, ensure that 
@@ -99,7 +99,7 @@ This is followed by a banner like the below on the serial terminal:
 
   ##########################
   OnionApps FPGA GPIO Controller Example
-  SW Version: qorc-onion-apps/qorc_fpga_m4_gpioctrl
+  SW Version: qorc-onion-apps/qorc_fpga_gpioctrl
   Feb 19 2021 18:57:15
   ##########################
   
@@ -111,7 +111,7 @@ This is followed by a banner like the below on the serial terminal:
   
   Command Line Interface
   
-  App SW Version: qorc-onion-apps/qorc_fpga_m4_gpioctrl
+  App SW Version: qorc-onion-apps/qorc_fpga_gpioctrl
   
   #*******************
   
