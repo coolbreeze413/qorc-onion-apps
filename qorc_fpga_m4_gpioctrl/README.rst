@@ -36,7 +36,7 @@ From the project root dir, execute:
 
 This will generate:
 
-- m4app binary: :code:`GCC_Project/output/bin/qorc_gpiocontroller_wb.bin`
+- m4app binary: :code:`GCC_Project/output/bin/qorc_fpga_m4_gpioctrl.bin`
 - appfpga binary: :code:`fpga/rtl/AL4S3B_FPGA_Top.bin`
 
 
@@ -67,13 +67,13 @@ From the project root dir, execute:
 
 ::
   
-  qfprog --port /dev/ttyACM0 --m4app GCC_Project/output/bin/qorc_gpiocontroller_wb.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4
+  qfprog --port /dev/ttyACM0 --m4app GCC_Project/output/bin/qorc_fpga_m4_gpioctrl.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4
   
 If you are flashing with a USB-UART connected to the EOSS3 UART port, then replace the ttyACMx with appropriate ttyUSBx, for example:
 
 ::
 
-  qfprog --port /dev/ttyUSB0 --m4app GCC_Project/output/bin/qorc_gpiocontroller_wb.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4
+  qfprog --port /dev/ttyUSB0 --m4app GCC_Project/output/bin/qorc_fpga_m4_gpioctrl.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4
   
 
 Before running the code in the next section, if you want to use the CLI to test, ensure that 
@@ -84,11 +84,11 @@ and you have a serial terminal connected to that port at 115200 8N1.
 Run Code
 --------
 
-Once the board is flashed, and reset, you should see a pattern of 3 PINK BLINKs (after the 
+Once the board is flashed, and reset, you should see a pattern of 3 Magenta Blinks (after the 
 flashing BLUE LED pattern put out by the bootloader as usual) indicating the code has loaded and 
 started execution (FPGA and M4)
 
-This pattern of 3 PINK BLINKs is executed using the eFPGA based GPIO Controller Design itself.
+This pattern of 3 Magenta Blinks  is executed using the eFPGA based GPIO Controller Design itself.
 
 This can be see in the code of `src/main.c [Line 85 - Line 102] <src/main.c#L85-L102>`__
 
@@ -99,7 +99,7 @@ This is followed by a banner like the below on the serial terminal:
 
   ##########################
   OnionApps FPGA GPIO Controller Example
-  SW Version: qorc-onion-apps/qorc_gpiocontroller_wb
+  SW Version: qorc-onion-apps/qorc_fpga_m4_gpioctrl
   Feb 19 2021 18:57:15
   ##########################
   
@@ -111,7 +111,7 @@ This is followed by a banner like the below on the serial terminal:
   
   Command Line Interface
   
-  App SW Version: qorc-onion-apps/qorc_gpiocontroller_wb
+  App SW Version: qorc-onion-apps/qorc_fpga_m4_gpioctrl
   
   #*******************
   
@@ -119,15 +119,15 @@ This is followed by a banner like the below on the serial terminal:
 
   
 
-Enter the GPIO Controller submenu using :code:`gpioctlr` and then type :code:`help` in the gpioctlr submenu for commands.
+Enter the GPIO Controller submenu using :code:`gpioctrl` and then type :code:`help` in the gpioctrl submenu for commands.
 
 ::
   
-  [0] > gpioctlr
+  [0] > gpioctrl
   
-  [1] gpioctlr > help
+  [1] gpioctrl > help
   
-  help-path: gpioctlr
+  help-path: gpioctrl
   
   setout         - setout IO_X VAL
   
@@ -151,7 +151,7 @@ For example, to set IO_22 to value 1 (this is connected to RED LED on the PygmyB
 
 ::
 
-  [1] gpioctlr > setout 22 1
+  [1] gpioctrl > setout 22 1
   io = 22
   val = 1
 
@@ -161,7 +161,7 @@ To set IO_22 to value 0:
 
 ::
 
-  [1] gpioctlr > setout 22 0
+  [1] gpioctrl > setout 22 0
   io = 22
   val = 0
 
@@ -176,14 +176,14 @@ For reading IO_5 for example, we set it to input mode first:
 
 ::
   
-  [1] gpioctlr > setin 5
+  [1] gpioctrl > setin 5
   io = 5
   
 Connect a Jumper Wire from IO_5 to 3V3 on the PygmyBB4/QF board, and the read the value:
 
 ::
 
-  [1] gpioctlr > getval 5
+  [1] gpioctrl > getval 5
   io = 5
   val = 0
   read value = 1
@@ -192,7 +192,7 @@ Now connect the Jumper Wire from IO_5 to GND instead, and read the value:
 
 ::
 
-  [1] gpioctlr > getval 5
+  [1] gpioctrl > getval 5
   io = 5
   val = 1
   read value = 0

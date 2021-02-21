@@ -42,7 +42,7 @@
 
 #include "cli.h"
 
-#include "hal_fpga_onion_gpioctlr.h"
+#include "hal_fpga_onion_gpioctrl.h"
 
 
 extern const struct cli_cmd_entry my_main_menu[];
@@ -62,7 +62,7 @@ static void nvic_init(void);
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc_gpiocontroller_wb";
+    SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc_fpga_m4_gpioctrl";
     
     qf_hardwareSetup();
     nvic_init();
@@ -83,23 +83,23 @@ int main(void)
     HAL_Delay_Init();
 
     // Visual Init Sequence Test.
-    hal_fpga_onion_gpioctlr_set_output(22, 1);
-    hal_fpga_onion_gpioctlr_set_output(18, 1);
+    hal_fpga_onion_gpioctrl_set_output(22, 1);
+    hal_fpga_onion_gpioctrl_set_output(18, 1);
     HAL_DelayUSec(400000);
-    hal_fpga_onion_gpioctlr_set_output(22, 0);
-    hal_fpga_onion_gpioctlr_set_output(18, 0);
+    hal_fpga_onion_gpioctrl_set_output(22, 0);
+    hal_fpga_onion_gpioctrl_set_output(18, 0);
     HAL_DelayUSec(400000);
-    hal_fpga_onion_gpioctlr_set_output(22, 1);
-    hal_fpga_onion_gpioctlr_set_output(18, 1);
+    hal_fpga_onion_gpioctrl_set_output(22, 1);
+    hal_fpga_onion_gpioctrl_set_output(18, 1);
     HAL_DelayUSec(400000);
-    hal_fpga_onion_gpioctlr_set_output(22, 0);
-    hal_fpga_onion_gpioctlr_set_output(18, 0);
+    hal_fpga_onion_gpioctrl_set_output(22, 0);
+    hal_fpga_onion_gpioctrl_set_output(18, 0);
     HAL_DelayUSec(400000);
-    hal_fpga_onion_gpioctlr_set_output(22, 1);
-    hal_fpga_onion_gpioctlr_set_output(18, 1);
+    hal_fpga_onion_gpioctrl_set_output(22, 1);
+    hal_fpga_onion_gpioctrl_set_output(18, 1);
     HAL_DelayUSec(400000);
-    hal_fpga_onion_gpioctlr_set_output(22, 0);
-    hal_fpga_onion_gpioctlr_set_output(18, 0);
+    hal_fpga_onion_gpioctrl_set_output(22, 0);
+    hal_fpga_onion_gpioctrl_set_output(18, 0);
 
 #if 0 // USED ONLY FOR TESTING SOME FPGA WB INTERFACE EDGE CASES
 
@@ -111,12 +111,12 @@ int main(void)
     dbg_str_hex32("read unused addr, 0x40021000      ", *(uint32_t*)(0x40021000));
     dbg_str_hex32("read unused addr, 0x40026000      ", *(uint32_t*)(0x40026000));
 
-    // access register in gpio ctlr outside of defined registers:
-    dbg_str_hex32("read used gpiotctlr, 0x40024000   ", *(uint32_t*)(0x40024000));
-    dbg_str_hex32("read used gpiotctlr, 0x40024004   ", *(uint32_t*)(0x40024004));
-    dbg_str_hex32("read used gpiotctlr, 0x40024008   ", *(uint32_t*)(0x40024008));
-    dbg_str_hex32("read unused gpiotctlr, 0x4002400C ", *(uint32_t*)(0x4002400C));
-    dbg_str_hex32("read unused gpiotctlr, 0x40024010 ", *(uint32_t*)(0x40024010));
+    // access register in gpio ctrl outside of defined registers:
+    dbg_str_hex32("read used gpiotctrl, 0x40024000   ", *(uint32_t*)(0x40024000));
+    dbg_str_hex32("read used gpiotctrl, 0x40024004   ", *(uint32_t*)(0x40024004));
+    dbg_str_hex32("read used gpiotctrl, 0x40024008   ", *(uint32_t*)(0x40024008));
+    dbg_str_hex32("read unused gpiotctrl, 0x4002400C ", *(uint32_t*)(0x4002400C));
+    dbg_str_hex32("read unused gpiotctrl, 0x40024010 ", *(uint32_t*)(0x40024010));
 
     // access QL_RESERVED
     dbg_str_hex32("read QL_RESERVED, 0x400251FC      ", *(uint32_t*)(0x400251FC));

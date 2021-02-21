@@ -39,7 +39,7 @@ parameter       APERWIDTH                       = 17            ;
 parameter       APERSIZE                        = 10            ;
 
 // base addresses of each (sub)module - note that these should be > aperture size (0x1000 here)
-parameter       ONION_GPIO_CTLR_BASE_ADDRESS    = 17'h04000     ;
+parameter       ONION_GPIOCTRL_BASE_ADDRESS     = 17'h04000     ;
 parameter       QL_RESERVED_BASE_ADDRESS        = 17'h05000     ;
 
 // define default value returned when accessing unused address space in the FPGA IP
@@ -92,13 +92,13 @@ inout       wire    [31:0]      GPIO_io;
 
 // MODULE INTERNAL Signals ===============================================================
 
-wire            WBs_CYC_ONION_GPIO_CTLR     ;
+wire            WBs_CYC_ONION_GPIOCTRL      ;
 wire            WBs_CYC_QL_Reserved         ;
 
-wire            WBs_ACK_ONION_GPIO_CTLR     ;
+wire            WBs_ACK_ONION_GPIOCTRL      ;
 wire            WBs_ACK_QL_Reserved         ;
 
-wire    [31:0]  WBs_DAT_o_ONION_GPIO_CTLR   ;
+wire    [31:0]  WBs_DAT_o_ONION_GPIOCTRL    ;
 wire    [31:0]  WBs_DAT_o_QL_Reserved       ;
 
 
@@ -108,15 +108,15 @@ wire    [31:0]  WBs_DAT_o_QL_Reserved       ;
 // each module does not need to check this by itself, it only needs to check its WBs_CYCi is high.
 // We use the base addresses, which can only be aperture-width:aperture-size.
 // 16:10 in our case, as 9:0 is the module's aperture size out of 16:0 aperture width
-assign WBs_CYC_QL_Reserved  = (  WBs_ADR[APERWIDTH-1:APERSIZE] == QL_RESERVED_BASE_ADDRESS[APERWIDTH-1:APERSIZE] ) 
-                            & (  WBs_CYC                                                                         );
+assign WBs_CYC_QL_Reserved      = (  WBs_ADR[APERWIDTH-1:APERSIZE] == QL_RESERVED_BASE_ADDRESS[APERWIDTH-1:APERSIZE] ) 
+                                & (  WBs_CYC                                                                         );
 
-assign WBs_CYC_ONION_GPIO_CTLR  = (  WBs_ADR[APERWIDTH-1:APERSIZE] == ONION_GPIO_CTLR_BASE_ADDRESS[APERWIDTH-1:APERSIZE] ) 
-                                & (  WBs_CYC                                                                             );
+assign WBs_CYC_ONION_GPIOCTRL   = (  WBs_ADR[APERWIDTH-1:APERSIZE] == ONION_GPIOCTRL_BASE_ADDRESS[APERWIDTH-1:APERSIZE] ) 
+                                & (  WBs_CYC                                                                            );
 
 
 // Combine the ACK's from each IP module
-assign WBs_ACK              =   WBs_ACK_ONION_GPIO_CTLR |
+assign WBs_ACK              =   WBs_ACK_ONION_GPIOCTRL |
                                 WBs_ACK_QL_Reserved;
 
 
@@ -124,7 +124,7 @@ assign WBs_ACK              =   WBs_ACK_ONION_GPIO_CTLR |
 always @(*)
 begin
     case(WBs_ADR[APERWIDTH-1:APERSIZE])
-        ONION_GPIO_CTLR_BASE_ADDRESS    [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_ONION_GPIO_CTLR   ;
+        ONION_GPIOCTRL_BASE_ADDRESS     [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_ONION_GPIOCTRL   ;
         QL_RESERVED_BASE_ADDRESS        [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_QL_Reserved       ;
         default:                                                WBs_RD_DAT  <=    DEFAULT_READ_VALUE          ;
     endcase
@@ -134,21 +134,21 @@ end
 // Instantiate (sub)Modules ==============================================================
 
 // GPIO
-AL4S3B_FPGA_ONION_GPIO_controller
-    u_AL4S3B_FPGA_ONION_GPIO_controller 
+AL4S3B_FPGA_ONION_GPIOCTRL
+    u_AL4S3B_FPGA_ONION_GPIOCTRL 
     (
         
         // AHB-To_FPGA Bridge I/F
         .WBs_ADR_i          ( WBs_ADR                       ),
-        .WBs_CYC_i          ( WBs_CYC_ONION_GPIO_CTLR       ),
+        .WBs_CYC_i          ( WBs_CYC_ONION_GPIOCTRL        ),
         .WBs_BYTE_STB_i     ( WBs_BYTE_STB                  ),
         .WBs_WE_i           ( WBs_WE                        ),
         .WBs_STB_i          ( WBs_STB                       ),
         .WBs_DAT_i          ( WBs_WR_DAT                    ),
         .WBs_CLK_i          ( WB_CLK                        ),
         .WBs_RST_i          ( WB_RST                        ),
-        .WBs_DAT_o          ( WBs_DAT_o_ONION_GPIO_CTLR     ),
-        .WBs_ACK_o          ( WBs_ACK_ONION_GPIO_CTLR       ),
+        .WBs_DAT_o          ( WBs_DAT_o_ONION_GPIOCTRL      ),
+        .WBs_ACK_o          ( WBs_ACK_ONION_GPIOCTRL        ),
 
         // GPIO signals
         .GPIO_io            ( GPIO_io                       )

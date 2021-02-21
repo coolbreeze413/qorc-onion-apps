@@ -30,7 +30,7 @@
 #include <stdbool.h>
 #include "dbg_uart.h"
 
-#include "hal_fpga_onion_gpioctlr.h"
+#include "hal_fpga_onion_gpioctrl.h"
 
 
 #if FEATURE_CLI_DEBUG_INTERFACE
@@ -42,7 +42,7 @@ static void set_gpio_input(const struct cli_cmd_entry *pEntry);
 static void get_gpio_value(const struct cli_cmd_entry *pEntry);
 
 
-const struct cli_cmd_entry qorc_gpioctlr[] =
+const struct cli_cmd_entry qorc_gpioctrl[] =
 {
     CLI_CMD_SIMPLE( "setout", set_gpio_output, "setout IO_X VAL" ),
 
@@ -66,7 +66,7 @@ static void set_gpio_output(const struct cli_cmd_entry *pEntry)
     
     CLI_uint8_getshow( "val", &io_pad_val);
 
-    hal_fpga_onion_gpioctlr_set_output(io_pad_num, io_pad_val);
+    hal_fpga_onion_gpioctrl_set_output(io_pad_num, io_pad_val);
 
     return;
 }
@@ -78,7 +78,7 @@ static void set_gpio_input(const struct cli_cmd_entry *pEntry)
 
     CLI_uint8_getshow( "io", &io_pad_num);
 
-    hal_fpga_onion_gpioctlr_set_input(io_pad_num);
+    hal_fpga_onion_gpioctrl_set_input(io_pad_num);
     
     return;
 }
@@ -90,7 +90,7 @@ static void get_gpio_value(const struct cli_cmd_entry *pEntry)
 
     CLI_uint8_getshow( "io", &io_pad_num);
 
-    io_pad_val = hal_fpga_onion_gpioctlr_get_value(io_pad_num);
+    io_pad_val = hal_fpga_onion_gpioctrl_get_value(io_pad_num);
     
     CLI_printf("read value = %d\n", io_pad_val);
  
@@ -101,7 +101,7 @@ static void get_gpio_value(const struct cli_cmd_entry *pEntry)
 
 const struct cli_cmd_entry my_main_menu[] = {
     
-    CLI_CMD_SUBMENU( "gpioctlr", qorc_gpioctlr, "FPGA GPIO Controller" ),
+    CLI_CMD_SUBMENU( "gpioctrl", qorc_gpioctrl, "FPGA GPIO Controller" ),
     
     CLI_CMD_TERMINATE()
 };

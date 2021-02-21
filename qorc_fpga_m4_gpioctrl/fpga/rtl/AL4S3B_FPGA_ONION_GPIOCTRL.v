@@ -1,7 +1,7 @@
 
 `timescale 1ns / 10ps
 
-module AL4S3B_FPGA_ONION_GPIO_controller ( 
+module AL4S3B_FPGA_ONION_GPIOCTRL ( 
     
     // AHB-To_FPGA Bridge I/F
     WBs_ADR_i,
