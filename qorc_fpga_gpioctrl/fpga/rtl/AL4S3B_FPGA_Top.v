@@ -3,7 +3,7 @@
 
 module AL4S3B_FPGA_Top (
     
-    // GPIO
+    // GPIOs from constraint file
     GPIO_io
 );
 
