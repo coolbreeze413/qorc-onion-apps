@@ -13,7 +13,7 @@ parameter PWM_RESOLUTION_BITS = 8;
 
 // MODULE Internal Parameters ============================================================
 
-localparam switch_count = 32'h12C0000;
+localparam switch_count = 32'h12C0000; // use approx 1 second to switch states
 
 
 // MODULE PORT Declarations and Data Types ===============================================

@@ -1,0 +1,24 @@
+// QuickFeather uses the QFN package, others mostly use the BGA package.
+// can do (QFN)   :     set_io      SIGNAL_NAME     QFN_PIN_NUM
+// can do (BGA)   :     set_io      SIGNAL_NAME     BGA_BALL_NUM
+// can do (WLCSP) :     set_io      SIGNAL_NAME     WLCSP_PIN_NUM
+// can do (ALL)   :     set_io      SIGNAL_NAME     IO_PAD_NUM
+// 
+// RED LED, for example is on IO_22, which is QFN_PIN_NUM 34 (BGA BALL G7)
+// so, 
+// (QFN)    :   set_io   red_led     34 
+// (BGA)    :   set_io   red_led     G7
+// (ALL)    :   set_io   red_led     IO_22
+// are equivalent
+// NOTE that the WLSCP version of EOSS3 does not have IO_22 brought out at all!
+// So, this signal cannot be used with the WLCSP package.
+//
+// by using the IO_PAD_NUM -> we don't need to change PCF across chip package variants.
+// However, we need to be careful that the relevant IO_PAD is actually brought out in the variant we are using.
+// WLCSP package of EOSS3 has a much lower number of IOs compared to the BGA/QFN package.
+//
+// signals defined here, can be directly accessed in the Verilog code.
+
+set_io      red_led       IO_22
+set_io      green_led     IO_21
+set_io      blue_led      IO_18
