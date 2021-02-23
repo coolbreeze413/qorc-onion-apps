@@ -11,16 +11,17 @@ module AL4S3B_FPGA_Top (
 
 parameter PWM_RESOLUTION_BITS = 8;
 
+
 // MODULE Internal Parameters ============================================================
 
-localparam switch_count = 32'h12C0000; // use approx 1 second to switch states
+localparam switch_count = 19660800*3; // use approx 4 seconds to switch states
 
 
 // MODULE PORT Declarations and Data Types ===============================================
 
-output      wire            red_led              ;
-output      wire            green_led            ;
-output      wire            blue_led             ;
+output      wire                        red_led              ;
+output      wire                        green_led            ;
+output      wire                        blue_led             ;
 
 
 // MODULE INTERNAL Signals ===============================================================
@@ -61,132 +62,65 @@ assign RST_IP = Sys_Clk0_Rst;
 assign CLK_IP = Sys_Clk0;
 
 
+// simple state-machine
 always@(*)
 begin
     case (state)
 
     32'd0       :   begin   // state 0
-                    if(toggle)
+                    if(!toggle)
                     begin   // toggle HIGH
-                        // YELLOW - LEVEL 1
-                        red_val <= 20;
-                        green_val <= 20;
-                        blue_val <= 0;
-                    end     // toggle HIGH
-                    else
-                    begin   // toggle LOW
                         // MAGENTA - LEVEL 1
                         red_val <= 20;
                         green_val <= 0;
                         blue_val <= 20;
+                    end     // toggle HIGH
+                    else
+                    begin   // toggle LOW
+                        // YELLOW - LEVEL 1
+                        red_val <= 20;
+                        green_val <= 20;
+                        blue_val <= 0;
                     end     // toggle LOW
                     end     // state 0
 
     32'd1       :   begin   // state 1
-                    if(toggle)
+                    if(!toggle)
                     begin   // toggle HIGH
-                        // YELLOW - LEVEL 2
-                        red_val <= 40;
-                        green_val <= 40;
-                        blue_val <= 0;
+                        // MAGENTA - LEVEL 2
+                        red_val <= 80;
+                        green_val <= 0;
+                        blue_val <= 80;
                     end     // toggle HIGH
                     else
                     begin   // toggle LOW
-                        // MAGENTA - LEVEL 2
-                        red_val <= 40;
-                        green_val <= 0;
-                        blue_val <= 40;
+                        // YELLO - LEVEL 2
+                        red_val <= 80;
+                        green_val <= 80;
+                        blue_val <= 0;
                     end     // toggle LOW
                     end     // state 1
 
     32'd2       :   begin   // state 2
-                    if(toggle)
+                    if(!toggle)
                     begin   // toggle HIGH
-                        // YELLOW - LEVEL 3
-                        red_val <= 60;
-                        green_val <= 60;
-                        blue_val <= 0;
-                    end     // toggle HIGH
-                    else
-                    begin   // toggle LOW
                         // MAGENTA - LEVEL 3
-                        red_val <= 60;
-                        green_val <= 0;
-                        blue_val <= 60;
-                    end     // toggle LOW
-                    end     // state 2
-
-    32'd3       :   begin   // state 3
-                    if(toggle)
-                    begin   // toggle HIGH
-                        // YELLOW - LEVEL 4
-                        red_val <= 80;
-                        green_val <= 80;
-                        blue_val <= 0;
-                    end     // toggle HIGH
-                    else
-                    begin   // toggle LOW
-                        // MAGENTA - LEVEL 4
-                        red_val <= 80;
-                        green_val <= 0;
-                        blue_val <= 80;
-                    end     // toggle LOW
-                    end     // state 3
-
-    32'd4       :   begin   // state 4
-                    if(toggle)
-                    begin   // toggle HIGH
-                        // YELLOW - LEVEL 5
-                        red_val <= 100;
-                        green_val <= 100;
-                        blue_val <= 0;
-                    end     // toggle HIGH
-                    else
-                    begin   // toggle LOW
-                        // MAGENTA - LEVEL 5
-                        red_val <= 100;
-                        green_val <= 0;
-                        blue_val <= 100;
-                    end     // toggle LOW
-                    end     // state 4
-
-    32'd5       :   begin   // state 5
-                    if(toggle)
-                    begin   // toggle HIGH
-                        // YELLOW - LEVEL 6
-                        red_val <= 127;
-                        green_val <= 127;
-                        blue_val <= 0;
-                    end     // toggle HIGH
-                    else
-                    begin   // toggle LOW
-                        // MAGENTA - LEVEL 6
-                        red_val <= 127;
-                        green_val <= 0;
-                        blue_val <= 127;
-                    end     // toggle LOW
-                    end     // state 5
-
-    32'd6       :   begin   // state 6
-                    if(toggle)
-                    begin   // toggle HIGH
-                        // YELLOW - LEVEL 7
-                        red_val <= 150;
-                        green_val <= 150;
-                        blue_val <= 0;
-                    end     // toggle HIGH
-                    else
-                    begin   // toggle LOW
-                        // MAGENTA - LEVEL 7
                         red_val <= 150;
                         green_val <= 0;
                         blue_val <= 150;
+                    end     // toggle HIGH
+                    else
+                    begin   // toggle LOW
+                        // YELLOW - LEVEL 3
+                        red_val <= 150;
+                        green_val <= 150;
+                        blue_val <= 0;
                     end     // toggle LOW
-                    end     // state 6
+                    end     // state 2
 
     default     :   begin   // state error
                     // RED
-                    red_val <= 255;
+                    red_val <= 150;
                     green_val <= 0;
                     blue_val <= 0;
                     end     // state error
@@ -194,6 +128,7 @@ begin
     endcase
 end
 
+// use a counter to switch states at regular intervals
 always @(posedge CLK_IP or posedge RST_IP) 
 begin
     if (RST_IP)
@@ -219,13 +154,9 @@ begin
             case (state)
             32'd0       :   state <= 32'd1;
             32'd1       :   state <= 32'd2;
-            32'd2       :   state <= 32'd3;
-            32'd3       :   state <= 32'd4;
-            32'd4       :   state <= 32'd5;
-            32'd5       :   state <= 32'd6;
-            32'd6       :   begin
+            32'd2       :   begin
                             state <= 32'd0; 
-                            toggle <= ~toggle;
+                            toggle <= ~toggle; // switch to the other color
                             end
             default     :   ;
             endcase
