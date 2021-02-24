@@ -24,3 +24,10 @@ Useful Links
 
    https://github.com/QuickLogic-Corp/qorc-sdk/blob/flashing-loading-changes-for-fpga/qf_apps/qf_bootloader/flash_memory_map.rst
 
+
+OptimusLogic Pygmy Based Devkit Series Info
+-------------------------------------------
+
+Features, Pinouts of various devkits (BB0, BB4, Sensei-Lite, Sensei):
+
+https://www.optimuslogic.in/product_pygmy.html
