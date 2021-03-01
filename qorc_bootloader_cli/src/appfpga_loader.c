@@ -110,34 +110,9 @@ int load_appfpga(void)
     // execute configuration of FB - PMU 0x40004400 FFE_FB_PF_Software_PD 0x200
     //*(uint32_t*)(0x40004600) = 0x2;
 
-    dbg_str("0\r\n");
 
-    s3x_pi_set_cfg_st(s3x_get_pi(S3X_FB_16_CLK));
-    dbg_str("1\r\n");
-
-#if 0
-    // wait for HW to clear, auto clear once power down sequence is finished
-    while(1)
-    {
-        if(*(uint32_t*)(0x40004600) & 0x2 == 0x0) break;
-    }
-
-    // this also should show, should we check this?
-    // wait till status is reflected - PMU 0x40004400 Status 0x0A0
-    while(1)
-    {
-        if(*(uint32_t*)(0x400044A0) & 0x2 == 0x2) break;
-    }
-#endif
-
-    // ensure IO_19 is low (externally we keep it low for now.)
-    // important that if we are in debugger mode, we make it low after bootstrapping is done.
-
-    s3x_pi_set_active_st(s3x_get_pi(S3X_FB_16_CLK));
-    dbg_str("2\r\n");
-
-  S3x_Clk_Disable(S3X_FB_21_CLK);
-  S3x_Clk_Disable(S3X_FB_16_CLK);
+  //S3x_Clk_Disable(S3X_FB_21_CLK);
+  //S3x_Clk_Disable(S3X_FB_16_CLK);
 
   S3x_Clk_Enable(S3X_A1_CLK);
   S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);

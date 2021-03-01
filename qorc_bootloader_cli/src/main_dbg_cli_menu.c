@@ -29,6 +29,9 @@
 #include "cli.h"
 #include <stdbool.h>
 #include "dbg_uart.h"
+#include "s3x_clock_hal.h"
+#include "s3x_clock.h"
+#include "s3x_pi.h"
 
 #include "bootloader_defines.h"
 
@@ -117,8 +120,36 @@ static void bootloader_cli_run_appfpga(const struct cli_cmd_entry *pEntry)
 
     if(current_active_images & METADATA_APPFPGA_IS_FLASHED)
     {
+
+            dbg_str("0\r\n");
+
+    s3x_pi_set_cfg_st(s3x_get_pi(S3X_FB_16_CLK));
+    dbg_str("1\r\n");
+
+#if 0
+    // wait for HW to clear, auto clear once power down sequence is finished
+    while(1)
+    {
+        if(*(uint32_t*)(0x40004600) & 0x2 == 0x0) break;
+    }
+
+    // this also should show, should we check this?
+    // wait till status is reflected - PMU 0x40004400 Status 0x0A0
+    while(1)
+    {
+        if(*(uint32_t*)(0x400044A0) & 0x2 == 0x2) break;
+    }
+#endif
+
+    // ensure IO_19 is low (externally we keep it low for now.)
+    // important that if we are in debugger mode, we make it low after bootstrapping is done.
+
+    s3x_pi_set_active_st(s3x_get_pi(S3X_FB_16_CLK));
+    dbg_str("2\r\n");
+
+
         //CLI_printf("Loading Application FPGA...\r\n");
-        int error = load_appfpga();
+        int error = load_usb_serial_ip();//load_appfpga();
 
         if(error != BL_NO_ERROR) // error occurred?
         {
