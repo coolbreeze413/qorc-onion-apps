@@ -26,6 +26,7 @@
 //#include "tfl_task.h"
 #include "dbg_uart.h"
 #include "RtosTask.h"
+#include "eoss3_hal_gpio.h"
      
 void        tfl_task(void*);
 static void SPIM_Setup(void);
@@ -53,14 +54,25 @@ void toggle_downloading_led(int high_time_msec, int low_time_msec);
 //--------------------  Debug -----------------------//
 int fzap = 0;
 
+#define BLUE_LED_GPIO_NUM         (4) //PAD 18, GPIO is connected to Blue LED
+#define GREEN_LED_GPIO_NUM        (5) //PAD 21, GPIO is connected to Green LED
+#define RED_LED_GPIO_NUM          (6) //PAD 22, GPIO is connected to Red LED
+
 
 void program_flash( void *pParameter )
 {
     (void)(pParameter);
-    uint16_t kiter = 0;
+    //uint16_t kiter = 0;
+    int ticker = 0;
+    uint8_t led_state = 0;
     uint8_t uart_id_current = UART_ID_BOOTLOADER;
     
     SPIM_Setup();
+
+    // HAL_GPIO_Write(RED_LED_GPIO_NUM, 0);
+    // HAL_GPIO_Write(GREEN_LED_GPIO_NUM, 0);
+    // HAL_GPIO_Write(BLUE_LED_GPIO_NUM, 1);
+
 
     while(1) {
         // Reset pointers
@@ -95,6 +107,15 @@ void program_flash( void *pParameter )
                 uart_id_current = UART_ID_HW;
             } 
 			//toggle_downloading_led(50,750);
+            // dbg_str("1");
+            // if((xTaskGetTickCount() - ticker) > 500)
+            // {
+            //     dbg_str("2");
+            //     led_state = !led_state;
+            //     ticker = xTaskGetTickCount();
+            //     HAL_GPIO_Write(GREEN_LED_GPIO_NUM, led_state);
+            // }
+            
         }
         // Use pkt info to determine write and read data lengths
         kbWrite = (atflPkt[2] << 8) | atflPkt[1];

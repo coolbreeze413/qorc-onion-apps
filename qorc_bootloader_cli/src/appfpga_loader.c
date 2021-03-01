@@ -92,7 +92,7 @@ int load_appfpga(void)
   image_size = image_metadata[1];
   if(image_size > FLASH_APPFPGA_SIZE)
   {
-    dbg_str("App FPGA Image size exceeded bootable size \n");
+    //dbg_str("App FPGA Image size exceeded bootable size \n");
     return BL_ERROR;
   }
   
@@ -103,6 +103,38 @@ int load_appfpga(void)
   //check crc
   if(check_appfpga_crc(image_size, image_crc) == BL_ERROR)
     return BL_ERROR;
+
+    // set configuration of FB to shutdown - PMU 0x40004400 FB_Power_Mode_Cfg 0x0A4
+    //*(uint32_t*)(0x400044A4) = 0x2;
+
+    // execute configuration of FB - PMU 0x40004400 FFE_FB_PF_Software_PD 0x200
+    //*(uint32_t*)(0x40004600) = 0x2;
+
+    dbg_str("0\r\n");
+
+    s3x_pi_set_cfg_st(s3x_get_pi(S3X_FB_16_CLK));
+    dbg_str("1\r\n");
+
+#if 0
+    // wait for HW to clear, auto clear once power down sequence is finished
+    while(1)
+    {
+        if(*(uint32_t*)(0x40004600) & 0x2 == 0x0) break;
+    }
+
+    // this also should show, should we check this?
+    // wait till status is reflected - PMU 0x40004400 Status 0x0A0
+    while(1)
+    {
+        if(*(uint32_t*)(0x400044A0) & 0x2 == 0x2) break;
+    }
+#endif
+
+    // ensure IO_19 is low (externally we keep it low for now.)
+    // important that if we are in debugger mode, we make it low after bootstrapping is done.
+
+    s3x_pi_set_active_st(s3x_get_pi(S3X_FB_16_CLK));
+    dbg_str("2\r\n");
 
   S3x_Clk_Disable(S3X_FB_21_CLK);
   S3x_Clk_Disable(S3X_FB_16_CLK);
@@ -140,10 +172,11 @@ int load_appfpga(void)
 //   dbg_hex32(fpga_meminit_crc);dbg_str("\r\n");
 //   dbg_int(fpga_iomux_size);dbg_str("\r\n");
 //   dbg_hex32(fpga_iomux_crc);dbg_str("\r\n");dbg_str("\r\n");
-  
+  dbg_str("3\r\n");
   load_fpga_with_mem_init(fpga_bitstream_size, fpga_bitstream_ptr, fpga_meminit_size, fpga_meminit_ptr);
+  dbg_str("4\r\n");
   fpga_iomux_init(fpga_iomux_size, fpga_iomux_ptr);
-
+dbg_str("6\r\n");
   S3x_Clk_Enable(S3X_FB_21_CLK);                          // Start FPGA clock
   S3x_Clk_Enable(S3X_FB_16_CLK);
 

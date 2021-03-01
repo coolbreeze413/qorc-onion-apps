@@ -34,6 +34,7 @@
 #include "dbg_uart.h"
 #include "flash_defines.h"
 #include "bootloader_defines.h"
+#include "RtosTask.h"
 
 
 extern uint32_t image_metadata[64];
@@ -96,6 +97,7 @@ void set_downloading_led(uint8_t value)
   //as an Acknowledgement of User button press
   HAL_GPIO_Write(GREEN_LED_GPIO_NUM, value);
 }
+
 /* 
 * This will toggle green LED with time passed. 
 * The state is maintained internal.
@@ -121,6 +123,7 @@ void toggle_downloading_led(int high_time_msec, int low_time_msec)
   }
   return;
 }
+
 void set_waiting_led(uint8_t value)
 {
   //we use blue LED toggle to indicate waiting
@@ -408,7 +411,7 @@ int check_active_images()
 */
 void BL_Task_Init(void)
 {
-	xTaskCreate(BLTaskHandler, "BL_Task", 256, NULL, tskIDLE_PRIORITY + 4, &BLTaskHandle);
+	xTaskCreate(BLTaskHandler, "BL_Task", 256, NULL,  (UBaseType_t)(PRIORITY_NORMAL), &BLTaskHandle);
 	configASSERT(BLTaskHandle);
 	return;
 }
