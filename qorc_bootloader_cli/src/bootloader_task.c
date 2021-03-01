@@ -193,6 +193,7 @@ static void BLTaskHandler(void *pvParameters)
     uint8_t blueval = 0;
 
     load_usb_serial_ip();
+    //load_appfpga(); // testing only !!! do not enable unless running from debugger!
 
     // yellow-cyan blink cycle
     HAL_GPIO_Write(GREEN_LED_GPIO_NUM, 1);
