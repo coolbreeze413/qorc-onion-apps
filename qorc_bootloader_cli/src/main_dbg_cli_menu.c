@@ -116,12 +116,16 @@ static void bootloader_cli_run_appfpga(const struct cli_cmd_entry *pEntry)
     uint8_t current_active_images;
     (void)pEntry;
 
+    while(1);
+
     current_active_images = check_active_images();
 
     if(current_active_images & METADATA_APPFPGA_IS_FLASHED)
     {
 
             dbg_str("0\r\n");
+
+#if 0
 
     s3x_pi_set_cfg_st(s3x_get_pi(S3X_FB_16_CLK));
     dbg_str("1\r\n");
@@ -146,15 +150,51 @@ static void bootloader_cli_run_appfpga(const struct cli_cmd_entry *pEntry)
 
     s3x_pi_set_active_st(s3x_get_pi(S3X_FB_16_CLK));
     dbg_str("2\r\n");
+#endif
 
+#if 1
+
+    // set configuration of FB to shutdown - PMU 0x40004400 FB_Power_Mode_Cfg 0x0A4
+    *(volatile uint32_t*)(0x400044A4) = 0x2;
+
+    // execute configuration of FB - PMU 0x40004400 FFE_FB_PF_Software_PD 0x200
+    *(volatile uint32_t*)(0x40004600) = 0x2;
+
+    // wait for sometime
+    vTaskDelay(100);
+
+    //w4 0x40004c4c 0x00000180
+    // w4 0x40004610 0x00000007
+    // w4 0x40004088 0x0000003f
+    // w4 0x40004044 0x00000007
+    // w4 0x4000404c 0x00000006
+    // w4 0x40004064 0x00000001
+    // w4 0x40004070 0x00000001
+    // w4 0x4000411c 0x00000006
+    // w4 0x40005310 0x1acce551
+    // w4 0x40004054 0x00000001
+
+    // *(volatile uint32_t*)(0x40004c4c) = 0x00000180;
+    // *(volatile uint32_t*)(0x40004610) = 0x00000007;
+    // *(volatile uint32_t*)(0x40004088) = 0x0000003f;
+    // *(volatile uint32_t*)(0x40004044) = 0x00000007;
+    // *(volatile uint32_t*)(0x4000404c) = 0x00000006;
+    // *(volatile uint32_t*)(0x40004070) = 0x00000001;
+    // *(volatile uint32_t*)(0x40004600) = 0x00000001;
+    // *(volatile uint32_t*)(0x4000411c) = 0x00000006;
+    // *(volatile uint32_t*)(0x40005310) = 0x1acce551;
+    // *(volatile uint32_t*)(0x40004054) = 0x00000001;
+
+#endif
 
         //CLI_printf("Loading Application FPGA...\r\n");
-        int error = load_usb_serial_ip();//load_appfpga();
+        int error = load_appfpga();//load_usb_serial_ip();//
 
         if(error != BL_NO_ERROR) // error occurred?
         {
             //CLI_printf("ERROR loading App FPGA!\n");
         }
+        while(1);
     }
     else
     {

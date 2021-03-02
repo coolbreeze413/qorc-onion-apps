@@ -141,8 +141,8 @@ int load_usb_serial_ip(void)
   if(check_fpga_crc(image_size, image_crc) == BL_ERROR)
     return BL_ERROR;
 
-  //S3x_Clk_Disable(S3X_FB_21_CLK);
-  //S3x_Clk_Disable(S3X_FB_16_CLK);
+  S3x_Clk_Disable(S3X_FB_21_CLK);
+  S3x_Clk_Disable(S3X_FB_16_CLK);
 
   S3x_Clk_Enable(S3X_A1_CLK);
   S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
@@ -150,6 +150,8 @@ int load_usb_serial_ip(void)
   //load the FPGA from RAM
   load_fpga(image_size, (uint32_t *)bufPtr);
   // Use 0x6140 as USB serial product ID (USB PID)
+S3x_Clk_Enable(S3X_FB_21_CLK);                          // Start FPGA clock
+  S3x_Clk_Enable(S3X_FB_16_CLK);
   dbg_str("12");
   HAL_usbserial_init2(false, false, 0x6140);         // Start USB serial not using interrupts
   dbg_str("13");

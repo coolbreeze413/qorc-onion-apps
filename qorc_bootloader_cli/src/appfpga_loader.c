@@ -104,15 +104,8 @@ int load_appfpga(void)
   if(check_appfpga_crc(image_size, image_crc) == BL_ERROR)
     return BL_ERROR;
 
-    // set configuration of FB to shutdown - PMU 0x40004400 FB_Power_Mode_Cfg 0x0A4
-    //*(uint32_t*)(0x400044A4) = 0x2;
-
-    // execute configuration of FB - PMU 0x40004400 FFE_FB_PF_Software_PD 0x200
-    //*(uint32_t*)(0x40004600) = 0x2;
-
-
-  //S3x_Clk_Disable(S3X_FB_21_CLK);
-  //S3x_Clk_Disable(S3X_FB_16_CLK);
+  S3x_Clk_Disable(S3X_FB_21_CLK);
+  S3x_Clk_Disable(S3X_FB_16_CLK);
 
   S3x_Clk_Enable(S3X_A1_CLK);
   S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
@@ -151,7 +144,7 @@ int load_appfpga(void)
   load_fpga_with_mem_init(fpga_bitstream_size, fpga_bitstream_ptr, fpga_meminit_size, fpga_meminit_ptr);
   dbg_str("4\r\n");
   fpga_iomux_init(fpga_iomux_size, fpga_iomux_ptr);
-dbg_str("6\r\n");
+  dbg_str("6\r\n");
   S3x_Clk_Enable(S3X_FB_21_CLK);                          // Start FPGA clock
   S3x_Clk_Enable(S3X_FB_16_CLK);
 
