@@ -106,15 +106,6 @@ void program_flash( void *pParameter )
                 }
                 uart_id_current = UART_ID_HW;
             } 
-			//toggle_downloading_led(50,750);
-            // dbg_str("1");
-            // if((xTaskGetTickCount() - ticker) > 500)
-            // {
-            //     dbg_str("2");
-            //     led_state = !led_state;
-            //     ticker = xTaskGetTickCount();
-            //     HAL_GPIO_Write(GREEN_LED_GPIO_NUM, led_state);
-            // }
             
         }
         // Use pkt info to determine write and read data lengths

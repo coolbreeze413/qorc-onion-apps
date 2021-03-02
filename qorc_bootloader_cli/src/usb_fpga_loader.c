@@ -150,7 +150,7 @@ int load_usb_serial_ip(void)
   //load the FPGA from RAM
   load_fpga(image_size, (uint32_t *)bufPtr);
   // Use 0x6140 as USB serial product ID (USB PID)
-S3x_Clk_Enable(S3X_FB_21_CLK);                          // Start FPGA clock
+  S3x_Clk_Enable(S3X_FB_21_CLK);                          // Start FPGA clock
   S3x_Clk_Enable(S3X_FB_16_CLK);
   dbg_str("12");
   HAL_usbserial_init2(false, false, 0x6140);         // Start USB serial not using interrupts

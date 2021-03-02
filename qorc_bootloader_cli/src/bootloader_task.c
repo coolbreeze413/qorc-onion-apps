@@ -199,14 +199,14 @@ static void BLTaskHandler(void *pvParameters)
     //load_appfpga(); // testing only !!! do not enable unless running from debugger!
 
     // yellow-cyan blink cycle
-    HAL_GPIO_Write(GREEN_LED_GPIO_NUM, 1);
+    HAL_GPIO_Write(GREEN_LED_GPIO_NUM, 1);    
     HAL_GPIO_Write(RED_LED_GPIO_NUM, 1);    
     while(1)
     {
         // dummy loop so BL does nothing for now.
         // Next we will add logic to connect from the CLI to do stuff
         
-        vTaskDelay(1000);
+        vTaskDelay(1000);        
         
         if(redval == 1)
         {
