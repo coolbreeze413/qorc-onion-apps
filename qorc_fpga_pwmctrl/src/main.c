@@ -124,7 +124,6 @@ int main(void)
     HAL_DelayUSec(500000);
     hal_fpga_onion_pwmctrl_disable(22);
     hal_fpga_onion_pwmctrl_disable(18);
-    HAL_DelayUSec(1000000);
 
     hal_fpga_onion_pwmctrl_disable(22);
     hal_fpga_onion_pwmctrl_disable(21);

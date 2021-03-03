@@ -84,14 +84,28 @@ static void disable_pwm_output(const struct cli_cmd_entry *pEntry)
 static void get_pwm_value(const struct cli_cmd_entry *pEntry)
 {
     uint32_t pwm_config = 0;
+    uint8_t pwm_enabled = 0;
+    uint16_t pwm_dutycycle = 0;
     (void)pEntry;
 
     CLI_uint8_getshow( "io", &io_pad_num);
 
     pwm_config = hal_fpga_onion_pwmctrl_getval(io_pad_num);
-    
-    CLI_printf("read value = 0x%08x\n", pwm_config);
- 
+
+    CLI_printf("pwm_config = 0x%08x\n", pwm_config);
+
+    pwm_enabled = (pwm_config >> 31) & 0x1;
+
+    if(pwm_enabled)
+    {
+        pwm_dutycycle = pwm_config & 0xFFFF;
+        CLI_printf("duty_cycle = %d [0x%04x]\n", pwm_dutycycle, pwm_dutycycle);
+    }
+    else
+    {
+        CLI_printf("pwm is disabled\n");
+    }
+
     return;
 }
 
