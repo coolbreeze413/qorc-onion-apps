@@ -52,7 +52,7 @@ From the project root dir, execute:
 
 ::
   
-  ql_symbiflow -compile -src fpga/rtl -d ql-eos-s3 -P pu64 -v AL4S3B_FPGA_Top.v AL4S3B_FPGA_IP.v AL4S3B_FPGA_QL_Reserved.v AL4S3B_FPGA_ONION_GPIO_controller.v -t AL4S3B_FPGA_Top -p quickfeather.pcf -dump binary
+  ql_symbiflow -compile -src fpga/rtl -d ql-eos-s3 -P pu64 -v AL4S3B_FPGA_Top.v AL4S3B_FPGA_IP.v AL4S3B_FPGA_QL_Reserved.v AL4S3B_FPGA_ONION_GPIOCTRL.v -t AL4S3B_FPGA_Top -p quickfeather.pcf -dump binary
 
 This will create the appfpga binary: :code:`fpga/rtl/AL4S3B_FPGA_Top.bin`
 
