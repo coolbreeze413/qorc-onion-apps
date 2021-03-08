@@ -37,20 +37,14 @@
 // if (inhale), BREATHE_o is ON as long as (duty-counter < duty-cycle (duty-cycle is increasing)
 // if (exhale), BREATHE_o is ON as long as duty-counter > duty-cycle (duty-cycle is decreasing)
 
-// next_ctr -> triggers duty cycle change, happens every 0x10000 cycles (16-bits)
+// next_ctr -> triggers duty cycle change, happens every "period" cycles (32-bits)
 // at each next_ctr, duty cycle changes by 1, and we need 0 - 0xff - 0 for inhale-exhale
 // so, duty_cycle sets = 256x2 = 512.
 
-// so one inhale-exhale = 0x10000 * 512 = 65536 * 512 = 33 554 432 clocks or 0x2000000 clocks.
-
-// PWM cycle = 8 bits (duty_ctr/duty_cycle) -> so 0x100 PWM cycles for every duty cycle change!
-// next_ctr has 0x10000 cycles, and each PWM cycle = 0x100 cycles, so.
- 
-  // each step is 256 clocks - this is the step period, and duty_ctr tracks the actual clock cycle in the step period
-
-  // every 16-bit cycle (0x10000 clocks) duty_cycle changes from 0 to peak(8-bit 0x100) to 0 in 1 step.
-  // in each step of duty cycle we have 8-bit period = 0x100 clock cycles
-  // total clock cycles per 0 - peak - 0 (inhale - exhale) = 0x10000 * (0x100*0x100 + 0x100*x100) = 
+// if period cycles = 0x10000 (0x10000 cycles at each brightness level in inhale+exhale)
+// then one inhale-exhale = 0x10000 * 512 = 65536 * 512 = 33 554 432 clocks or 0x2000000 clocks.
+// with 8-bit pwm, 12MHz input clock, 0x10000 cycle period per duty-cycle will give 
+// an approximately human breathing cycle appearance ~3seconds.
 
 
 // FUTURE REIMPLEMENTATION NOTES =========================================================
@@ -80,6 +74,7 @@
 
 
 module ONION_BREATHE (
+    period,
     clk,
     reset,
     BREATHE_o,
@@ -95,7 +90,7 @@ module ONION_BREATHE (
 
 
 // MODULE PORT Declarations and Data Types ===============================================
-
+input       wire    [31:0]  period              ; // how many cycles for each brightness step?
 input       wire            clk                 ;
 input       wire            reset               ;
 output      wire            BREATHE_o           ;
@@ -103,27 +98,38 @@ output      wire            BREATHE_o           ;
 
 // MODULE INTERNAL Signals ===============================================================
 
-reg [15:0] next_ctr;                // Counter to create a ~60Hz change in brightness
+reg [31:0] next_ctr;                // Counter to create a ~60Hz change in brightness
 reg [7:0] duty_ctr;                 // Counter to create a 256 clock cycle period
 reg [7:0] duty_cycle;               // Number of ticks in duty_ctr that LED is on/off
 
 reg inhale;                         // When set, duty cycle is increasing
 reg output_state;                   // LED is on when set, off when cleared
-
+//reg next;                           // indicates change of breathe state (inhale/exhale)
 
 // MODULE LOGIC ==========================================================================
 
 assign BREATHE_o = output_state;    // Drive LED with output_state
-assign next = &next_ctr;            // Advance duty cycle when next_ctr saturates
 
 
 // Counter to advance the duty cycle (i.e., increase or decrease the LED
 // brightness) approx 60 times per second
 always@ (posedge clk or negedge reset)
 if (!reset)
-    next_ctr <= 16'd0;
+begin
+    next_ctr <= 0;
+end
 else
-    next_ctr <= next_ctr + 16'd1;
+begin
+    if(next_ctr == period)
+    begin
+        next_ctr <= 0;
+    end
+    else
+    begin        
+        next_ctr <= next_ctr + 1;
+    end
+    
+end
 
 // Duty cycle is number of clock cycles the BREATHE_o will be off (when inhale = 1'b0)
 // or on (when inhale = 1'b1) per each 256 clock cycle period. The greater the
@@ -131,7 +137,7 @@ else
 always@ (posedge clk or negedge reset)
 if (!reset)
     duty_cycle <= 8'd0;
-else if (next)
+else if(next_ctr == period)
     duty_cycle <= duty_cycle + 8'd1;
 
 
@@ -149,8 +155,11 @@ else
 always@ (posedge clk or negedge reset)
 if (!reset)
     inhale <= 1'b1;
-else if (next && &duty_cycle)
+else if ((next_ctr == period) && &duty_cycle) // counter period AND duty cycle saturated, at peak.
+begin
     inhale <= ~inhale;
+    next <= 0;
+end
 
 // Drive the LEDs on or off depending on where in the 256 clock period cycle
 // we are.

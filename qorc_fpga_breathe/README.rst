@@ -13,12 +13,12 @@ and exhale effects.
 Once flashed and board is reset, we can see the RGB LED glow with a breathing effect, with 
 the following color sequence:
 
-- blue
-- green
-- red
-- yellow
-- magenta
-- cyan
+- 2x blue
+- 2x green
+- 2x red
+- 2x yellow
+- 2x magenta
+- 2x cyan
 - [repeats from blue]
 
 Prerequisites
