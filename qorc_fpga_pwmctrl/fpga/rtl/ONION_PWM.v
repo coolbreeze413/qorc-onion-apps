@@ -53,7 +53,7 @@ always@ (posedge clk or negedge reset)
 // drive the LED on or off depending on where we are in the 2^resolution-bits clock cycle period
 always@ (posedge clk or negedge reset)
     if (!reset)
-        PWM_o_state <= 1'b0;
+        PWM_o_state <= 1'bz;
     else
         PWM_o_state <= (clk_counter <= duty_cycle);
 

@@ -82,6 +82,9 @@ int main(void)
 
     HAL_Delay_Init();
 
+    // print DEVICE ID:
+    dbg_str_hex32("FPGA Device ID", hal_fpga_onion_get_device_id());
+
     // Visual Init Sequence Test.
     hal_fpga_onion_pwmctrl_disable(22);
     hal_fpga_onion_pwmctrl_disable(21);
@@ -140,11 +143,18 @@ int main(void)
     dbg_str_hex32("read unused addr, 0x40026000      ", *(uint32_t*)(0x40026000));
 
     // access register in gpio ctrl outside of defined registers:
-    dbg_str_hex32("read used gpiotctrl, 0x40024000   ", *(uint32_t*)(0x40024000));
-    dbg_str_hex32("read used gpiotctrl, 0x40024004   ", *(uint32_t*)(0x40024004));
-    dbg_str_hex32("read used gpiotctrl, 0x40024008   ", *(uint32_t*)(0x40024008));
-    dbg_str_hex32("read unused gpiotctrl, 0x4002400C ", *(uint32_t*)(0x4002400C));
-    dbg_str_hex32("read unused gpiotctrl, 0x40024010 ", *(uint32_t*)(0x40024010));
+    dbg_str_hex32("read used gpioctrl, 0x40024000   ", *(uint32_t*)(0x40024000));
+    dbg_str_hex32("read used gpioctrl, 0x40024004   ", *(uint32_t*)(0x40024004));
+    dbg_str_hex32("read used gpioctrl, 0x40024008   ", *(uint32_t*)(0x40024008));
+    dbg_str_hex32("read unused gpioctrl, 0x4002400C ", *(uint32_t*)(0x4002400C));
+    dbg_str_hex32("read unused gpioctrl, 0x40024010 ", *(uint32_t*)(0x40024010));
+
+    // access register in pwm ctrl outside of defined registers:
+    dbg_str_hex32("read used pwmctrl, 0x40023000   ", *(uint32_t*)(0x40023000));
+    dbg_str_hex32("read used pwmctrl, 0x40023004   ", *(uint32_t*)(0x40023004));
+    dbg_str_hex32("read used pwmctrl, 0x40023008   ", *(uint32_t*)(0x40023008));
+    dbg_str_hex32("read unused pwmctrl, 0x4002300C ", *(uint32_t*)(0x4002300C));
+    dbg_str_hex32("read unused pwmctrl, 0x40023010 ", *(uint32_t*)(0x40023010));
 
     // access QL_RESERVED
     dbg_str_hex32("read QL_RESERVED, 0x400251FC      ", *(uint32_t*)(0x400251FC));

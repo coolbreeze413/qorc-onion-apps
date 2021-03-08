@@ -6,7 +6,7 @@
 //      PWM_x_DUTY_CYCLE    - [15:0]    (max, actual depends on PWM_RESOLUTION_BITS)
 //      PWM_x_RESERVED      - [30:16]   future
 //      PWM_x_EN            - [31]      1 to enable, 0 to disable
-// so, for first 32 IOs, we will have 32 registers PWM_0_CONFIG - PWM_31_CONFIG
+// so, for each IO, we will have 1 register PWM_x_CONFIG (addr = 0,4,8...)
 
 module AL4S3B_FPGA_ONION_PWMCTRL ( 
     
@@ -47,7 +47,6 @@ localparam  REG_ADDR_PWM_0_CONFIG    =  10'h000        ;
 localparam  REG_ADDR_PWM_1_CONFIG    =  10'h004        ;
 localparam  REG_ADDR_PWM_2_CONFIG    =  10'h008        ;
 
-
 // MODULE PORT Declarations and Data Types ===============================================
 
 // AHB-To_FPGA Bridge I/F
@@ -64,22 +63,21 @@ output      wire                WBs_ACK_o           ;  // Transfer Cycle Acknowl
 
 // PWM clock
 input       wire                PWM_clk             ;
-// PWM
-output       wire    [31:0]      PWM_o              ;
+// PWM - 2:0 IOs only.
+output      wire    [31:0]      PWM_o               ;
 
 
 // MODULE INTERNAL Signals ===============================================================
 
+reg     [31:0]  PWM_0_CONFIG            ;
+reg     [31:0]  PWM_1_CONFIG            ;
+reg     [31:0]  PWM_2_CONFIG            ;
 
 
-reg     [31:0]  PWM_0_CONFIG        ;
-reg     [31:0]  PWM_1_CONFIG        ;
-reg     [31:0]  PWM_2_CONFIG        ;
-
-wire            REG_WE_PWM_0_CONFIG ;
-wire            REG_WE_PWM_1_CONFIG  ;
-wire            REG_WE_PWM_2_CONFIG  ;
-wire            WBs_ACK_o_nxt   ;
+wire            REG_WE_PWM_0_CONFIG     ;
+wire            REG_WE_PWM_1_CONFIG     ;
+wire            REG_WE_PWM_2_CONFIG     ;
+wire            WBs_ACK_o_nxt           ;
 
 
 // MODULE LOGIC ==========================================================================
@@ -163,15 +161,15 @@ begin
 end
 
 
-// define READ logic for the registers
+//define READ logic for the registers
 always @(*)
 begin
     case(WBs_ADR_i[ADDRWIDTH-1:2])
         REG_ADDR_PWM_0_CONFIG    [ADDRWIDTH-1:2]    : WBs_DAT_o <= PWM_0_CONFIG         ;
         REG_ADDR_PWM_1_CONFIG    [ADDRWIDTH-1:2]    : WBs_DAT_o <= PWM_1_CONFIG         ;
         REG_ADDR_PWM_2_CONFIG    [ADDRWIDTH-1:2]    : WBs_DAT_o <= PWM_2_CONFIG         ;
-	    default                                     : WBs_DAT_o <= DEFAULT_REG_VALUE    ;
-	endcase
+        default                                     : WBs_DAT_o <= DEFAULT_REG_VALUE    ;
+    endcase
 end
 
 

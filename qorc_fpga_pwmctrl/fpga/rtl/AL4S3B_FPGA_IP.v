@@ -20,8 +20,8 @@ module AL4S3B_FPGA_IP (
     WBs_RD_DAT,
     WBs_ACK,
 
-    // PWM
-    PWM_o
+    // io_pad
+    io_pad
 );
 
 
@@ -86,21 +86,22 @@ input       wire                WB_RST          ; // Wishbone FPGA Reset
 output      wire    [31:0]      WBs_RD_DAT      ; // Wishbone Read Data Bus
 output      wire                WBs_ACK         ; // Wishbone Client Acknowledge
 
-// PWM
-output      wire    [31:0]      PWM_o;
+// io_pad
+inout       wire    [31:0]      io_pad         ; // io_pad of the EOSS3
 
 
 // MODULE INTERNAL Signals ===============================================================
 
-wire            WBs_CYC_ONION_PWMCTRL      ;
-wire            WBs_CYC_QL_Reserved         ;
+wire            WBs_CYC_ONION_PWMCTRL           ;
+wire            WBs_CYC_QL_Reserved             ;
 
-wire            WBs_ACK_ONION_PWMCTRL      ;
-wire            WBs_ACK_QL_Reserved         ;
+wire            WBs_ACK_ONION_PWMCTRL           ;
+wire            WBs_ACK_QL_Reserved             ;
 
-wire    [31:0]  WBs_DAT_o_ONION_PWMCTRL    ;
-wire    [31:0]  WBs_DAT_o_QL_Reserved       ;
+wire    [31:0]  WBs_DAT_o_ONION_PWMCTRL         ;
+wire    [31:0]  WBs_DAT_o_QL_Reserved           ;
 
+wire    [31:0]  FPGA_IP_PWM_o                   ;
 
 // MODULE LOGIC ==========================================================================                                                                  );
 
@@ -124,20 +125,24 @@ assign WBs_ACK              =   WBs_ACK_ONION_PWMCTRL |
 always @(*)
 begin
     case(WBs_ADR[APERWIDTH-1:APERSIZE])
-        ONION_PWMCTRL_BASE_ADDRESS     [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_ONION_PWMCTRL   ;
-        QL_RESERVED_BASE_ADDRESS        [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_QL_Reserved       ;
-        default:                                                WBs_RD_DAT  <=    DEFAULT_READ_VALUE          ;
+        ONION_PWMCTRL_BASE_ADDRESS      [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_ONION_PWMCTRL   ;
+        QL_RESERVED_BASE_ADDRESS        [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_QL_Reserved     ;
+        default:                                                WBs_RD_DAT  <=    DEFAULT_READ_VALUE        ;
     endcase
 end
 
+// Multiplex the IO signals between submodules (we have only one here)
+always @(*)
+begin
+    io_pad <= FPGA_IP_PWM_o;
+end
 
 // Instantiate (sub)Modules ==============================================================
 
-// GPIO
+// PWM CONTROLLER
 AL4S3B_FPGA_ONION_PWMCTRL
     u_AL4S3B_FPGA_ONION_PWMCTRL
     (
-        
         // AHB-To_FPGA Bridge I/F
         .WBs_ADR_i          ( WBs_ADR                       ),
         .WBs_CYC_i          ( WBs_CYC_ONION_PWMCTRL        ),
@@ -147,14 +152,14 @@ AL4S3B_FPGA_ONION_PWMCTRL
         .WBs_DAT_i          ( WBs_WR_DAT                    ),
         .WBs_CLK_i          ( WB_CLK                        ),
         .WBs_RST_i          ( WB_RST                        ),
-        .WBs_DAT_o          ( WBs_DAT_o_ONION_PWMCTRL      ),
-        .WBs_ACK_o          ( WBs_ACK_ONION_PWMCTRL        ),
+        .WBs_DAT_o          ( WBs_DAT_o_ONION_PWMCTRL       ),
+        .WBs_ACK_o          ( WBs_ACK_ONION_PWMCTRL         ),
 
         // PWM clk
         .PWM_clk            ( CLK_IP_i                      ),
 
         // PWM signals
-        .PWM_o              ( PWM_o                         )
+        .PWM_o              ( FPGA_IP_PWM_o[31:0]           )
     );
 
 // Reserved Resources Block
