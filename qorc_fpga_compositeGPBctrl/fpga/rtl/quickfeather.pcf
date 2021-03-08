@@ -1,0 +1,54 @@
+// QuickFeather uses the QFN package, others mostly use the BGA package.
+// can do (QFN)   :     set_io      SIGNAL_NAME     QFN_PIN_NUM
+// can do (BGA)   :     set_io      SIGNAL_NAME     BGA_BALL_NUM
+// can do (WLCSP) :     set_io      SIGNAL_NAME     WLCSP_PIN_NUM
+// can do (ALL)   :     set_io      SIGNAL_NAME     IO_PAD_NUM
+// 
+// RED LED, for example is on IO_22, which is QFN_PIN_NUM 34 (BGA BALL G7)
+// so, 
+// (QFN)    :   set_io   red_led     34 
+// (BGA)    :   set_io   red_led     G7
+// (ALL)    :   set_io   red_led     IO_22
+// are equivalent
+// NOTE that the WLSCP version of EOSS3 does not have IO_22 brought out at all!
+// So, this signal cannot be used with the WLCSP package.
+//
+// by using the IO_PAD_NUM -> we don't need to change PCF across chip package variants.
+// However, we need to be careful that the relevant IO_PAD is actually brought out in the variant we are using.
+// WLCSP package of EOSS3 has a much lower number of IOs compared to the BGA/QFN package.
+//
+// signals defined here, can be directly accessed in the Verilog code.
+
+// io_pad TOP LEVEL port signals
+set_io      io_pad(0)           IO_0
+set_io      io_pad(1)           IO_1
+set_io      io_pad(2)           IO_2
+set_io      io_pad(3)           IO_3
+set_io      io_pad(4)           IO_4
+set_io      io_pad(5)           IO_5
+set_io      io_pad(6)           IO_6
+set_io      io_pad(7)           IO_7
+set_io      io_pad(8)           IO_8
+set_io      io_pad(9)           IO_9
+set_io      io_pad(10)          IO_10
+set_io      io_pad(11)          IO_11
+set_io      io_pad(12)          IO_12
+set_io      io_pad(13)          IO_13
+set_io      io_pad(14)          IO_14
+set_io      io_pad(15)          IO_15
+set_io      io_pad(16)          IO_16
+set_io      io_pad(17)          IO_17
+set_io      io_pad(18)          IO_18
+set_io      io_pad(19)          IO_19
+set_io      io_pad(20)          IO_20
+set_io      io_pad(21)          IO_21
+set_io      io_pad(22)          IO_22
+set_io      io_pad(23)          IO_23
+set_io      io_pad(24)          IO_24
+set_io      io_pad(25)          IO_25
+set_io      io_pad(26)          IO_26
+set_io      io_pad(27)          IO_27
+set_io      io_pad(28)          IO_28
+set_io      io_pad(29)          IO_29
+set_io      io_pad(30)          IO_30
+set_io      io_pad(31)          IO_31
