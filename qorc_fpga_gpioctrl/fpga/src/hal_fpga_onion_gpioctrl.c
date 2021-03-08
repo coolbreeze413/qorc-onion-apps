@@ -1,5 +1,5 @@
-//* SPDX-License-Identifier: Apache-2.0 OR MIT */
-// Copyright © 2021 https://github.com/coonionbreeze413
+//* SPDX-License-Identifier: MIT */
+// Copyright © 2021 https://github.com/coolbreeze413
 
 #include "hal_fpga_onion_gpioctrl.h"
 

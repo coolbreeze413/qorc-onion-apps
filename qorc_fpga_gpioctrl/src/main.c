@@ -83,7 +83,7 @@ int main(void)
     HAL_Delay_Init();
 
     // print DEVICE ID:
-    dbg_str_hex32("FPGA Device ID",*(uint32_t*)(0x40005000+0x3FC));
+    dbg_str_hex32("FPGA Device ID", hal_fpga_onion_get_device_id());
 
     // Visual Init Sequence Test.
     hal_fpga_onion_gpioctrl_set_output(22, 1);

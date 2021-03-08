@@ -114,7 +114,7 @@ This is followed by a banner like the below on the serial terminal:
   App SW Version: qorc-onion-apps/qorc_fpga_gpioctrl
   
   #*******************
-  
+  FPGA Device ID: 0x0000c001
   [0] > 
 
   

@@ -1,4 +1,4 @@
-//* SPDX-License-Identifier: Apache-2.0 OR MIT */
+//* SPDX-License-Identifier: MIT */
 // Copyright © 2021 https://github.com/coolbreeze413
 
 #ifndef __FPGA_ONION_GPIOCTRL_H_
