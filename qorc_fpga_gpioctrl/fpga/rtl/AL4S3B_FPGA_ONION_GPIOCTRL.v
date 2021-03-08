@@ -90,9 +90,9 @@ always @( posedge WBs_CLK_i or posedge WBs_RST_i)
 begin
     if (WBs_RST_i)
     begin
-        GPIO_out          <= 32'b0    ;
-        GPIO_OE           <= 32'b0    ;
-        WBs_ACK_o    	  <= 1'b0    ;
+        GPIO_out          <= 32'b0      ;
+        GPIO_OE           <= 32'b0      ;
+        WBs_ACK_o    	  <= 1'b0       ;
     end  
     else
     begin
@@ -101,13 +101,13 @@ begin
         if (REG_WE_GPIO_out)
         begin
             if (WBs_BYTE_STB_i[0])
-                GPIO_out[7:0]     <= WBs_DAT_i[7:0]   ;
+                GPIO_out[7:0]       <= WBs_DAT_i[7:0]   ;
             if (WBs_BYTE_STB_i[1])
-                GPIO_out[15:8]    <= WBs_DAT_i[15:8]  ;
+                GPIO_out[15:8]      <= WBs_DAT_i[15:8]  ;
             if (WBs_BYTE_STB_i[2])
-                GPIO_out[23:16]   <= WBs_DAT_i[23:16] ;
+                GPIO_out[23:16]     <= WBs_DAT_i[23:16] ;
             if (WBs_BYTE_STB_i[3])
-                GPIO_out[31:24]   <= WBs_DAT_i[31:24] ;
+                GPIO_out[31:24]     <= WBs_DAT_i[31:24] ;
         end
         
         // GPIO OE Register
@@ -123,7 +123,7 @@ begin
                 GPIO_OE[31:24]      <= WBs_DAT_i[31:24] ;
         end
 
-        WBs_ACK_o                   <=  WBs_ACK_o_nxt  ;
+        WBs_ACK_o                   <=  WBs_ACK_o_nxt   ;
     end  
 end
 

@@ -67,13 +67,13 @@ From the project root dir, execute:
 
 ::
   
-  qfprog --port /dev/ttyACM0 --m4app GCC_Project/output/bin/qorc_fpga_gpioctrl.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4
+  qfprog --port /dev/ttyACM0 --m4app GCC_Project/output/bin/qorc_fpga_gpioctrl.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4 --reset
   
 If you are flashing with a USB-UART connected to the EOSS3 UART port, then replace the ttyACMx with appropriate ttyUSBx, for example:
 
 ::
 
-  qfprog --port /dev/ttyUSB0 --m4app GCC_Project/output/bin/qorc_fpga_gpioctrl.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4
+  qfprog --port /dev/ttyUSB0 --m4app GCC_Project/output/bin/qorc_fpga_gpioctrl.bin --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga-m4 --reset
   
 
 Before running the code in the next section, if you want to use the CLI to test, ensure that 

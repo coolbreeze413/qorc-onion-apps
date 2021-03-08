@@ -3,8 +3,8 @@
 
 module AL4S3B_FPGA_Top (
     
-    // GPIOs from constraint file
-    GPIO_io
+    // io_pad(s) from constraint file
+    io_pad
 );
 
 
@@ -18,8 +18,8 @@ module AL4S3B_FPGA_Top (
 
 // MODULE PORT Declarations and Data Types ===============================================
 
-// GPIO
-inout   wire        [31:0]           GPIO_io        ;       // IO_0 - IO_31 as GPIO inout
+// io_pad(s)
+inout   wire    [31:0]   io_pad ;
 
 
 // MODULE INTERNAL Signals ===============================================================
@@ -52,32 +52,25 @@ wire            WB_RST_FPGA     ; // Wishbone FPGA Reset [to FPGA_IP]
 // Misc
 wire    [15:0]  Device_ID       ; // Provide DEVICE_ID output [to S3B Cell Macro]
 
-// IO_0 - IO_46 can be used, depends on how much we connect into this from the PORT signals.
-wire    [31:0]  GPIO_31_0_top;
-wire    [31:0]  GPIO_45_32_top;
 
 // MODULE LOGIC ==========================================================================
 
 // if Wishbone Slave interface is being used in the FPGA IP, then:
 // 1. use Sys_Clk0 as the clock input for the WBs block
-// 2. use Sys_Clk1 as the clocking for other logic in the FPGA IP
-// This makes it simpler so that Sys_Clk1 can be changed according to need, keeping Sys_Clk0 stable.
+// 2. use Sys_Clk0 as the clocking for other logic in the FPGA IP
+// Sys_Clk1 can also be used as clocking for the IP as needed.
 
 // reset the FPGA IP on either the AHB domain or clock domain reset signals.
 gclkbuff u_gclkbuff_reset ( .A(Sys_Clk0_Rst | WB_RST) , .Z(WB_RST_FPGA) );
 // Sys_Clk0 provides clock to the WBs interface block
 gclkbuff u_gclkbuff_clock ( .A(Sys_Clk0             ) , .Z(WB_CLK       ) );
 
-// Sys_Clk1_Rst provides a reset signal for the other FPGA IP logic
-assign RST_IP = Sys_Clk1_Rst;
-// Sys_Clk1 provides a clock signal for the other FPGA IP logic
-assign CLK_IP = Sys_Clk1;
+// Sys_Clk0_Rst provides a reset signal for the other FPGA IP logic
+assign RST_IP = Sys_Clk0_Rst;
+// Sys_Clk0 provides a clock signal for the other FPGA IP logic
+assign CLK_IP = Sys_Clk0;
 
-assign Device_ID = 16'hDEAD;
-
-// GPIO_io from PORT signals, connect to the top signals as needed.
-assign GPIO_io[31:0] = GPIO_31_0_top[31:0];
-//assign GPIO_io[45:32] = GPIO_45_32_top[13:0];
+assign Device_ID = 16'hC001; // GPIO CONTROLLER ID = 0x001
 
 
 // Instantiate (sub)Modules ==============================================================
@@ -105,7 +98,7 @@ AL4S3B_FPGA_IP
         .WBs_ACK                    ( WBs_ACK                   ), // output        | Transfer Cycle Acknowledge from FPGA
 
         // GPIO
-        .GPIO_io                    ( GPIO_31_0_top             ), // inout  [31:0] | IO PADs
+        .io_pad                     ( io_pad                    ), // inout  [31:0] | IO PADs
     );
 
 

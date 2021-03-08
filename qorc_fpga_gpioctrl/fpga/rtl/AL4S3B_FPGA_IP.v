@@ -20,8 +20,8 @@ module AL4S3B_FPGA_IP (
     WBs_RD_DAT,
     WBs_ACK,
 
-    // GPIO
-    GPIO_io
+    // io_pad
+    io_pad
 );
 
 
@@ -39,7 +39,7 @@ parameter       APERWIDTH                       = 17            ;
 parameter       APERSIZE                        = 10            ;
 
 // base addresses of each (sub)module - note that these should be > aperture size (0x1000 here)
-parameter       ONION_GPIOCTRL_BASE_ADDRESS     = 17'h04000     ;
+parameter       ONION_GPIOCTRL_BASE_ADDRESS     = 17'h01000     ;
 parameter       QL_RESERVED_BASE_ADDRESS        = 17'h05000     ;
 
 // define default value returned when accessing unused address space in the FPGA IP
@@ -87,7 +87,7 @@ output      wire    [31:0]      WBs_RD_DAT      ; // Wishbone Read Data Bus
 output      wire                WBs_ACK         ; // Wishbone Client Acknowledge
 
 // GPIO
-inout       wire    [31:0]      GPIO_io;
+inout       wire    [31:0]      io_pad          ;
 
 
 // MODULE INTERNAL Signals ===============================================================
@@ -101,6 +101,7 @@ wire            WBs_ACK_QL_Reserved         ;
 wire    [31:0]  WBs_DAT_o_ONION_GPIOCTRL    ;
 wire    [31:0]  WBs_DAT_o_QL_Reserved       ;
 
+wire    [31:0]  FPGA_IP_GPIO_io             ;
 
 // MODULE LOGIC ==========================================================================                                                                  );
 
@@ -130,6 +131,11 @@ begin
     endcase
 end
 
+// Multiplex the IO signals between submodules (we have only one here)
+always @(*)
+begin
+    io_pad <= FPGA_IP_GPIO_io;
+end
 
 // Instantiate (sub)Modules ==============================================================
 
@@ -151,7 +157,7 @@ AL4S3B_FPGA_ONION_GPIOCTRL
         .WBs_ACK_o          ( WBs_ACK_ONION_GPIOCTRL        ),
 
         // GPIO signals
-        .GPIO_io            ( GPIO_io                       )
+        .GPIO_io            ( FPGA_IP_GPIO_io               )
     );
 
 // Reserved Resources Block
