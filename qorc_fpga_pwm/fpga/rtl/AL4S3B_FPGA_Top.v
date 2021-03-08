@@ -14,7 +14,7 @@ parameter PWM_RESOLUTION_BITS = 8;
 
 // MODULE Internal Parameters ============================================================
 
-localparam switch_count = 19660800*3; // use approx 4 seconds to switch states
+localparam switch_count = 19660800*2; // use approx 4 seconds to switch states
 
 
 // MODULE PORT Declarations and Data Types ===============================================
@@ -56,9 +56,9 @@ reg                                     toggle          ;
 
 // MODULE LOGIC ==========================================================================
 
-// Sys_Clk1_Rst provides a reset signal for the other FPGA IP logic
+// Sys_Clk0_Rst provides a reset signal for the other FPGA IP logic
 assign RST_IP = Sys_Clk0_Rst;
-// Sys_Clk1 provides a clock signal for the other FPGA IP logic
+// Sys_Clk0 provides a clock signal for the other FPGA IP logic
 assign CLK_IP = Sys_Clk0;
 
 
@@ -94,7 +94,7 @@ begin
                     end     // toggle HIGH
                     else
                     begin   // toggle LOW
-                        // YELLO - LEVEL 2
+                        // YELLOW - LEVEL 2
                         red_val <= 80;
                         green_val <= 80;
                         blue_val <= 0;
