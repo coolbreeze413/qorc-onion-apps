@@ -18,7 +18,7 @@ parameter BREATHE_STEPS_PER_CYCLE = 1 << (BREATHE_PWM_RESOLUTION_BITS + 1);
 
 // how many clock cycles do we want to spend at each brightness level? BREATHE_CLK_CYCLES_PER_STEP
 // lower the number, faster the breathing. 0xAAAA approx 1 sec inhale, 1 sec exhale.
-parameter BREATHE_CLK_CYCLES_PER_STEP = 32'hAAAA;
+parameter BREATHE_CLK_CYCLES_PER_STEP = 24'hAAAA;
 
 // how many clock cycles does it take then, to complete one breathe cycle?
 parameter BREATHE_CLK_CYCLES_PER_BREATHE_CYCLE = BREATHE_CLK_CYCLES_PER_STEP * BREATHE_STEPS_PER_CYCLE;
@@ -48,7 +48,7 @@ wire Sys_Clk1;
 wire Sys_Clk1_Rst;
 reg [31:0] count;
 reg [2:0] rgb;
-reg [31:0] breathe_period;
+reg [23:0] breathe_period;
 initial count <= 0;     // does not synthesize!
 initial rgb <= 3'b000;  // does not synthesize!
 initial breathe_period <= BREATHE_CLK_CYCLES_PER_STEP;

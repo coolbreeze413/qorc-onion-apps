@@ -37,7 +37,7 @@
 // if (inhale), BREATHE_o is ON as long as (duty-counter < duty-cycle (duty-cycle is increasing)
 // if (exhale), BREATHE_o is ON as long as duty-counter > duty-cycle (duty-cycle is decreasing)
 
-// next_ctr -> triggers duty cycle change, happens every "period" cycles (32-bits)
+// next_ctr -> triggers duty cycle change, happens every "period" cycles (24-bits)
 // at each next_ctr, duty cycle changes by 1, and we need 0 - 0xff - 0 for inhale-exhale
 // so, duty_cycle sets = 256x2 = 512.
 
@@ -90,7 +90,7 @@ module ONION_BREATHE (
 
 
 // MODULE PORT Declarations and Data Types ===============================================
-input       wire    [31:0]  period              ; // how many cycles for each brightness step?
+input       wire    [23:0]  period              ; // how many cycles for each brightness step?
 input       wire            clk                 ;
 input       wire            reset               ;
 output      wire            BREATHE_o           ;
@@ -98,13 +98,12 @@ output      wire            BREATHE_o           ;
 
 // MODULE INTERNAL Signals ===============================================================
 
-reg [31:0] next_ctr;                // Counter to create a ~60Hz change in brightness
-reg [7:0] duty_ctr;                 // Counter to create a 256 clock cycle period
-reg [7:0] duty_cycle;               // Number of ticks in duty_ctr that LED is on/off
+reg [23:0] next_ctr;                    // Counter to create a change in brightness
+reg [7:0] duty_ctr;                     // Counter to create a 256 clock cycle period
+reg [7:0] duty_cycle;                   // Number of ticks in duty_ctr that LED is on/off
 
-reg inhale;                         // When set, duty cycle is increasing
-reg output_state;                   // LED is on when set, off when cleared
-//reg next;                           // indicates change of breathe state (inhale/exhale)
+reg inhale;                             // When set, duty cycle is increasing
+reg output_state;                       // LED is on when set, off when cleared
 
 // MODULE LOGIC ==========================================================================
 
@@ -112,7 +111,7 @@ assign BREATHE_o = output_state;    // Drive LED with output_state
 
 
 // Counter to advance the duty cycle (i.e., increase or decrease the LED
-// brightness) approx 60 times per second
+// brightness)
 always@ (posedge clk or negedge reset)
 if (!reset)
 begin
@@ -158,7 +157,6 @@ if (!reset)
 else if ((next_ctr == period) && &duty_cycle) // counter period AND duty cycle saturated, at peak.
 begin
     inhale <= ~inhale;
-    next <= 0;
 end
 
 // Drive the LEDs on or off depending on where in the 256 clock period cycle
