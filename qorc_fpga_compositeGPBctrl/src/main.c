@@ -152,6 +152,10 @@ int main(void)
     hal_fpga_onion_breathectrl_disable(21);
     hal_fpga_onion_breathectrl_disable(18);
 
+    // TIMERCTRL : monitor task to see the timer state changes/ISR
+    minimal_task_init_timerctrl0_mon();
+    // TIMERCTRL : initialize for interrupt-handling
+    hal_fpga_onion_timerctrl_init();
 
     /* Start the tasks and timer running. */
     vTaskStartScheduler();

@@ -129,6 +129,10 @@ begin
 end
 
 
+//assign TIMER_dbg_o[22] = 1'bz;
+//assign TIMER_dbg_o[21] = 1'bz;
+
+
 // Instantiate (sub)Modules ==============================================================
 
 ONION_TIMER 
@@ -138,7 +142,7 @@ ONION_TIMER
     .clk                ( TIMER_clk                                 ),
     .reset              ( TIMER_0_CONFIG[31]                        ),
     .TIMER_o            ( TIMER_o[0]                                ),
-    .TIMER_dbg_o        ( TIMER_dbg_o[18]                                  ),
+    .TIMER_dbg_o        ( /*TIMER_dbg_o[18]*/                       ),
     );
 
 

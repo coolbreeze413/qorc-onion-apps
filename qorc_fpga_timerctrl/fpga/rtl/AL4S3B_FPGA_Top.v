@@ -97,10 +97,10 @@ AL4S3B_FPGA_IP
         .WBs_ACK                    ( WBs_ACK                   ), // output        | Transfer Cycle Acknowledge from FPGA
 
         // io_pad(s)
-        .io_pad                     ( io_pad                     ), // inout  [31:0] | IO PADs
+        .io_pad                     ( io_pad                    ), // inout  [31:0] | IO PADs
 
         // Interrupts
-        .FPGA_INTR                  ( FPGA_INTR),
+        .FPGA_INTR                  ( FPGA_INTR                 ),
     );
 
 

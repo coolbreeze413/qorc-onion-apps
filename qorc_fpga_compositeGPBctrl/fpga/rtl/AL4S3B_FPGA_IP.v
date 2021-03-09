@@ -21,7 +21,10 @@ module AL4S3B_FPGA_IP (
     WBs_ACK,
 
     // io_pad
-    io_pad
+    io_pad,
+
+    // FPGA Interrupts
+    FPGA_INTR
 );
 
 
@@ -42,6 +45,7 @@ parameter       APERSIZE                        = 10            ;
 parameter       ONION_GPIOCTRL_BASE_ADDRESS     = 17'h01000     ;
 parameter       ONION_PWMCTRL_BASE_ADDRESS      = 17'h02000     ;
 parameter       ONION_BREATHECTRL_BASE_ADDRESS  = 17'h03000     ;
+parameter       ONION_TIMERCTRL_BASE_ADDRESS    = 17'h04000     ;
 parameter       QL_RESERVED_BASE_ADDRESS        = 17'h05000     ;
 
 // define default value returned when accessing unused address space in the FPGA IP
@@ -91,27 +95,34 @@ output      wire                WBs_ACK         ; // Wishbone Client Acknowledge
 // io_pad
 inout       wire    [31:0]      io_pad         ; // io_pad of the EOSS3
 
+// FPGA Interrupts
+output      wire    [3:0]       FPGA_INTR       ;
+
 
 // MODULE INTERNAL Signals ===============================================================
 
 wire            WBs_CYC_ONION_GPIOCTRL          ;
 wire            WBs_CYC_ONION_PWMCTRL           ;
 wire            WBs_CYC_ONION_BREATHECTRL       ;
+wire            WBs_CYC_ONION_TIMERCTRL         ;
 wire            WBs_CYC_QL_Reserved             ;
 
 wire            WBs_ACK_ONION_GPIOCTRL          ;
 wire            WBs_ACK_ONION_PWMCTRL           ;
 wire            WBs_ACK_ONION_BREATHECTRL       ;
+wire            WBs_ACK_ONION_TIMERCTRL         ;
 wire            WBs_ACK_QL_Reserved             ;
 
 wire    [31:0]  WBs_DAT_o_ONION_GPIOCTRL        ;
 wire    [31:0]  WBs_DAT_o_ONION_PWMCTRL         ;
 wire    [31:0]  WBs_DAT_o_ONION_BREATHECTRL     ;
+wire    [31:0]  WBs_DAT_o_ONION_TIMERCTRL       ;
 wire    [31:0]  WBs_DAT_o_QL_Reserved           ;
 
 wire    [31:0]  FPGA_IP_GPIO_io                 ;
 wire    [31:0]  FPGA_IP_PWM_o                   ;
 wire    [31:0]  FPGA_IP_BREATHE_o               ;
+wire    [31:0]  FPGA_IP_TIMER_dbg_o             ;
 
 // MODULE LOGIC ==========================================================================                                                                  );
 
@@ -131,11 +142,15 @@ assign WBs_CYC_ONION_PWMCTRL   = (  WBs_ADR[APERWIDTH-1:APERSIZE] == ONION_PWMCT
 assign WBs_CYC_ONION_BREATHECTRL   = (  WBs_ADR[APERWIDTH-1:APERSIZE] == ONION_BREATHECTRL_BASE_ADDRESS[APERWIDTH-1:APERSIZE] ) 
                                    & (  WBs_CYC                                                                            );
 
+assign WBs_CYC_ONION_TIMERCTRL   = (  WBs_ADR[APERWIDTH-1:APERSIZE] == ONION_TIMERCTRL_BASE_ADDRESS[APERWIDTH-1:APERSIZE] ) 
+                                   & (  WBs_CYC                                                                            );
+
 
 // Combine the ACK's from each IP module
 assign WBs_ACK              =   WBs_ACK_ONION_GPIOCTRL |
                                 WBs_ACK_ONION_PWMCTRL |
                                 WBs_ACK_ONION_BREATHECTRL |
+                                WBs_ACK_ONION_TIMERCTRL |
                                 WBs_ACK_QL_Reserved;
 
 
@@ -146,15 +161,16 @@ begin
         ONION_GPIOCTRL_BASE_ADDRESS         [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_ONION_GPIOCTRL   ;
         ONION_PWMCTRL_BASE_ADDRESS          [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_ONION_PWMCTRL   ;
         ONION_BREATHECTRL_BASE_ADDRESS      [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_ONION_BREATHECTRL   ;
+        ONION_TIMERCTRL_BASE_ADDRESS        [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_ONION_TIMERCTRL   ;
         QL_RESERVED_BASE_ADDRESS            [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_QL_Reserved     ;
         default:                                                    WBs_RD_DAT  <=    DEFAULT_READ_VALUE        ;
     endcase
 end
 
-// Multiplex the IO signals between submodules (we have only one here)
+// Multiplex the IO signals between submodules 
 always @(*)
 begin
-    io_pad <= FPGA_IP_GPIO_io | FPGA_IP_PWM_o | FPGA_IP_BREATHE_o;
+    io_pad <= FPGA_IP_GPIO_io | FPGA_IP_PWM_o | FPGA_IP_BREATHE_o ;//| FPGA_IP_TIMER_dbg_o;
 end
 
 // Instantiate (sub)Modules ==============================================================
@@ -225,6 +241,33 @@ AL4S3B_FPGA_ONION_BREATHECTRL
         // BREATHE signals
         .BREATHE_o          ( FPGA_IP_BREATHE_o[31:0]           )
     );
+
+// TIMER CONTROLLER
+AL4S3B_FPGA_ONION_TIMERCTRL
+    u_AL4S3B_FPGA_ONION_TIMERCTRL
+    (
+        // AHB-To_FPGA Bridge I/F
+        .WBs_ADR_i          ( WBs_ADR                           ),
+        .WBs_CYC_i          ( WBs_CYC_ONION_TIMERCTRL         ),
+        .WBs_BYTE_STB_i     ( WBs_BYTE_STB                      ),
+        .WBs_WE_i           ( WBs_WE                            ),
+        .WBs_STB_i          ( WBs_STB                           ),
+        .WBs_DAT_i          ( WBs_WR_DAT                        ),
+        .WBs_CLK_i          ( WB_CLK                            ),
+        .WBs_RST_i          ( WB_RST                            ),
+        .WBs_DAT_o          ( WBs_DAT_o_ONION_TIMERCTRL         ),
+        .WBs_ACK_o          ( WBs_ACK_ONION_TIMERCTRL           ),
+
+        // TIMER clk
+        .TIMER_clk          ( CLK_IP_i                          ),
+
+        // TIMER output interrupts
+        .TIMER_o            ( FPGA_INTR                         ),
+
+        // TIMER dbg signals
+        .TIMER_dbg_o        ( FPGA_IP_TIMER_dbg_o[31:0]         )
+    );
+
 
 // Reserved Resources Block
 // Note: This block should be used in each QL FPGA design

@@ -90,7 +90,7 @@ output      wire    [31:0]      WBs_RD_DAT      ; // Wishbone Read Data Bus
 output      wire                WBs_ACK         ; // Wishbone Client Acknowledge
 
 // io_pad
-inout       wire    [31:0]      io_pad         ; // io_pad of the EOSS3
+inout       wire    [31:0]      io_pad          ; // io_pad of the EOSS3
 
 // FPGA Interrupts
 output      wire    [3:0]       FPGA_INTR       ;
@@ -106,7 +106,7 @@ wire            WBs_ACK_QL_Reserved             ;
 wire    [31:0]  WBs_DAT_o_ONION_TIMERCTRL       ;
 wire    [31:0]  WBs_DAT_o_QL_Reserved           ;
 
-wire    [31:0]  FPGA_IP_TIMER_dbg_o                 ;
+wire    [31:0]  FPGA_IP_TIMER_dbg_o             ;
 
 // MODULE LOGIC ==========================================================================                                                                  );
 
@@ -130,9 +130,9 @@ assign WBs_ACK              =   WBs_ACK_ONION_TIMERCTRL |
 always @(*)
 begin
     case(WBs_ADR[APERWIDTH-1:APERSIZE])
-        ONION_TIMERCTRL_BASE_ADDRESS      [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_ONION_TIMERCTRL   ;
-        QL_RESERVED_BASE_ADDRESS            [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_QL_Reserved     ;
-        default:                                                    WBs_RD_DAT  <=    DEFAULT_READ_VALUE        ;
+        ONION_TIMERCTRL_BASE_ADDRESS    [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_ONION_TIMERCTRL   ;
+        QL_RESERVED_BASE_ADDRESS        [APERWIDTH-1:APERSIZE]: WBs_RD_DAT  <=    WBs_DAT_o_QL_Reserved     ;
+        default:                                                WBs_RD_DAT  <=    DEFAULT_READ_VALUE        ;
     endcase
 end
 
@@ -150,7 +150,7 @@ AL4S3B_FPGA_ONION_TIMERCTRL
     (
         // AHB-To_FPGA Bridge I/F
         .WBs_ADR_i          ( WBs_ADR                           ),
-        .WBs_CYC_i          ( WBs_CYC_ONION_TIMERCTRL         ),
+        .WBs_CYC_i          ( WBs_CYC_ONION_TIMERCTRL           ),
         .WBs_BYTE_STB_i     ( WBs_BYTE_STB                      ),
         .WBs_WE_i           ( WBs_WE                            ),
         .WBs_STB_i          ( WBs_STB                           ),
@@ -167,7 +167,7 @@ AL4S3B_FPGA_ONION_TIMERCTRL
         .TIMER_o            ( FPGA_INTR                         ),
 
         // TIMER dbg signals
-        .IO_o          ( FPGA_IP_TIMER_dbg_o[31:0]               )
+        .TIMER_dbg_o        ( FPGA_IP_TIMER_dbg_o[31:0]         )
     );
 
 // Reserved Resources Block
@@ -204,4 +204,3 @@ AL4S3B_FPGA_QL_Reserved
     );
 
 endmodule
-

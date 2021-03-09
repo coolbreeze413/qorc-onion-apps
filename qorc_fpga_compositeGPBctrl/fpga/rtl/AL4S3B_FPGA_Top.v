@@ -51,6 +51,9 @@ wire            WB_RST_FPGA     ; // Wishbone FPGA Reset [to FPGA_IP]
 // Misc
 wire    [15:0]  Device_ID       ; // Provide DEVICE_ID output [to S3B Cell Macro]
 
+// Interrupts
+wire    [3:0]   FPGA_INTR       ;
+
 // MODULE LOGIC ==========================================================================
 
 // if Wishbone Slave interface is being used in the FPGA IP, then:
@@ -68,7 +71,7 @@ assign RST_IP = Sys_Clk0_Rst;
 // Sys_Clk0 provides a clock signal for the other FPGA IP logic
 assign CLK_IP = Sys_Clk0;
 
-assign Device_ID = 16'hC007; // GPIO+PWM+BREATHE = 0x1|0x2|0x4 = 0x7
+assign Device_ID = 16'hC00F; // GPIO+PWM+BREATHE+TIMER = 0x1|0x2|0x4|0x8 = 0xF
 
 
 // Instantiate (sub)Modules ==============================================================
@@ -97,6 +100,9 @@ AL4S3B_FPGA_IP
 
         // io_pad(s)
         .io_pad                    ( io_pad                     ), // inout  [31:0] | IO PADs
+
+        // Interrupts
+        .FPGA_INTR                  ( FPGA_INTR                 ),
     );
 
 
@@ -124,7 +130,7 @@ qlal4s3b_cell_macro
         .SDMA_Active               (                                ), // output  [3:0]
 
         // FB Interrupts
-        .FB_msg_out                ( {1'b0, 1'b0, 1'b0, 1'b0}       ), // input   [3:0]
+        .FB_msg_out                ( {1'b0, 1'b0, 1'b0, FPGA_INTR[0]}), // input   [3:0]
         .FB_Int_Clr                ( 8'h0                           ), // input   [7:0]
         .FB_Start                  (                                ), // output
         .FB_Busy                   ( 1'b0                           ), // input

@@ -249,6 +249,79 @@ static void get_breathe_value(const struct cli_cmd_entry *pEntry)
 }
 
 
+// TIMERCTRL
+static void enable_timer_output(const struct cli_cmd_entry *pEntry);
+
+static void disable_timer_output(const struct cli_cmd_entry *pEntry);
+static void get_timer_value(const struct cli_cmd_entry *pEntry);
+
+
+const struct cli_cmd_entry qorc_timerctrl[] =
+{
+    CLI_CMD_SIMPLE( "entimer", enable_timer_output, "entimer ID VAL(30-bit)" ),
+    CLI_CMD_SIMPLE( "distimer", disable_timer_output, "distimer ID" ),
+    CLI_CMD_SIMPLE( "gettimer", get_timer_value, "gettimer ID" ),
+
+    CLI_CMD_TERMINATE()
+};
+
+
+uint8_t timer_id;
+uint32_t timer_val;
+
+static void enable_timer_output(const struct cli_cmd_entry *pEntry)
+{
+    (void)pEntry;
+
+    CLI_uint8_getshow( "id", &timer_id);
+    
+    CLI_uint32_getshow( "val", &timer_val);
+
+    hal_fpga_onion_timerctrl_enable(timer_id, timer_val);
+
+    return;
+}
+
+
+static void disable_timer_output(const struct cli_cmd_entry *pEntry)
+{
+    (void)pEntry;
+
+    CLI_uint8_getshow( "id", &timer_id);
+
+    hal_fpga_onion_timerctrl_disable(timer_id);
+    
+    return;
+}
+
+
+static void get_timer_value(const struct cli_cmd_entry *pEntry)
+{
+    uint32_t timer_config = 0;
+    uint8_t timer_enabled = 0;
+    uint32_t timer_period = 0;
+    (void)pEntry;
+
+    CLI_uint8_getshow( "id", &timer_id);
+
+    timer_config = hal_fpga_onion_timerctrl_getval(timer_id);
+
+    CLI_printf("timer_config = 0x%08x\n", timer_config);
+
+    timer_enabled = (timer_config >> 31) & 0x1;
+
+    if(timer_enabled)
+    {
+        timer_period = timer_config & 0x7FFFFFFF;
+        CLI_printf("timer_period = %d [0x%08x]\n", timer_period, timer_period);
+    }
+    else
+    {
+        CLI_printf("timer is disabled\n");
+    }
+
+    return;
+}
 
 
 
@@ -258,6 +331,7 @@ const struct cli_cmd_entry my_main_menu[] = {
     CLI_CMD_SUBMENU( "gpioctrl", qorc_gpioctrl, "FPGA GPIO Controller" ),
     CLI_CMD_SUBMENU( "pwmctrl", qorc_pwmctrl, "FPGA PWM Controller" ),
     CLI_CMD_SUBMENU( "breathectrl", qorc_breathectrl, "FPGA BREATHE Controller" ),
+    CLI_CMD_SUBMENU( "timerctrl", qorc_timerctrl, "FPGA TIMER Controller" ),
     
     CLI_CMD_TERMINATE()
 };
