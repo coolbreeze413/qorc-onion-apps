@@ -65,7 +65,7 @@ static void nvic_init(void);
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc_fpga_compositeGPBctrl";
+    SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc_fpga_compositeGPBTctrl";
     
     qf_hardwareSetup();
     nvic_init();
@@ -79,7 +79,7 @@ int main(void)
     dbg_str( __DATE__ " " __TIME__ "\n" );
     dbg_str( "##########################\n\n");
 
-    dbg_str( "\n\nHello GPIO/PWM/BREATHE CONTROLLER!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
+    dbg_str( "\n\nHello GPIO/PWM/BREATHE/TIMER CONTROLLER!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
 
     CLI_start_task( my_main_menu );
 
