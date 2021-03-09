@@ -85,6 +85,10 @@ int main(void)
     // print DEVICE ID:
     dbg_str_hex32("FPGA Device ID", hal_fpga_onion_get_device_id());
 
+#if 0 // WB ACCESS TESTCASES
+    hal_fpga_onion_test_wb();
+#endif
+
     // Visual Init Sequence Test.
     hal_fpga_onion_gpioctrl_set_output(22, 1);
     hal_fpga_onion_gpioctrl_set_output(18, 1);
@@ -103,32 +107,6 @@ int main(void)
     HAL_DelayUSec(400000);
     hal_fpga_onion_gpioctrl_set_output(22, 0);
     hal_fpga_onion_gpioctrl_set_output(18, 0);
-
-#if 0 // USED ONLY FOR TESTING SOME FPGA WB INTERFACE EDGE CASES
-
-    // undefined ip-module address space in FPGA IP     : 0xBADFABAC
-    // undefined register space in existing ip-module   : 0xDEFFABAC
-    // defined stuff - as per ip-module
-
-    // access register outside of defined IP Modules:
-    dbg_str_hex32("read unused addr, 0x40021000      ", *(uint32_t*)(0x40021000));
-    dbg_str_hex32("read unused addr, 0x40026000      ", *(uint32_t*)(0x40026000));
-
-    // access register in gpio ctrl outside of defined registers:
-    dbg_str_hex32("read used gpiotctrl, 0x40024000   ", *(uint32_t*)(0x40024000));
-    dbg_str_hex32("read used gpiotctrl, 0x40024004   ", *(uint32_t*)(0x40024004));
-    dbg_str_hex32("read used gpiotctrl, 0x40024008   ", *(uint32_t*)(0x40024008));
-    dbg_str_hex32("read unused gpiotctrl, 0x4002400C ", *(uint32_t*)(0x4002400C));
-    dbg_str_hex32("read unused gpiotctrl, 0x40024010 ", *(uint32_t*)(0x40024010));
-
-    // access QL_RESERVED
-    dbg_str_hex32("read QL_RESERVED, 0x400251FC      ", *(uint32_t*)(0x400251FC));
-    dbg_str_hex32("read QL_RESERVED, 0x400251F8      ", *(uint32_t*)(0x400251F8));
-
-    // access register in QL_RESERVED outside of defined registers:
-    dbg_str_hex32("read QL_RESERVED, 0x40025000      ", *(uint32_t*)(0x40025000));
-
-#endif
 
 
     /* Start the tasks and timer running. */

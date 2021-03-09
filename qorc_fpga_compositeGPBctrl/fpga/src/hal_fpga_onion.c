@@ -17,8 +17,8 @@ void hal_fpga_onion_test_wb ()
     // defined stuff - as per ip-module
 
     // register access tests
-    dbg_str_hex32("read unused addr         0x40027000", *(uint32_t*)(0x40027000));
-    dbg_str_hex32("read unused addr         0x40026000", *(uint32_t*)(0x40026000));
+    dbg_str_hex32("read unused addr,        0x40027000", *(uint32_t*)(0x40027000));
+    dbg_str_hex32("read unused addr,        0x40026000", *(uint32_t*)(0x40026000));
 
     // access register in gpio ctrl outside of defined registers:
     dbg_str_hex32("read used gpioctrl       0x40021000", *(uint32_t*)(0x40021000));
@@ -40,6 +40,10 @@ void hal_fpga_onion_test_wb ()
     dbg_str_hex32("read used breathectrl    0x40023008", *(uint32_t*)(0x40023008));
     dbg_str_hex32("read unused breathectrl  0x4002300C", *(uint32_t*)(0x4002300C));
     dbg_str_hex32("read unused breathectrl  0x40023010", *(uint32_t*)(0x40023010));
+
+    // access register in timer ctrl outside of defined registers:
+    dbg_str_hex32("read used timerctrl      0x40024000", *(uint32_t*)(0x40024000));
+    dbg_str_hex32("read unused timerctrl    0x4002400C", *(uint32_t*)(0x4002400C));
 
     // access QL_RESERVED
     dbg_str_hex32("read QL_RESERVED         0x400251FC", *(uint32_t*)(0x400251FC));

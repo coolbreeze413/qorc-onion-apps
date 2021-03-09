@@ -88,7 +88,7 @@ int main(void)
     // print DEVICE ID:
     dbg_str_hex32("FPGA Device ID", hal_fpga_onion_get_device_id());
 
-#if 1 // WB ACCESS TESTCASES
+#if 0 // WB ACCESS TESTCASES
     hal_fpga_onion_test_wb();
 #endif
 

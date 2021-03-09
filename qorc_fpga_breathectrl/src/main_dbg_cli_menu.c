@@ -53,7 +53,7 @@ const struct cli_cmd_entry qorc_breathectrl[] =
 
 
 uint8_t io_pad_num;
-uint32_t io_pad_val;
+uint32_t io_pad_breathe_val;
 
 static void enable_breathe_output(const struct cli_cmd_entry *pEntry)
 {
@@ -61,9 +61,9 @@ static void enable_breathe_output(const struct cli_cmd_entry *pEntry)
 
     CLI_uint8_getshow( "io", &io_pad_num);
     
-    CLI_uint32_getshow( "val", &io_pad_val);
+    CLI_uint32_getshow( "val", &io_pad_breathe_val);
 
-    hal_fpga_onion_breathectrl_enable(io_pad_num, io_pad_val);
+    hal_fpga_onion_breathectrl_enable(io_pad_num, io_pad_breathe_val);
 
     return;
 }

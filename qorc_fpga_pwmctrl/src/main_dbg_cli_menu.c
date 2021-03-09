@@ -42,7 +42,7 @@ static void disable_pwm_output(const struct cli_cmd_entry *pEntry);
 static void get_pwm_value(const struct cli_cmd_entry *pEntry);
 
 
-const struct cli_cmd_entry qorc_gpioctrl[] =
+const struct cli_cmd_entry qorc_pwmctrl[] =
 {
     CLI_CMD_SIMPLE( "enpwm", enable_pwm_output, "enpwm IO_X VAL(0-255)" ),
     CLI_CMD_SIMPLE( "dispwm", disable_pwm_output, "dispwm IO_X" ),
@@ -53,7 +53,7 @@ const struct cli_cmd_entry qorc_gpioctrl[] =
 
 
 uint8_t io_pad_num;
-uint8_t io_pad_val;
+uint8_t io_pad_pwm_val;
 
 static void enable_pwm_output(const struct cli_cmd_entry *pEntry)
 {
@@ -61,9 +61,9 @@ static void enable_pwm_output(const struct cli_cmd_entry *pEntry)
 
     CLI_uint8_getshow( "io", &io_pad_num);
     
-    CLI_uint8_getshow( "val", &io_pad_val);
+    CLI_uint8_getshow( "val", &io_pad_pwm_val);
 
-    hal_fpga_onion_pwmctrl_enable(io_pad_num, io_pad_val);
+    hal_fpga_onion_pwmctrl_enable(io_pad_num, io_pad_pwm_val);
 
     return;
 }
@@ -113,7 +113,7 @@ static void get_pwm_value(const struct cli_cmd_entry *pEntry)
 
 const struct cli_cmd_entry my_main_menu[] = {
     
-    CLI_CMD_SUBMENU( "pwmctrl", qorc_gpioctrl, "FPGA PWM Controller" ),
+    CLI_CMD_SUBMENU( "pwmctrl", qorc_pwmctrl, "FPGA PWM Controller" ),
     
     CLI_CMD_TERMINATE()
 };

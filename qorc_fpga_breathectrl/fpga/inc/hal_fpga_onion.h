@@ -24,7 +24,7 @@
 #define FPGA_ONION_MISC_REG_OFFSET_FPGA_DEVID           0x3FC
 
 
-#define FPGA_ONION_MISC_REG_ADDR_FPGA_DEVID            (uint32_t*)(FPGA_ONION_MISC_BASE_ADDR + \
+#define FPGA_ONION_MISC_REG_ADDR_FPGA_DEVID             (uint32_t*)(FPGA_ONION_MISC_BASE_ADDR + \
                                                         FPGA_ONION_MISC_REG_OFFSET_FPGA_DEVID)
 
 

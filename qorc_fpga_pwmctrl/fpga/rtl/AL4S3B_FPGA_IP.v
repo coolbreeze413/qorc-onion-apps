@@ -39,7 +39,7 @@ parameter       APERWIDTH                       = 17            ;
 parameter       APERSIZE                        = 10            ;
 
 // base addresses of each (sub)module - note that these should be > aperture size (0x1000 here)
-parameter       ONION_PWMCTRL_BASE_ADDRESS      = 17'h03000     ;
+parameter       ONION_PWMCTRL_BASE_ADDRESS      = 17'h02000     ;
 parameter       QL_RESERVED_BASE_ADDRESS        = 17'h05000     ;
 
 // define default value returned when accessing unused address space in the FPGA IP
