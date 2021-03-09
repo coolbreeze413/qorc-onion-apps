@@ -1,0 +1,1 @@
+qfprog --port /dev/ttyACM0 --m4app qorc_fpga_compositeGPBTctrl.bin --appfpga AL4S3B_FPGA_Top.bin --mode fpga-m4 --reset
