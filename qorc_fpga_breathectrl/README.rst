@@ -122,7 +122,7 @@ Enter the Breathe Controller submenu using :code:`breathectrl` and then type :co
   [0] > breathectrl
   [1] breathectrl > help
   help-path: breathectrl
-  enbreathe      - enbreathe IO_X VAL(24-bit)
+  enbreathe      - enbreathe IO_X period_msec
   disbreathe     - disbreathe IO_X
   getbreathe     - getbreathe IO_X
   exit           - exit/leave menu
@@ -131,17 +131,15 @@ Enter the Breathe Controller submenu using :code:`breathectrl` and then type :co
   help-end:
 
 
-To set a GPIO as breathe output with specific period, use :code:`enbreathe IO_PADNUMBER VALUE_TO_SET`
+To set a GPIO as breathe output with specific period, use :code:`enbreathe IO_PADNUMBER PERIOD_MSEC`
 
-:code:`NOTE: default clock we use here is 12MHz, and values of clock cycles below are calculated according to that.`
-
-For example, set IO_22 to value 43690(~1 sec inhale, ~1 sec exhale):
+For example, set IO_22 to 2 sec (1 sec inhale, 1 sec exhale):
 
 ::
 
-  [1] breathectrl > enbreathe 22 43690
+  [1] breathectrl > enbreathe 22 2000
   io = 22
-  val = 43690
+  val = 2000
 
 The RED LED should have be breathing with approx 1 sec inhale, and 1 sec exhale period
 
@@ -153,18 +151,17 @@ For reading IO_22 for example:
   
   [1] breathectrl > getbreathe 22
   io = 22
-  breathe_config = 0x8000aaaa
-  breathe_period = 43690 [0x00aaaa]
+  breathe_period = 2000 [0x000007d0] msec
 
 
 
-To set IO_22 to value 21845 (~0.5 sec inhale, ~0.5 sec exhale):
+To set IO_22 to 1 sec (0.5 sec inhale, 0.5 sec exhale):
 
 ::
 
-  [1] breathectrl > enbreathe 22 21845
+  [1] breathectrl > enbreathe 22 1000
   io = 22
-  val = 21845
+  val = 1000
 
 The RED LED should have be breathing with approx 0.5 sec inhale, and 0.5 sec exhale period
 
@@ -174,8 +171,7 @@ Read IO_22 breathe config:
   
   [1] breathectrl > getbreathe 22
   io = 22
-  breathe_config = 0x80005555
-  breathe_period = 21845 [0x005555]
+  breathe_period = 999 [0x000003e7] msec
 
 
 To disable the breathing on IO_22:
@@ -193,7 +189,6 @@ Read IO_22 breathe config:
   
   [1] breathectrl > getbreathe 22
   io = 22
-  breathe_config = 0x00000000
   breathe is disabled
 
 

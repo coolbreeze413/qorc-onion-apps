@@ -102,7 +102,7 @@ Enter the Timer Controller submenu using :code:`timerctrl` and then type :code:`
   [0] > timerctrl
   [1] timerctrl > help
   help-path: timerctrl
-  entimer        - entimer ID VAL(30-bit)
+  entimer        - entimer ID period_msec
   distimer       - distimer ID
   gettimer       - gettimer ID
   exit           - exit/leave menu
@@ -112,19 +112,17 @@ Enter the Timer Controller submenu using :code:`timerctrl` and then type :code:`
 
 
 
-To set a Timer with specific period, use :code:`entimer TIMER_ID TIMER_PERIOD_CLK_CYCLES`
+To set a Timer with specific period, use :code:`entimer TIMER_ID TIMER_PERIOD_MSEC`
 
-:code:`NOTE: default clock we use here is 12MHz, and values of clock cycles below are calculated according to that.`
+Currently, only one Timer is instantiated, and its ID is 0, so :code:`TIMER_ID = 0`
 
-Currently, only one Timer is instantiated, and its ID is 0
-
-For example, set TIMER0 to period 22369280(~1 sec):
+For example, set TIMER0 to period 1 second:
 
 ::
 
-  [1] timerctrl > entimer 0 22369280
+  [1] timerctrl > entimer 0 1000
   id = 22
-  val = 22369280
+  val = 1000
 
 You should see the prints on the serial terminal shortly after:
 

@@ -53,3 +53,32 @@ void hal_fpga_onion_test_wb ()
     dbg_str_hex32("read QL_RESERVED         0x40025000", *(uint32_t*)(0x40025000));
 
 }
+
+uint32_t hal_fpga_onion_clock_cycles_for_msec (uint32_t msec, S3x_CLK_ID clk_id)
+{
+    uint32_t clock_cycles = 0;
+    uint32_t clock_rate_hz = 0;
+
+    // get the clock frequency
+    clock_rate_hz = S3x_Clk_Get_Rate(clk_id);
+
+    // clock_cycles/1000msec = clock_rate_hz
+    clock_cycles = ((float)clock_rate_hz/1000) * msec; // prevent 32-bit overflow!
+
+    return clock_cycles;
+}
+
+
+uint32_t    hal_fpga_onion_msec_for_clock_cycles    (uint32_t clock_cycles, S3x_CLK_ID clk_id)
+{
+    uint32_t msec = 0;
+    uint32_t clock_rate_hz = 0;
+
+    // get the clock frequency
+    clock_rate_hz = S3x_Clk_Get_Rate(clk_id);
+
+    // clock_cycles/1000msec = clock_rate_hz
+    msec = ((float)clock_cycles/clock_rate_hz) * 1000; // prevent 32-bit overflow!
+
+    return msec;
+}

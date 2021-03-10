@@ -128,24 +128,16 @@ Enter the GPIO Controller submenu using :code:`gpioctrl` and then type :code:`he
 ::
   
   [0] > gpioctrl
-  
   [1] gpioctrl > help
-  
   help-path: gpioctrl
-  
   setout         - setout IO_X VAL
-  
   setin          - setin IO_X
-  
   getval         - getval IO_X (must be setin first)
-  
   exit           - exit/leave menu
-  
   help           - show help
-  
   ?              - show help
-  
   help-end:
+
 
   
   
@@ -190,7 +182,7 @@ Enter the PWM Controller submenu using :code:`pwmctrl` and then type :code:`help
   ?              - show help
   help-end:
 
-To set a GPIO as output with specific value, use :code:`enpwm IO_PADNUMBER VALUE_TO_SET`
+To set a GPIO as output with specific value, use :code:`enpwm IO_PADNUMBER VALUE_TO_SET(0-255)`
 
 For example, to set IO_22 to value 50  (this is connected to RED LED on the PygmyBB4/QF):
 
@@ -254,7 +246,7 @@ Enter the Breathe Controller submenu using :code:`breathectrl` and then type :co
   [0] > breathectrl
   [1] breathectrl > help
   help-path: breathectrl
-  enbreathe      - enbreathe IO_X VAL(24-bit)
+  enbreathe      - enbreathe IO_X period_msec
   disbreathe     - disbreathe IO_X
   getbreathe     - getbreathe IO_X
   exit           - exit/leave menu
@@ -262,14 +254,15 @@ Enter the Breathe Controller submenu using :code:`breathectrl` and then type :co
   ?              - show help
   help-end:
 
+To set a GPIO as breathe output with specific period, use :code:`enbreathe IO_PADNUMBER PERIOD_MSEC`
 
-For example, set IO_22 to value 43690(~1 sec inhale, ~1 sec exhale):
+For example, set IO_22 to 2 sec breathe(1 sec inhale, 1 sec exhale):
 
 ::
 
-  [1] breathectrl > enbreathe 22 43690
+  [1] breathectrl > enbreathe 22 2000
   io = 22
-  val = 43690
+  val = 2000
 
 The RED LED should have be breathing with approx 1 sec inhale, and 1 sec exhale period
 
@@ -281,8 +274,7 @@ For reading IO_22 for example:
   
   [1] breathectrl > getbreathe 22
   io = 22
-  breathe_config = 0x8000aaaa
-  breathe_period = 43690 [0x00aaaa]
+  breathe_period = 999 [0x000003e7] msec
 
 To disable the breathing on IO_22:
 
@@ -299,7 +291,6 @@ Read IO_22 breathe config:
   
   [1] breathectrl > getbreathe 22
   io = 22
-  breathe_config = 0x00000000
   breathe is disabled
 
 TIMERCTRL SubMenu
@@ -312,7 +303,7 @@ Enter the Timer Controller submenu using :code:`timerctrl` and then type :code:`
   [0] > timerctrl
   [1] timerctrl > help
   help-path: timerctrl
-  entimer        - entimer ID VAL(30-bit)
+  entimer        - entimer ID period_msec
   distimer       - distimer ID
   gettimer       - gettimer ID
   exit           - exit/leave menu
@@ -322,19 +313,17 @@ Enter the Timer Controller submenu using :code:`timerctrl` and then type :code:`
 
 
 
-To set a Timer with specific period, use :code:`entimer TIMER_ID TIMER_PERIOD_CLK_CYCLES`
+To set a Timer with specific period, use :code:`entimer TIMER_ID TIMER_PERIOD_MSEC`
 
-:code:`NOTE: default clock we use here is 12MHz, and values of clock cycles below are calculated according to that.`
+Currently, only one Timer is instantiated, and its ID is 0, so :code:`TIMER_ID = 0`
 
-Currently, only one Timer is instantiated, and its ID is 0
-
-For example, set TIMER0 to period 22369280(~1 sec):
+For example, set TIMER0 to period 1 second:
 
 ::
 
-  [1] timerctrl > entimer 0 22369280
+  [1] timerctrl > entimer 0 1000
   id = 22
-  val = 22369280
+  val = 1000
 
 You should see the prints on the serial terminal shortly after:
 
@@ -348,7 +337,7 @@ You should see the prints on the serial terminal shortly after:
 
 
 These are output by a small monitor task - to which we send messages from the HAL enable/disable 
-functions, and the FPGA Interrupt Handler
+functions, and from the FPGA Interrupt Handler.
 
 As a "debug" output, the TIMER0 also triggers the BLUE LED, and it should be visible for a very 
 small amount of time, when the timer expires - we disable the timer as soon as the Interrupt 
@@ -362,6 +351,7 @@ To disable TIMER0 manually:
   io = 0
   [1] timerctrl > 
   timer0 disabled
+
 
 
 Details

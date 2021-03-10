@@ -42,6 +42,7 @@
 
 #include "cli.h"
 
+#include "hal_fpga_onion.h"
 #include "hal_fpga_onion_timerctrl.h"
 
 

@@ -30,6 +30,7 @@
 #include <stdbool.h>
 #include "dbg_uart.h"
 
+#include "hal_fpga_onion.h"
 #include "hal_fpga_onion_breathectrl.h"
 
 
@@ -44,7 +45,7 @@ static void get_breathe_value(const struct cli_cmd_entry *pEntry);
 
 const struct cli_cmd_entry qorc_breathectrl[] =
 {
-    CLI_CMD_SIMPLE( "enbreathe", enable_breathe_output, "enbreathe IO_X VAL(24-bit)" ),
+    CLI_CMD_SIMPLE( "enbreathe", enable_breathe_output, "enbreathe IO_X period_msec" ),
     CLI_CMD_SIMPLE( "disbreathe", disable_breathe_output, "disbreathe IO_X" ),
     CLI_CMD_SIMPLE( "getbreathe", get_breathe_value, "getbreathe IO_X" ),
 
@@ -83,23 +84,16 @@ static void disable_breathe_output(const struct cli_cmd_entry *pEntry)
 
 static void get_breathe_value(const struct cli_cmd_entry *pEntry)
 {
-    uint32_t breathe_config = 0;
-    uint8_t breathe_enabled = 0;
     uint32_t breathe_period = 0;
     (void)pEntry;
 
     CLI_uint8_getshow( "io", &io_pad_num);
 
-    breathe_config = hal_fpga_onion_breathectrl_getval(io_pad_num);
+    breathe_period = hal_fpga_onion_breathectrl_getval(io_pad_num);
 
-    CLI_printf("breathe_config = 0x%08x\n", breathe_config);
-
-    breathe_enabled = (breathe_config >> 31) & 0x1;
-
-    if(breathe_enabled)
+    if(breathe_period)
     {
-        breathe_period = breathe_config & 0xFFFFFF;
-        CLI_printf("breathe_period = %d [0x%06x]\n", breathe_period, breathe_period);
+        CLI_printf("breathe_period = %d [0x%08x] msec\n", breathe_period, breathe_period);
     }
     else
     {

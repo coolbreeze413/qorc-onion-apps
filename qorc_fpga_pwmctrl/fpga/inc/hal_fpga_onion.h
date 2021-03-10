@@ -13,6 +13,7 @@
 #include <string.h>
 
 #include "eoss3_dev.h"
+#include "s3x_clock_hal.h"
 
 // Generic Onion FPGA Stuff
 
@@ -28,9 +29,15 @@
                                                         FPGA_ONION_MISC_REG_OFFSET_FPGA_DEVID)
 
 
+
+
 // public function prototypes
 
 uint16_t    hal_fpga_onion_get_device_id    ();
 void        hal_fpga_onion_test_wb          ();
 
+// internal utility function prototypes
+
+uint32_t    hal_fpga_onion_clock_cycles_for_msec    (uint32_t msec, S3x_CLK_ID clk_id);
+uint32_t    hal_fpga_onion_msec_for_clock_cycles    (uint32_t clock_cycles, S3x_CLK_ID clk_id);
 #endif // #ifndef __FPGA_ONION_H_

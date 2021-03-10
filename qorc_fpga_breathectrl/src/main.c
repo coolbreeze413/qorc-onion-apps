@@ -42,6 +42,7 @@
 
 #include "cli.h"
 
+#include "hal_fpga_onion.h"
 #include "hal_fpga_onion_breathectrl.h"
 
 
@@ -94,21 +95,21 @@ int main(void)
     hal_fpga_onion_breathectrl_disable(21);
     hal_fpga_onion_breathectrl_disable(18);
 
-    hal_fpga_onion_breathectrl_enable(22, 0xAAAA); //43690
-    hal_fpga_onion_breathectrl_enable(18, 0xAAAA); //43690
-    HAL_DelayUSec(3*1800000); // 43690 = ~1.8 seconds per breathe cycle
+    hal_fpga_onion_breathectrl_enable(22, 1800);
+    hal_fpga_onion_breathectrl_enable(18, 1800);
+    HAL_DelayUSec(3*1800000);
     hal_fpga_onion_breathectrl_disable(22);
     hal_fpga_onion_breathectrl_disable(18);
     HAL_DelayUSec(500000);
-    hal_fpga_onion_breathectrl_enable(22, 0x5555); //21845
-    hal_fpga_onion_breathectrl_enable(18, 0x5555); //21845
-    HAL_DelayUSec(3*900000); // 21845 = ~0.9 seconds per breathe cycle
+    hal_fpga_onion_breathectrl_enable(22, 900);
+    hal_fpga_onion_breathectrl_enable(18, 900);
+    HAL_DelayUSec(3*900000);
     hal_fpga_onion_breathectrl_disable(22);
     hal_fpga_onion_breathectrl_disable(18);
     HAL_DelayUSec(500000);
-    hal_fpga_onion_breathectrl_enable(22, 0x38E3); //14563
-    hal_fpga_onion_breathectrl_enable(18, 0x38E3); //14563
-    HAL_DelayUSec(3*600000); // 14563 = ~0.6 seconds per breathe cycle
+    hal_fpga_onion_breathectrl_enable(22, 600);
+    hal_fpga_onion_breathectrl_enable(18, 600);
+    HAL_DelayUSec(3*600000);
     hal_fpga_onion_breathectrl_disable(22);
     hal_fpga_onion_breathectrl_disable(18);
 

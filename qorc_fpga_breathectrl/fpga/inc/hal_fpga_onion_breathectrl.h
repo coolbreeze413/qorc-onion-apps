@@ -42,7 +42,7 @@
 
 // public function prototypes
 void        hal_fpga_onion_breathectrl_enable       (uint8_t io_pad_num, 
-                                                    uint32_t io_pad_period_value);
+                                                    uint32_t breathe_period_ms);
 
 void        hal_fpga_onion_breathectrl_disable      (uint8_t io_pad_num);
 

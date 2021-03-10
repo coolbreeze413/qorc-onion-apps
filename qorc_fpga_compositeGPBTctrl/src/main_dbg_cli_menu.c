@@ -30,13 +30,17 @@
 #include <stdbool.h>
 #include "dbg_uart.h"
 
+#include "hal_fpga_onion.h"
+#include "hal_fpga_onion_gpioctrl.h"
+#include "hal_fpga_onion_pwmctrl.h"
 #include "hal_fpga_onion_breathectrl.h"
+#include "hal_fpga_onion_timerctrl.h"
 
 
 #if FEATURE_CLI_DEBUG_INTERFACE
 
 
-// GPIO CLI
+// GPIOCTRL CLI
 static void set_gpio_output(const struct cli_cmd_entry *pEntry);
 
 static void set_gpio_input(const struct cli_cmd_entry *pEntry);
@@ -99,7 +103,7 @@ static void get_gpio_value(const struct cli_cmd_entry *pEntry)
 }
 
 
-// PWM CLI
+// PWMCTRL CLI
 static void enable_pwm_output(const struct cli_cmd_entry *pEntry);
 
 static void disable_pwm_output(const struct cli_cmd_entry *pEntry);
@@ -174,7 +178,7 @@ static void get_pwm_value(const struct cli_cmd_entry *pEntry)
 }
 
 
-// BREATHE CLI
+// BREATHECTRL CLI
 static void enable_breathe_output(const struct cli_cmd_entry *pEntry);
 
 static void disable_breathe_output(const struct cli_cmd_entry *pEntry);
@@ -183,7 +187,7 @@ static void get_breathe_value(const struct cli_cmd_entry *pEntry);
 
 const struct cli_cmd_entry qorc_breathectrl[] =
 {
-    CLI_CMD_SIMPLE( "enbreathe", enable_breathe_output, "enbreathe IO_X VAL(24-bit)" ),
+    CLI_CMD_SIMPLE( "enbreathe", enable_breathe_output, "enbreathe IO_X period_msec" ),
     CLI_CMD_SIMPLE( "disbreathe", disable_breathe_output, "disbreathe IO_X" ),
     CLI_CMD_SIMPLE( "getbreathe", get_breathe_value, "getbreathe IO_X" ),
 
@@ -222,23 +226,16 @@ static void disable_breathe_output(const struct cli_cmd_entry *pEntry)
 
 static void get_breathe_value(const struct cli_cmd_entry *pEntry)
 {
-    uint32_t breathe_config = 0;
-    uint8_t breathe_enabled = 0;
     uint32_t breathe_period = 0;
     (void)pEntry;
 
     CLI_uint8_getshow( "io", &io_pad_num);
 
-    breathe_config = hal_fpga_onion_breathectrl_getval(io_pad_num);
+    breathe_period = hal_fpga_onion_breathectrl_getval(io_pad_num);
 
-    CLI_printf("breathe_config = 0x%08x\n", breathe_config);
-
-    breathe_enabled = (breathe_config >> 31) & 0x1;
-
-    if(breathe_enabled)
+    if(breathe_period)
     {
-        breathe_period = breathe_config & 0xFFFFFF;
-        CLI_printf("breathe_period = %d [0x%06x]\n", breathe_period, breathe_period);
+        CLI_printf("breathe_period = %d [0x%08x] msec\n", breathe_period, breathe_period);
     }
     else
     {
@@ -249,7 +246,7 @@ static void get_breathe_value(const struct cli_cmd_entry *pEntry)
 }
 
 
-// TIMERCTRL
+// TIMERCTRL CLI
 static void enable_timer_output(const struct cli_cmd_entry *pEntry);
 
 static void disable_timer_output(const struct cli_cmd_entry *pEntry);
@@ -258,7 +255,7 @@ static void get_timer_value(const struct cli_cmd_entry *pEntry);
 
 const struct cli_cmd_entry qorc_timerctrl[] =
 {
-    CLI_CMD_SIMPLE( "entimer", enable_timer_output, "entimer ID VAL(30-bit)" ),
+    CLI_CMD_SIMPLE( "entimer", enable_timer_output, "entimer ID period_msec" ),
     CLI_CMD_SIMPLE( "distimer", disable_timer_output, "distimer ID" ),
     CLI_CMD_SIMPLE( "gettimer", get_timer_value, "gettimer ID" ),
 
@@ -297,23 +294,16 @@ static void disable_timer_output(const struct cli_cmd_entry *pEntry)
 
 static void get_timer_value(const struct cli_cmd_entry *pEntry)
 {
-    uint32_t timer_config = 0;
-    uint8_t timer_enabled = 0;
     uint32_t timer_period = 0;
     (void)pEntry;
 
     CLI_uint8_getshow( "id", &timer_id);
 
-    timer_config = hal_fpga_onion_timerctrl_getval(timer_id);
+    timer_period = hal_fpga_onion_timerctrl_getval(timer_id);
 
-    CLI_printf("timer_config = 0x%08x\n", timer_config);
-
-    timer_enabled = (timer_config >> 31) & 0x1;
-
-    if(timer_enabled)
+    if(timer_period)
     {
-        timer_period = timer_config & 0x7FFFFFFF;
-        CLI_printf("timer_period = %d [0x%08x]\n", timer_period, timer_period);
+        CLI_printf("timer_period = %d [0x%08x] msec\n", timer_period, timer_period);
     }
     else
     {
@@ -322,8 +312,6 @@ static void get_timer_value(const struct cli_cmd_entry *pEntry)
 
     return;
 }
-
-
 
 
 const struct cli_cmd_entry my_main_menu[] = {

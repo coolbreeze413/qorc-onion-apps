@@ -13,6 +13,7 @@
 #include <string.h>
 
 #include "eoss3_dev.h"
+#include "s3x_clock_hal.h"
 
 
 // module and register defines
@@ -31,11 +32,12 @@
 
 
 // public function prototypes
-void        hal_fpga_onion_timerctrl_enable       (uint8_t timer_id, 
-                                                    uint32_t timer_period_value);
+void hal_fpga_onion_timerctrl_enable (uint8_t timer_id, 
+                                      uint32_t timer_period_ms);
 
-void        hal_fpga_onion_timerctrl_disable      (uint8_t timer_id);
+void hal_fpga_onion_timerctrl_disable (uint8_t timer_id);
+void hal_fpga_onion_timerctrl_disable_fromisr (uint8_t timer_id);
 
-uint32_t    hal_fpga_onion_timerctrl_getval       (uint8_t timer_id);
+uint32_t hal_fpga_onion_timerctrl_getval (uint8_t timer_id);
 
 #endif // #ifndef __FPGA_ONION_TIMERCTRL_H_

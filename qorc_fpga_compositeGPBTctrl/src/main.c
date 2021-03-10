@@ -142,9 +142,9 @@ int main(void)
     hal_fpga_onion_breathectrl_disable(21);
     hal_fpga_onion_breathectrl_disable(18);
 
-    hal_fpga_onion_breathectrl_enable(22, 0xAAAA); //43690
-    hal_fpga_onion_breathectrl_enable(18, 0xAAAA); //43690
-    HAL_DelayUSec(3*1800000); // 43690 = ~1.8 seconds per breathe cycle
+    hal_fpga_onion_breathectrl_enable(22, 1800); //43690
+    hal_fpga_onion_breathectrl_enable(18, 1800); //43690
+    HAL_DelayUSec(3*1800000);
     hal_fpga_onion_breathectrl_disable(22);
     hal_fpga_onion_breathectrl_disable(18);
 
