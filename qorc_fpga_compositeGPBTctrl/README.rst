@@ -357,8 +357,58 @@ To disable TIMER0 manually:
 Details
 =======
 
-::
+The code is structured (with only interesting files shown) as:
 
+::
+  
   .
-  FURTHER INFORMATION TO BE ADDED
-  .
+  ├── binaries                                      ==> (prebuilt) BINARIES
+  │   ├── AL4S3B_FPGA_Top.bin                       ==> appfpga BINARY
+  │   ├── flash_binaries.txt
+  │   ├── qorc_fpga_compositeGPBTctrl.bin           ==> m4app BINARY
+  │   ├── qorc_fpga_compositeGPBTctrl.elf
+  │   └── qorc_fpga_compositeGPBTctrl.map
+  ├── fpga
+  │   ├── inc                                       ==> FPGA "HAL" sources
+  │   │   ├── hal_fpga_onion.h
+  │   │   ├── hal_fpga_onion_gpioctrl.h
+  │   │   ├── hal_fpga_onion_pwmctrl.h
+  │   │   ├── hal_fpga_onion_breathectrl.h
+  │   │   └── hal_fpga_onion_timerctrl.h
+  │   ├── rtl                                       ==> FPGA RTL Verilog Code
+  │   │   ├── AL4S3B_FPGA_IP.v
+  │   │   ├── AL4S3B_FPGA_ONION_BREATHECTRL.v
+  │   │   ├── AL4S3B_FPGA_ONION_GPIOCTRL.v
+  │   │   ├── AL4S3B_FPGA_ONION_PWMCTRL.v
+  │   │   ├── AL4S3B_FPGA_ONION_TIMERCTRL.v
+  │   │   ├── AL4S3B_FPGA_QL_Reserved.v
+  │   │   ├── AL4S3B_FPGA_Top.v
+  │   │   ├── ONION_BREATHE.v
+  │   │   ├── ONION_PWM.v
+  │   │   ├── ONION_TIMER.v
+  │   │   └── quickfeather.pcf
+  │   └── src                                       ==> FPGA "HAL" sources
+  │       ├── hal_fpga_onion_breathectrl.c
+  │       ├── hal_fpga_onion.c
+  │       ├── hal_fpga_onion_gpioctrl.c
+  │       ├── hal_fpga_onion_pwmctrl.c
+  │       └── hal_fpga_onion_timerctrl.c
+  ├── GCC_Project                                   ==> Makefile Build Infra
+  │   ├── config-GCC.mk
+  │   ├── config.mk
+  │   ├── Makefile
+  │   ├── makefiles
+  │   ├── output
+  │   └── quickfeather.ld
+  ├── inc
+  │   ├── minimal_task.h                            ==> "monitor" task header for TIMER0
+  │   ├── s3x_pwrcfg.h                              ==> EOSS3 power/clock configuration header
+  ├── README.rst
+  └── src
+      ├── exceptions.c                              ==> Interrupt Handlers
+      ├── main.c                                    ==> m4app entry point
+      ├── main_dbg_cli_menu.c                       ==> m4app command line interface
+      ├── minimal_task.c                            ==> "monitor" task source for TIMER0
+      ├── pincfg_table.c                            ==> EOSS3 m4app pinmuxing
+      └── s3x_pwrcfg.c                              ==> EOSS3 power/clock configuration header
+  
