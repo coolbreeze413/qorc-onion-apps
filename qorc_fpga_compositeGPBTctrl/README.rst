@@ -402,7 +402,7 @@ The code is structured (with only interesting files shown) as:
   │   └── quickfeather.ld
   ├── inc
   │   ├── minimal_task.h                            ==> "monitor" task header for TIMER0
-  │   ├── s3x_pwrcfg.h                              ==> EOSS3 power/clock configuration header
+  │   └── s3x_pwrcfg.h                              ==> EOSS3 power/clock configuration header
   ├── README.rst
   └── src
       ├── exceptions.c                              ==> Interrupt Handlers
@@ -410,5 +410,5 @@ The code is structured (with only interesting files shown) as:
       ├── main_dbg_cli_menu.c                       ==> m4app command line interface
       ├── minimal_task.c                            ==> "monitor" task source for TIMER0
       ├── pincfg_table.c                            ==> EOSS3 m4app pinmuxing
-      └── s3x_pwrcfg.c                              ==> EOSS3 power/clock configuration header
+      └── s3x_pwrcfg.c                              ==> EOSS3 power/clock configuration source
   
