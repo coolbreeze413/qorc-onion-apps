@@ -1,0 +1,16 @@
+#
+# SW sources
+#
+MAIN_DRIVERS_DPS310_SRCS:=$(wildcard $(MAIN_DRIVERS_DPS310)/*.c)
+
+filters=
+
+SRCS:=$(filter-out $(filters),$(notdir $(MAIN_DRIVERS_DPS310_SRCS)))
+
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(MAIN_DRIVERS_DPS310)
+
+
+include $(COMMON_STUB)
+
+

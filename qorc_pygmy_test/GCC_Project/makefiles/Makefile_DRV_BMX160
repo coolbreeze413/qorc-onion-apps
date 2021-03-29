@@ -1,0 +1,16 @@
+#
+# SW sources
+#
+MAIN_DRIVERS_BMX160_SRCS:=$(wildcard $(MAIN_DRIVERS_BMX160)/*.c)
+
+filters=
+
+SRCS:=$(filter-out $(filters),$(notdir $(MAIN_DRIVERS_BMX160_SRCS)))
+
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(MAIN_DRIVERS_BMX160)
+
+
+include $(COMMON_STUB)
+
+

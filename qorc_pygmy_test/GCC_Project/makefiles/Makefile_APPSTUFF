@@ -1,0 +1,32 @@
+# -*- mode: Makefile -*-
+
+all:  BMA400  BMX160  DPS310 HX3313 TASKS
+
+.PHONY: BMA400
+BMA400:
+	make -f makefiles/Makefile_DRV_BMA400
+
+.PHONY: BMX160
+BMX160:
+	make -f makefiles/Makefile_DRV_BMX160
+
+
+.PHONY: DPS310
+DPS310:
+	make -f makefiles/Makefile_DRV_DPS310
+
+.PHONY: HX3313
+HX3313:
+	make -f makefiles/Makefile_DRV_HX3313
+
+.PHONY: TASKS
+TASKS:
+	make -f makefiles/Makefile_APP_TASKS
+
+clean:
+	make -f makefiles/Makefile_DRV_BMA400 clean
+	make -f makefiles/Makefile_DRV_BMX160 clean
+	make -f makefiles/Makefile_DRV_DPS310 clean
+	make -f makefiles/Makefile_DRV_HX3313 clean
+	make -f makefiles/Makefile_APP_TASKS clean
+	

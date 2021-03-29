@@ -1,0 +1,16 @@
+#
+# SW sources
+#
+MAIN_TASKS_SRCS:=$(wildcard $(MAIN_TASKS)/*.c)
+
+filters=
+
+SRCS:=$(filter-out $(filters),$(notdir $(MAIN_TASKS_SRCS)))
+
+OBJS:=$(addprefix $(OUTPUT_PATH)/,$(SRCS:.c=.o))
+SRC_PATH:= $(MAIN_TASKS)
+
+
+include $(COMMON_STUB)
+
+
