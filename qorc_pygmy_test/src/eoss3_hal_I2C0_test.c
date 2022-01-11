@@ -86,6 +86,7 @@ void setup_I2C0_M4()
     HAL_I2C_Init(xI2CConfig);  
 }
 
+
 void setup_I2C1_M4()
 {  
     I2C_Config xI2CConfig;
@@ -136,7 +137,7 @@ uint8_t verify_I2C_reg_read(uint8_t i2c_bus_num,
     return retval;
 }
 
-void TestI2C(void)
+void TestI2CRW(void)
 {
     uint8_t i2c_ref_data;
     uint8_t i2c_read_data;
