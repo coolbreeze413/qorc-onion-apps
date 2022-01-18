@@ -17,7 +17,7 @@
 /*==========================================================
  *
  *    File   : main.c
- *    Purpose: main for QuickFeather helloworldsw and LED/UserButton test
+ *    Purpose: simple m4 only hello world example
  *                                                          
  *=========================================================*/
 
@@ -62,7 +62,7 @@ static void nvic_init(void);
 I2C_Config i2c0config =
 {
     .eI2CFreq = I2C_400KHZ,    // 400kHz
-    .eI2CInt = I2C_DISABLE,    // enabled interrupt
+    .eI2CInt = I2C_DISABLE,    // no interrupts
     .ucI2Cn = 0
 };
 uint8_t i2c_read_data;
@@ -85,14 +85,15 @@ int main(void)
     dbg_str( __DATE__ " " __TIME__ "\n" );
     dbg_str( "##########################\n\n");
 
-    dbg_str( "\n\nHello world!!\n\n");	// <<<<<<<<<<<<<<<<<<<<<  Change me!
+    dbg_str( "\n\nHello World!!\n\n");
 
 
     HAL_Delay_Init();
     HAL_I2C_Init(i2c0config);
-    
-    
+
+
     HAL_I2C0_Select();
+
     HAL_I2C_Read(0x68, 0x00, &i2c_read_data, 1);
     dbg_str_hex8("read 0x68,0x00",i2c_read_data);
 
@@ -127,5 +128,3 @@ void SystemInit(void)
 {
 
 }
-
-
