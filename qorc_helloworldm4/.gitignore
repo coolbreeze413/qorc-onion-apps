@@ -3,9 +3,6 @@
 # ignore vscode/ dir and everything inside
 /.vscode/*
 
-# re-add this AFTER the settings.json is completely independent of HOST specific paths
-#!.vscode/settings.json
-
 # remove this AFTER the settings.json is completely independent of HOST specific paths
 !/.vscode/settings.template.jsonc
 

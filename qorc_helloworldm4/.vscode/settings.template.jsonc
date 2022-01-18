@@ -1,4 +1,8 @@
 // The env variables defined here are using the 'launch.json' for the debug configurations.
+// TL;DR
+// if you are using 'source debugenvsetup.sh' from qorc_utils/ in this repo, then you can use this file as is.
+// just rename this file to 'settings.json' and you are set.
+// [ensure that this repo (qorc-onion-apps) is inside the qorc-sdk dir at the top level, same as 'qf_apps']
 //
 // fill in the appropriate paths below as applicable:
 // qorc_sdk_path : relative or abs path to the qorc-sdk repo                [if this app is 2 levels down from qorc-sdk, leave as is]
