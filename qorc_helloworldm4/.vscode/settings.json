@@ -1,0 +1,20 @@
+{
+    // path to the qorc-sdk : assume that we have cloned 'qorc-onion-apps' inside the qorc-sdk dir
+    // (at the same level as 'qf_apps')
+    "qorc_sdk_path" : "${workspaceFolder}/../../",
+
+    // path to the arm toolchain
+    "qorc_arm_toolchain_path" : "${config:qorc_sdk_path}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin",
+
+    // path to the OpenOCD gdb-server if using OpenOCD
+    "qorc_openocd_server_path" : "${config:qorc_sdk_path}/openocd_install/xpack-openocd-0.11.0-3/bin/openocd",
+
+    // path to the OpenOCD script dir if using OpenOCD
+    "qorc_openocd_scripts_path" : "${config:qorc_sdk_path}/openocd_install/xpack-openocd-0.11.0-3/scripts",
+
+    // path to the JLink commandline gdb-server if using JLink
+    "qorc_jlink_server_path" : "${config:qorc_sdk_path}/jlink_install/JLink_Linux_V760d_x86_64/JLinkGDBServerCLExe",
+
+    // svd file path is optional, can be used to view device registers in peripherals view
+    "qorc_svd_file_path": "${config:qorc_sdk_path}/eos_s3.svd",
+}
