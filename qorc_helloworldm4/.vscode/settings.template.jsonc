@@ -1,11 +1,11 @@
 // The env variables defined here are using the 'launch.json' for the debug configurations.
 //
 // fill in the appropriate paths below as applicable:
-// qorc_sdk_path : relative to the workspaceFolder!
-// qorc_arm_toolchain_path : if not using 'envsetup.sh' (recommended to use it), path to toolchain binaries
-// if using OpenOCD : openocd binary path and openocd script dir path
-// if using JLink : JLinkGDBServerCLExe binary path
-// if using svd : eos_s3 svd file path
+// qorc_sdk_path : relative or abs path to the qorc-sdk repo                [if this app is 2 levels down from qorc-sdk, leave as is]
+// qorc_arm_toolchain_path : path to toolchain binaries                     [if using 'envsetup.sh' leave as is]
+// if using OpenOCD : openocd binary path and openocd script dir path       [if using 'debugenvsetup.sh', leave as is]
+// if using JLink : JLinkGDBServerCLExe binary path                         [if using 'debugenvsetup.sh', leave as is]
+// if using svd : eos_s3 svd file path                                      [if using 'debugenvsetup.sh', leave as is]
 // Finally, rename this file to settings.json : "mv settings.template.jsonc settings.json"
 {
     // path to the qorc-sdk
@@ -15,21 +15,20 @@
     "qorc_arm_toolchain_path" : "${config:qorc_sdk_path}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin",
 
     // path to the OpenOCD gdb-server if using OpenOCD
-    "qorc_openocd_server_path" : "<PATH TO 'openocd' binary>",
+    "qorc_openocd_server_path" : "${config:qorc_sdk_path}/openocd_install/xpack-openocd-0.11.0-3/bin/openocd",
 
     // path to the OpenOCD scripts dir if using OpenOCD
-    "qorc_openocd_scripts_path" : "<PATH TO openocd 'scripts' dir>",
+    "qorc_openocd_scripts_path" : "${config:qorc_sdk_path}/openocd_install/xpack-openocd-0.11.0-3/scripts",
 
     // path to the JLink commandline gdb-server if using JLink
-    "qorc_jlink_server_path" : "<PATH TO 'JLinkGDBServerCLExe' binary>",
+    "qorc_jlink_server_path" : "${config:qorc_sdk_path}/jlink_install/JLink_Linux_V760d_x86_64/JLinkGDBServerCLExe",
     
     // svd file path is optional, can be used to view device registers in peripherals view
-    "qorc_svd_file_path" : ""
+    "qorc_svd_file_path": "${config:qorc_sdk_path}/eos_s3.svd"
 }
 // Why is this file called jsonc?
 // VSCode treats settings.json (and other specific files) as a jsonc file, but not any other.
 // Using '.jsonc' allows us to add useful comments like this one here.
 // 
-// Ensure you do not force commit this file into git (yet).
 // we will probably replace this file by 'settings.json' in git once we have the JLink/OpenOCD/SVD 
 //    also included in the envsetup.sh script.

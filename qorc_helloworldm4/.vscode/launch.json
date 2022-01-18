@@ -101,7 +101,7 @@
         },
         // Debug - OpenOCD GDB Server - JLink Probe (experimental)
         {
-            "name": "Debug (OpenOCD) STLINK-v2",
+            "name": "Debug (OpenOCD) JLink",
             "type": "cortex-debug",
             "request": "launch",
             "cwd": "${workspaceFolder}",
