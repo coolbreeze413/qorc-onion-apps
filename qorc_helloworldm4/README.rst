@@ -1,7 +1,7 @@
-QuickFeather HelloWorldM4 Application
-=====================================
+QORC HelloWorldM4 Application
+=============================
 
-This test/example contains the :code:`qf_helloworldm4` example, which is derived from the :code:`qf_helloworldsw` example.
+This test/example contains the :code:`qorc_helloworldm4` example, which is derived from the :code:`qf_helloworldsw` example.
 This is a simple M4-only application, which uses the EOS S3 UART to expose a command line interface (CLI).
 
 
@@ -40,7 +40,7 @@ How To
     
     ::
 
-      qfprog --port /dev/ttyACM0 --m4app output/bin/qf_helloworldm4.bin --mode m4
+      qfprog --port /dev/ttyACM0 --m4app output/bin/qorc_helloworldm4.bin --mode m4
 
     | Note the :code:`--mode` option at the end, which is now mandatory - this specifies the operating mode which the bootloader uses.
     | :code:`--mode m4` ensures that the bootloader knows that only the m4app binary is flashed, and it will load the flashed m4app binary only.
