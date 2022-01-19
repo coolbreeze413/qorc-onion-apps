@@ -48,3 +48,6 @@
 /**/rtl/build
 /**/rtl/Makefile.symbiflow
 ### build artifacts -- ###
+
+custom_eoss3.jlink*
+custom_eoss3.openocd*

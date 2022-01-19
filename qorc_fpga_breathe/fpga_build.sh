@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# requires that 'source envsetup.sh' from the qorc-sdk is already run so the toolchains are on the path!
+
 # to adapt to a new fpga-only project:
 # [1] change the top module name (arg provided to '-t')
 # [2] adjust the output format(s) for the fpga design to be generated: (arg(s) to '-dump')

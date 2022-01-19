@@ -6,8 +6,8 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "build-fpga",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && ./build_fpga.sh",
+            "label": "fpga-build",
+            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && ./fpga_build.sh",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -21,8 +21,8 @@
         },
         {
             "type": "shell",
-            "label": "clean-fpga",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && ./clean_fpga.sh",
+            "label": "fpga-clean",
+            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && ./fpga_clean.sh",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -30,6 +30,51 @@
             "problemMatcher": [],
             "presentation": {
                 "reveal": "silent",
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "fpga-load (JLink)",
+            "command": "./fpga_load_jlink.sh ${config:qorc_jlink_commander_path}",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "close": false
+            }
+        },
+        {
+            "type": "shell",
+            "label": "fpga-load-custom (JLink)",
+            "command": "./fpga_load_custom_jlink.sh ${config:qorc_jlink_commander_path}",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "fpga-load-custom (OpenOCD)",
+            "command": "./fpga_load_custom_openocd.sh ${config:qorc_openocd_server_path}",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
                 "revealProblems": "onProblem",
                 "close": true
             }
