@@ -33,14 +33,14 @@
 #define FEATURE_USBSERIAL   1       // USBSERIAL port is present
 
 // Options for debug output -- use to set DEBUG_UART below
-// #define UART_ID_DISABLED  0 /* /dev/null */
+//#define UART_ID_DISABLED  0 /* /dev/null */
 // #define UART_ID_HW        1 /* the hard UART on the S3 */
 // #define UART_ID_SEMIHOST  2  // Write debug data to semihost
 // #define UART_ID_FPGA      3 /* second uart if part of FPGA */
 // #define UART_ID_BUFFER    4 // Write data to buffer
 // #define UART_ID_SEMBUF    5 // Write datat to semihost and buffer
 // #define UART_ID_USBSERIAL    6   // Write data to USB serial port
-#define DEBUG_UART UART_ID_SEMIHOST  // Write debug data to semihost
+#define DEBUG_UART UART_ID_DISABLED  // Write debug data to semihost
 
 // Set the UART ID to use for bootloader
 #define UART_ID_BOOTLOADER UART_ID_USBSERIAL

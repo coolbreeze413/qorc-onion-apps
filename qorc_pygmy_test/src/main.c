@@ -59,22 +59,45 @@ const char *SOFTWARE_VERSION_STR;
 extern void qf_hardwareSetup();
 static void nvic_init(void);
 
-I2C_Config i2c0config =
-{
-    .eI2CFreq = I2C_400KHZ,    // 400kHz
-    .eI2CInt = I2C_DISABLE,    // enabled interrupt
-    .ucI2Cn = 0
+#define BANNER_NUM_LINES    15
+static const char* rolling_banner[BANNER_NUM_LINES] = {
+    "\n\n\n",
+    "██╗     ███████╗██╗   ██╗██╗ █████╗ ████████╗██╗  ██╗ █████╗ ███╗   ██╗\n",
+    "██║     ██╔════╝██║   ██║██║██╔══██╗╚══██╔══╝██║  ██║██╔══██╗████╗  ██║\n",
+    "██║     █████╗  ██║   ██║██║███████║   ██║   ███████║███████║██╔██╗ ██║\n",
+    "██║     ██╔══╝  ╚██╗ ██╔╝██║██╔══██║   ██║   ██╔══██║██╔══██║██║╚██╗██║\n",
+    "███████╗███████╗ ╚████╔╝ ██║██║  ██║   ██║   ██║  ██║██║  ██║██║ ╚████║\n",
+    "╚══════╝╚══════╝  ╚═══╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝\n",
+    "\n\n\n",
+    "██╗    ██╗ █████╗ ██╗  ██╗███████╗███████╗\n",
+    "██║    ██║██╔══██╗██║ ██╔╝██╔════╝██╔════╝\n",
+    "██║ █╗ ██║███████║█████╔╝ █████╗  ███████╗\n",
+    "██║███╗██║██╔══██║██╔═██╗ ██╔══╝  ╚════██║\n",
+    "╚███╔███╔╝██║  ██║██║  ██╗███████╗███████║\n",
+    " ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝\n",
+    "\n\n\n"
 };
-uint8_t i2c_read_data;
+
+
+void output_banner()
+{
+    uint8_t i = 0;
+    for(i = 0; i < BANNER_NUM_LINES; i++)
+    {
+        dbg_str(rolling_banner[i]);     // print line
+        HAL_DelayUSec(100*1000);        // 100ms
+    }
+}
 
 
 int main(void)
 {
 
     SOFTWARE_VERSION_STR = "qorc_pygmy_test_1.0.0";
-    
+
     qf_hardwareSetup();
     nvic_init();
+    HAL_Delay_Init();
 
     dbg_str("\n\n");
     dbg_str( "##########################\n");
@@ -85,33 +108,16 @@ int main(void)
     dbg_str( __DATE__ " " __TIME__ "\n" );
     dbg_str( "##########################\n\n");
 
-    dbg_str( "\n\n");
-    dbg_str( "██╗     ███████╗██╗   ██╗██╗ █████╗ ████████╗██╗  ██╗ █████╗ ███╗   ██╗\n");
-    dbg_str( "██║     ██╔════╝██║   ██║██║██╔══██╗╚══██╔══╝██║  ██║██╔══██╗████╗  ██║\n");
-    dbg_str( "██║     █████╗  ██║   ██║██║███████║   ██║   ███████║███████║██╔██╗ ██║\n");
-    dbg_str( "██║     ██╔══╝  ╚██╗ ██╔╝██║██╔══██║   ██║   ██╔══██║██╔══██║██║╚██╗██║\n");
-    dbg_str( "███████╗███████╗ ╚████╔╝ ██║██║  ██║   ██║   ██║  ██║██║  ██║██║ ╚████║\n");
-    dbg_str( "╚══════╝╚══════╝  ╚═══╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝\n");
-    dbg_str( "\n\n\n");
-    dbg_str("██╗    ██╗ █████╗ ██╗  ██╗███████╗███████╗\n");
-    dbg_str("██║    ██║██╔══██╗██║ ██╔╝██╔════╝██╔════╝\n");
-    dbg_str("██║ █╗ ██║███████║█████╔╝ █████╗  ███████╗\n");
-    dbg_str("██║███╗██║██╔══██║██╔═██╗ ██╔══╝  ╚════██║\n");
-    dbg_str("╚███╔███╔╝██║  ██║██║  ██╗███████╗███████║\n");
-    dbg_str(" ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝\n");
-    dbg_str( "\n\n\n");
-
+    output_banner();
 
     setup_I2C0_M4();
     setup_I2C1_M4();
     
-// individual tests ++
-    HAL_Delay_Init();
+// individual tests ++    
     //printf("float: %d\n", sizeof(float));
     //printf("double: %d\n", sizeof(double));
     
-    TestI2C();
-    
+    TestI2CRW();
 
     //HAL_I2C0_Select();
     //HAL_I2C1_Select();
@@ -131,8 +137,7 @@ int main(void)
 // poll task    
     //HAL_Init_Timer_Task();
     //sensorhub_poll_task_init();
-// poll task    
-
+// poll task
 
 
     CLI_start_task( my_main_menu );

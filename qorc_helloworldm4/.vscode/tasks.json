@@ -1,0 +1,105 @@
+// NOTE: remember to set the qorc_sdk_path in the settings.json (derive from settings.template.jsonc)
+// shortcut to run task from keyboard: CTRL+p -> enter "task" and then a space ('t' 'a' 's' 'k' 'spacebar')
+//      and you get the list of tasks
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            // 'label' is the name of the task: https://stackoverflow.com/a/51550043
+            "label": "build",
+            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make",
+            "options": {
+                "cwd": "${workspaceFolder}/GCC_Project",
+                // TODO other options to be documented
+            },
+            "group": {
+                // this sets the current task as the 'default' build task
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "base": "$gcc", 
+                //"fileLocation": ["relative", "${workspaceFolder}/GCC_Project/output"]
+            },
+            // auto close terminal after task exits: https://stackoverflow.com/a/67872135
+            "presentation": {
+                // reveal terminal only if problems encountered : 'silent'
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                // comment below line out if you want to see the build terminal output always.
+                "close": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "clean",
+            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean",
+            "options": {
+                "cwd": "${workspaceFolder}/GCC_Project"
+            },
+            "group": "build",
+            "problemMatcher": {
+                "base": "$gcc", 
+            },
+            "presentation": {
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "clean-build",
+            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean && make",
+            "options": {
+                "cwd": "${workspaceFolder}/GCC_Project"
+            },
+            "group": "build",
+            "problemMatcher": {
+                "base": "$gcc", 
+            },
+            "presentation": {
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+        // generate a compile_commands.json db from the make output using 'bear'
+        // install using the regular package manager ('apt install bear' on Ubuntu)
+        // recommend this one over compiledb - in some cases compiledb produced blank files.
+        // https://github.com/rizsotto/Bear
+        {
+            "type": "shell",
+            "label": "json-db-bear",
+            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean && bear make",
+            "options": {
+                "cwd": "${workspaceFolder}/GCC_Project"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+        // generate a compile_commands.json db from the make output using 'compiledb'
+        // install using pip (pip install compiledb)
+        // it doesn't need a make clean, it can use dry-run instead, so faster, and python, so easier on many platforms.
+        // https://github.com/nickdiego/compiledb
+        {
+            "type": "shell",
+            "label": "json-db-compiledb",
+            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean && compiledb make",
+            "options": {
+                "cwd": "${workspaceFolder}/GCC_Project"
+            },
+            "group": "build",
+            "presentation": {
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+    ]
+}

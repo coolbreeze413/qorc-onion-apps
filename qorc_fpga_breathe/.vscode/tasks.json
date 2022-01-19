@@ -1,0 +1,38 @@
+// NOTE: remember to set the qorc_sdk_path in the settings.json (derive from settings.template.jsonc)
+// shortcut to run task from keyboard: CTRL+p -> enter "task" and then a space ('t' 'a' 's' 'k' 'spacebar')
+//      and you get the list of tasks
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "build-fpga",
+            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && ./build_fpga.sh",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "clean-fpga",
+            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && ./clean_fpga.sh",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "silent",
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+    ]
+}
