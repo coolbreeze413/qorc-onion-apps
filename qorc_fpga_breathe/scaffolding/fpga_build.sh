@@ -10,20 +10,21 @@
 # jlink         (fpga bin loading via jlink script)
 # openocd       (fpga bin loading via openocd script)
 
-TMP_SOURCE="fpga/rtl"
+PROJECT_ROOT_DIR=$(cd .. ; printf %s "$PWD")
+PROJECT_RTL_DIR="${PROJECT_ROOT_DIR}/fpga/rtl"
 
-TMP_VERILOG_FILES=`cd ${TMP_SOURCE};ls *.v`
+PROJECT_VERILOG_FILES=$(cd ${PROJECT_RTL_DIR};ls *.v)
 
-echo "$TMP_VERILOG_FILES" > ${TMP_SOURCE}/tmp_v_list
+echo "$PROJECT_VERILOG_FILES" > ${PROJECT_RTL_DIR}/tmp_v_list
 
-sed '/^$/d' $TMP_SOURCE/tmp_v_list > $TMP_SOURCE/tmp_f_list
+sed '/^$/d' $PROJECT_RTL_DIR/tmp_v_list > $PROJECT_RTL_DIR/tmp_f_list
 
-TMP_VERILOG_FILES=`cat $TMP_SOURCE/tmp_f_list`
+PROJECT_VERILOG_FILES=$(cat $PROJECT_RTL_DIR/tmp_f_list)
 
-rm $TMP_SOURCE/tmp_v_list $TMP_SOURCE/tmp_f_list
+rm $PROJECT_RTL_DIR/tmp_v_list $PROJECT_RTL_DIR/tmp_f_list
 
 # note: provide an absolute path to the -src parameter (especially when dumping multiple output formats at the same time)
-ql_symbiflow -compile -src ${PWD}/fpga/rtl -d ql-eos-s3 -t AL4S3B_FPGA_Top -v "$TMP_VERILOG_FILES" -p quickfeather.pcf -P PU64 -dump binary header openocd jlink
+ql_symbiflow -compile -src "$PROJECT_RTL_DIR" -d ql-eos-s3 -t AL4S3B_FPGA_Top -v "$PROJECT_VERILOG_FILES" -p quickfeather.pcf -P PU64 -dump binary header openocd jlink
 
 # if you have verilog files you don't want to be included, set the files yourself:
-#ql_symbiflow -compile -src fpga/rtl -d ql-eos-s3 -t AL4S3B_FPGA_Top -v AL4S3B_FPGA_Top.v ONION_BREATHE.v -p quickfeather.pcf -P PU64 -dump binary
+#ql_symbiflow -compile -src "$PROJECT_RTL_DIR" -d ql-eos-s3 -t AL4S3B_FPGA_Top -v AL4S3B_FPGA_Top.v ONION_BREATHE.v -p quickfeather.pcf -P PU64 -dump binary

@@ -9,7 +9,7 @@
             "label": "fpga-build",
             "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && ./fpga_build.sh",
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -24,7 +24,7 @@
             "label": "fpga-clean",
             "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && ./fpga_clean.sh",
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -39,7 +39,7 @@
             "label": "fpga-load (JLink)",
             "command": "./fpga_load_jlink.sh ${config:qorc_jlink_commander_path}",
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -54,7 +54,7 @@
             "label": "fpga-load-custom (JLink)",
             "command": "./fpga_load_custom_jlink.sh ${config:qorc_jlink_commander_path}",
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -69,7 +69,7 @@
             "label": "fpga-load-custom (OpenOCD) FT2232H",
             "command": "./fpga_load_custom_openocd.sh ${config:qorc_openocd_server_path} interface/ft2232h_swd.cfg",
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -84,7 +84,7 @@
             "label": "fpga-load-custom (OpenOCD) STLINK-v2",
             "command": "./fpga_load_custom_openocd.sh ${config:qorc_openocd_server_path} interface/stlink-v2-1.cfg",
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -99,7 +99,7 @@
             "label": "fpga-load-custom (OpenOCD) JLink",
             "command": "./fpga_load_custom_openocd.sh ${config:qorc_openocd_server_path} interface/jlink_swd.cfg",
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -107,6 +107,21 @@
                 "reveal": "always",
                 "revealProblems": "onProblem",
                 "close": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "fpga-load-custom (OpenOCD-gdb) JLink",
+            "command": "./fpga_load_custom_openocd_gdb.sh ${config:qorc_openocd_server_path} ${config:qorc_arm_toolchain_path}/arm-none-eabi-gdb",
+            "options": {
+                "cwd": "${workspaceFolder}/scaffolding"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always", 
+                "revealProblems": "onProblem",
+                "close": false
             }
         },
     ]

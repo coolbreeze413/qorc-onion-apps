@@ -49,7 +49,8 @@
 /**/rtl/Makefile.symbiflow
 ### build artifacts -- ###
 
-### task or script artifacts ++ ###
+### scaffolding artifacts ++ ###
 custom_eoss3.jlink*
 custom_eoss3.openocd*
-### task or script artifacts -- ###
+fpga_load_custom_openocd_gdb.log
+### scaffolding artifacts -- ###
