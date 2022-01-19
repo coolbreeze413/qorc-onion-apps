@@ -66,8 +66,38 @@
         },
         {
             "type": "shell",
-            "label": "fpga-load-custom (OpenOCD)",
-            "command": "./fpga_load_custom_openocd.sh ${config:qorc_openocd_server_path}",
+            "label": "fpga-load-custom (OpenOCD) FT2232H",
+            "command": "./fpga_load_custom_openocd.sh ${config:qorc_openocd_server_path} interface/ft2232h_swd.cfg",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "fpga-load-custom (OpenOCD) STLINK-v2",
+            "command": "./fpga_load_custom_openocd.sh ${config:qorc_openocd_server_path} interface/stlink-v2-1.cfg",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "fpga-load-custom (OpenOCD) JLink",
+            "command": "./fpga_load_custom_openocd.sh ${config:qorc_openocd_server_path} interface/jlink_swd.cfg",
             "options": {
                 "cwd": "${workspaceFolder}"
             },

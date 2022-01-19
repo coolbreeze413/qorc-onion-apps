@@ -49,5 +49,7 @@
 /**/rtl/Makefile.symbiflow
 ### build artifacts -- ###
 
+### task or script artifacts ++ ###
 custom_eoss3.jlink*
 custom_eoss3.openocd*
+### task or script artifacts -- ###
