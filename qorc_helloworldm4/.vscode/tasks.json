@@ -101,6 +101,21 @@
                 "close": true
             }
         },
+        {
+            "type": "shell",
+            "label": "m4-load (JLink)",
+            "command": "./m4_load_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
+            "options": {
+                "cwd": "${workspaceFolder}/.scaffolding"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always", 
+                "revealProblems": "onProblem",
+                "close": false
+            }
+        },
         // generate a compile_commands.json db from the make output using 'bear'
         // install using the regular package manager ('apt install bear' on Ubuntu)
         // recommend this one over compiledb - in some cases compiledb produced blank files.

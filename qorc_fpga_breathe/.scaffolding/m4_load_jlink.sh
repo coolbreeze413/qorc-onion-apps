@@ -72,15 +72,14 @@ printf "\n"
 
 
 PROJECT_ROOT_DIR=$(cd .. ; printf %s "$PWD")
-PROJECT_RTL_DIR="${PROJECT_ROOT_DIR}/fpga/rtl"
+PROJECT_OUTPUT_BIN_DIR="${PROJECT_ROOT_DIR}/GCC_Project/output/bin"
 
+PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin)
 
-# the generated .jlink script only focusses on loading the design and setting the IOMUX
-#  registers for the design - it does not do anything related to initialization of the EOS_S3
-# typically, we need to ensure that the EOS_S3 has been reset before loading the design.
+# generate a jlink script to load the m4 binary into RAM and run it.
 
-# generate a jlink script to reset the EOS_S3
-CUSTOM_JLINK_SCRIPT="custom_eoss3_reset.jlink"
+CUSTOM_JLINK_SCRIPT="custom_eoss3_m4.jlink"
+CUSTOM_JLINK_SCRIPT_LOG="custom_eoss3_m4.jlink.log"
 
 # write "NOTHING" into file, i.e. reset the contents, faster than delete + touch.
 #https://askubuntu.com/a/549672
@@ -89,15 +88,22 @@ CUSTOM_JLINK_SCRIPT="custom_eoss3_reset.jlink"
 echo "connect" >> "$CUSTOM_JLINK_SCRIPT"
 echo "RSetType 3" >> "$CUSTOM_JLINK_SCRIPT"
 echo "r" >> "$CUSTOM_JLINK_SCRIPT"
-echo "q" >> "$CUSTOM_JLINK_SCRIPT"
+echo "loadbin $PROJECT_M4_BIN, 0x0" >> "$CUSTOM_JLINK_SCRIPT"
+echo "r" >> "$CUSTOM_JLINK_SCRIPT"
+echo "g" >> "$CUSTOM_JLINK_SCRIPT"
 
-# https://wiki.segger.com/J-Link_Commander
+# moar: https://wiki.segger.com/J-Link_Commander
+# 'h' to halt
+# 'i' to read JTAG ID (0x2BA01477)
+# 'mem32 ADDR COUNT' to read COUNT words from ADDR 'mem32 0x40005484 1'
+# 'w4 ADDR VAL' to write 4 byte word VAL into ADDR 'w4 0x2007C000, 0xAABBCCDD'
+# 'savebin PATH_TO_SAVE_BIN, FROM_ADDR, NUM_BYTES' to dump RAM content into binary file 'savebin saved_mem.bin, 0x0, 0x20000'
+# 'verifybin PATH_TO_ORIG_BIN, FROM_ADDR, NUM_BYTES' to compare and verify bin is loaded
 
-# init the S3 with reset
-"$JLINK_EXE_PATH" -Device Cortex-M4 -If SWD -Speed 4000 -commandFile "$CUSTOM_JLINK_SCRIPT"
 
-# load fpga design : note that the JLinkExe will still be running after load, enter 'q' to quit
-"$JLINK_EXE_PATH" -Device Cortex-M4 -If SWD -Speed 4000 -commandFile "$PROJECT_RTL_DIR"/*.jlink
+# load m4 : note that the JLinkExe will still be running after load, enter 'q' to quit
+"$JLINK_EXE_PATH" -Device Cortex-M4 -If SWD -Speed 4000 -commandFile "$CUSTOM_JLINK_SCRIPT" -Log "$CUSTOM_JLINK_SCRIPT_LOG"
 
 # remove the custom script/log (disable for debugging the script)
 rm "$CUSTOM_JLINK_SCRIPT"
+rm "$CUSTOM_JLINK_SCRIPT_LOG"

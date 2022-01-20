@@ -79,10 +79,25 @@ PROJECT_RTL_DIR="${PROJECT_ROOT_DIR}/fpga/rtl"
 #  registers for the design - it does not do anything related to initialization of the EOS_S3
 # typically, we need to ensure that the EOS_S3 has been reset before loading the design.
 
+# generate a jlink script to reset the EOS_S3
+CUSTOM_JLINK_SCRIPT="custom_eoss3_reset.jlink"
+
+# write "NOTHING" into file, i.e. reset the contents, faster than delete + touch.
+#https://askubuntu.com/a/549672
+: > "$CUSTOM_JLINK_SCRIPT"
+
+echo "connect" >> "$CUSTOM_JLINK_SCRIPT"
+echo "RSetType 3" >> "$CUSTOM_JLINK_SCRIPT"
+echo "r" >> "$CUSTOM_JLINK_SCRIPT"
+echo "q" >> "$CUSTOM_JLINK_SCRIPT"
+
 # https://wiki.segger.com/J-Link_Commander
 
 # init the S3 with reset
-"$JLINK_EXE_PATH" -Device Cortex-M4 -If SWD -Speed 4000 -commandFile reset_eoss3.jlink
+"$JLINK_EXE_PATH" -Device Cortex-M4 -If SWD -Speed 4000 -commandFile "$CUSTOM_JLINK_SCRIPT"
 
 # load fpga design : note that the JLinkExe will still be running after load, enter 'q' to quit
 "$JLINK_EXE_PATH" -Device Cortex-M4 -If SWD -Speed 4000 -commandFile "$PROJECT_RTL_DIR"/*.jlink
+
+# remove the custom script/log (disable for debugging the script)
+rm "$CUSTOM_JLINK_SCRIPT"

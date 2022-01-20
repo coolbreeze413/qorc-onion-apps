@@ -139,6 +139,7 @@ done < "$PROJECT_RTL_DIR"/*.openocd
 # AFTER
 echo "" >> "$CUSTOM_OPENOCD_SCRIPT"
 echo "" >> "$CUSTOM_OPENOCD_SCRIPT"
+# the JIM-TCL proc is called load_bitstream in the generated openocd script, invoke it
 echo "load_bitstream" >> "$CUSTOM_OPENOCD_SCRIPT"
 echo "eos_s3.cpu mdw 0x40005484" >> "$CUSTOM_OPENOCD_SCRIPT"
 echo "shutdown" >> "$CUSTOM_OPENOCD_SCRIPT"
