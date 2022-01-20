@@ -14,7 +14,7 @@
             "group": "build",
             "problemMatcher": [],
             "presentation": {
-                "reveal": "silent",
+                "reveal": "always",
                 "revealProblems": "onProblem",
                 "close": true
             }
@@ -31,7 +31,7 @@
             "presentation": {
                 "reveal": "silent",
                 "revealProblems": "onProblem",
-                "close": false
+                "close": true
             }
         },
         {
@@ -157,7 +157,7 @@
             "presentation": {
                 "reveal": "always", 
                 "revealProblems": "onProblem",
-                "close": false
+                "close": true
             }
         },
     ],

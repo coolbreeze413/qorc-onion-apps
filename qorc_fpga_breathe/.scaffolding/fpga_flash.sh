@@ -7,7 +7,7 @@
 # option strings
 SHORT="" # no short options at all, clearer that way.
 # reference on how to enforce no short options: https://unix.stackexchange.com/questions/162624/how-to-use-getopt-in-bash-command-line-with-only-long-options
-LONG="qorc-sdk-path:,help"
+LONG="qorc-sdk-path:,port:,help"
 
 
 # read the options
@@ -24,9 +24,9 @@ usage()
     printf "\n"
     printf "build the fpga design\n"
     printf "\n"
-    printf " syntax: $0 --qorc-sdk-path=/path/to/qorc/sdk\n"
+    printf " syntax: $0 --qorc-sdk-path=/path/to/qorc/sdk --port=serial_port_id\n"
     printf "\n"
-    printf "example: $0 --qorc-sdk-path=$HOME/qorc-sdk\n"
+    printf "example: $0 --qorc-sdk-path=$HOME/qorc-sdk --port=/dev/ttyUSB0\n"
     printf "\n"
 }
 
@@ -35,6 +35,10 @@ while true ; do
     case "$1" in
         --qorc-sdk-path )
             QORC_SDK_PATH="$2"
+            shift 2
+        ;;
+        --port )
+            PORT="$2"
             shift 2
         ;;
         -- )
@@ -51,6 +55,12 @@ done
 # arg checks
 if [ -z "$QORC_SDK_PATH" ] ; then
     printf "\nWARNING: QORC_SDK_PATH is not defined!\n"
+fi
+
+if [ -z "$PORT" ] ; then
+    printf "\nERROR: PORT is not defined!\n"
+    usage
+    exit 1
 fi
 
 
