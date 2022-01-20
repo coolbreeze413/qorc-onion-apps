@@ -7,9 +7,9 @@
         {
             "type": "shell",
             "label": "fpga-build",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && ./fpga_build.sh",
+            "command": "./fpga_build.sh --qorc-sdk-path=${config:qorc_sdk_path}",
             "options": {
-                "cwd": "${workspaceFolder}/scaffolding"
+                "cwd": "${workspaceFolder}/.scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -22,24 +22,24 @@
         {
             "type": "shell",
             "label": "fpga-clean",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && ./fpga_clean.sh",
+            "command": "./fpga_clean.sh --qorc-sdk-path=${config:qorc_sdk_path}",
             "options": {
-                "cwd": "${workspaceFolder}/scaffolding"
+                "cwd": "${workspaceFolder}/.scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
             "presentation": {
                 "reveal": "silent",
                 "revealProblems": "onProblem",
-                "close": true
+                "close": false
             }
         },
         {
             "type": "shell",
             "label": "fpga-load (JLink)",
-            "command": "./fpga_load_jlink.sh ${config:qorc_jlink_commander_path}",
+            "command": "./fpga_load_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
             "options": {
-                "cwd": "${workspaceFolder}/scaffolding"
+                "cwd": "${workspaceFolder}/.scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -52,9 +52,9 @@
         {
             "type": "shell",
             "label": "fpga-load-custom (JLink)",
-            "command": "./fpga_load_custom_jlink.sh ${config:qorc_jlink_commander_path}",
+            "command": "./fpga_load_custom_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
             "options": {
-                "cwd": "${workspaceFolder}/scaffolding"
+                "cwd": "${workspaceFolder}/.scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -67,9 +67,9 @@
         {
             "type": "shell",
             "label": "fpga-load-custom (OpenOCD) FT2232H",
-            "command": "./fpga_load_custom_openocd.sh ${config:qorc_openocd_server_path} interface/ft2232h_swd.cfg",
+            "command": "./fpga_load_custom_openocd.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=interface/ft2232h_swd.cfg",
             "options": {
-                "cwd": "${workspaceFolder}/scaffolding"
+                "cwd": "${workspaceFolder}/.scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -82,9 +82,9 @@
         {
             "type": "shell",
             "label": "fpga-load-custom (OpenOCD) STLINK-v2",
-            "command": "./fpga_load_custom_openocd.sh ${config:qorc_openocd_server_path} interface/stlink-v2-1.cfg",
+            "command": "./fpga_load_custom_openocd.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=interface/stlink-v2-1.cfg",
             "options": {
-                "cwd": "${workspaceFolder}/scaffolding"
+                "cwd": "${workspaceFolder}/.scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -97,9 +97,9 @@
         {
             "type": "shell",
             "label": "fpga-load-custom (OpenOCD) JLink",
-            "command": "./fpga_load_custom_openocd.sh ${config:qorc_openocd_server_path} interface/jlink_swd.cfg",
+            "command": "./fpga_load_custom_openocd.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=interface/jlink_swd.cfg",
             "options": {
-                "cwd": "${workspaceFolder}/scaffolding"
+                "cwd": "${workspaceFolder}/.scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -112,9 +112,45 @@
         {
             "type": "shell",
             "label": "fpga-load-custom (OpenOCD-gdb) JLink",
-            "command": "./fpga_load_custom_openocd_gdb.sh ${config:qorc_openocd_server_path} ${config:qorc_arm_toolchain_path}/arm-none-eabi-gdb",
+            "command": "./fpga_load_custom_openocd_gdb.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=interface/jlink_swd.cfg --gdb-path=${config:qorc_arm_toolchain_path}/arm-none-eabi-gdb",
             "options": {
-                "cwd": "${workspaceFolder}/scaffolding"
+                "cwd": "${workspaceFolder}/.scaffolding"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always", 
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "fpga-flash-manual",
+            "command": "./fpga_flash.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPort}",
+            // "args": [
+            //     "${input:serialPort}"
+            // ],
+            "options": {
+                "cwd": "${workspaceFolder}/.scaffolding"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always", 
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "fpga-flash",
+            "command": "./fpga_flash.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortExt}",
+            // "args": [
+            //     "${input:serialPort}"
+            // ],
+            "options": {
+                "cwd": "${workspaceFolder}/.scaffolding"
             },
             "group": "build",
             "problemMatcher": [],
@@ -124,5 +160,27 @@
                 "close": false
             }
         },
-    ]
+    ],
+    "inputs": [
+        {
+            "id": "serialPort",
+            "type": "promptString",
+            "description": "serialPort identifier",
+            "default": "/dev/ttyUSB0"
+        },
+        {
+            "id": "serialPortExt",
+            "type": "command",
+            "command": "shellCommand.execute",
+            "args" :{
+                "command": "python ./get_serial_ports_list.py",
+                "cwd": "${workspaceFolder}/.scaffolding",
+                "fieldSeparator": "|",
+                "description": "select serial port",
+                "useSingleResult": true,
+                "env" : {}
+            },
+            
+        }
+    ],
 }
