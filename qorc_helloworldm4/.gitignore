@@ -43,6 +43,14 @@
 # fpga build artifacts
 /**/rtl/*.bin
 /**/rtl/*_bit.h
+/**/rtl/*.jlink
+/**/rtl/*.openocd
 /**/rtl/build
 /**/rtl/Makefile.symbiflow
 ### build artifacts -- ###
+
+### scaffolding artifacts ++ ###
+custom_eoss3.jlink*
+custom_eoss3.openocd*
+fpga_load_custom_openocd_gdb.log
+### scaffolding artifacts -- ###

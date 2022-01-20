@@ -65,6 +65,42 @@
                 "close": true
             }
         },
+        {
+            "type": "shell",
+            "label": "m4-flash",
+            "command": "./m4_flash.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortExt}",
+            // "args": [
+            //     "${input:serialPort}"
+            // ],
+            "options": {
+                "cwd": "${workspaceFolder}/.scaffolding"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always", 
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "m4-flash-manual",
+            "command": "./m4_flash.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPort}",
+            // "args": [
+            //     "${input:serialPort}"
+            // ],
+            "options": {
+                "cwd": "${workspaceFolder}/.scaffolding"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always", 
+                "revealProblems": "onProblem",
+                "close": true
+            }
+        },
         // generate a compile_commands.json db from the make output using 'bear'
         // install using the regular package manager ('apt install bear' on Ubuntu)
         // recommend this one over compiledb - in some cases compiledb produced blank files.
@@ -101,5 +137,27 @@
                 "close": true
             }
         },
-    ]
+    ],
+    "inputs": [
+        {
+            "id": "serialPort",
+            "type": "promptString",
+            "description": "serialPort identifier",
+            "default": "/dev/ttyUSB0"
+        },
+        {
+            "id": "serialPortExt",
+            "type": "command",
+            "command": "shellCommand.execute",
+            "args" :{
+                "command": "python ./get_serial_ports_list.py",
+                "cwd": "${workspaceFolder}/.scaffolding",
+                "fieldSeparator": "|",
+                "description": "select serial port",
+                "useSingleResult": true,
+                "env" : {}
+            },
+            
+        }
+    ],
 }
