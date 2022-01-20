@@ -35,6 +35,7 @@ QORC_SDK_PATH=$(cd "$1"; printf %s "$PWD")
 QORC_SDK_DEBUGENVSETUP_VER=1.5.1
 
 # OpenOCD: https://github.com/xpack-dev-tools/openocd-xpack/releases/ -> get the linux-x64 archive from this page
+# also, some systems may need udev rules depending on debug probe used, put into /etc/udev/rules -> this is upto the end user.
 OPENOCD_ARCHIVE_URL="https://github.com/xpack-dev-tools/openocd-xpack/releases/download/v0.11.0-3/xpack-openocd-0.11.0-3-linux-x64.tar.gz"
 OPENOCD_ARCHIVE_FILE="xpack-openocd-0.11.0-3-linux-x64.tar.gz"
 OPENOCD_INSTALL_BASE_DIR="${QORC_SDK_PATH}/openocd_install"
