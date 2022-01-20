@@ -13,7 +13,7 @@
 // Finally, rename this file to settings.json : "mv settings.template.jsonc settings.json"
 {
     // path to the qorc-sdk
-    "qorc_sdk_path" : "${workspaceFolder}/../../",
+    "qorc_sdk_path" : "${workspaceFolder}/../..",
 
     // path to the arm toolchain
     "qorc_arm_toolchain_path" : "${config:qorc_sdk_path}/arm_toolchain_install/gcc-arm-none-eabi-9-2020-q2-update/bin",
@@ -23,6 +23,9 @@
 
     // path to the OpenOCD scripts dir if using OpenOCD
     "qorc_openocd_scripts_path" : "${config:qorc_sdk_path}/openocd_install/xpack-openocd-0.11.0-3/scripts",
+
+    // path to the JLink Commander if using JLink
+    "qorc_jlink_commander_path" : "${config:qorc_sdk_path}/jlink_install/JLink_Linux_V760d_x86_64/JLinkExe",
 
     // path to the JLink commandline gdb-server if using JLink
     "qorc_jlink_server_path" : "${config:qorc_sdk_path}/jlink_install/JLink_Linux_V760d_x86_64/JLinkGDBServerCLExe",
