@@ -5,35 +5,64 @@
     "version": "2.0.0",
     "tasks": [
         {
+            // build : build fpga, build m4 [default build task]
+            "label": "build",
             "type": "shell",
-            // 'label' is the name of the task: https://stackoverflow.com/a/51550043
-            "label": "m4-build",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make",
-            "options": {
-                "cwd": "${workspaceFolder}/GCC_Project",
-                // TODO other options to be documented
-            },
+            "dependsOrder": "parallel",
+            "dependsOn":[
+                "build-m4",
+                "build-fpga",
+            ],
             "group": {
-                // this sets the current task as the 'default' build task
                 "kind": "build",
                 "isDefault": true
             },
-            "problemMatcher": {
-                "base": "$gcc", 
-                //"fileLocation": ["relative", "${workspaceFolder}/GCC_Project/output"]
+        },
+        {
+            // clean : clean fpga, clean m4
+            "label": "clean",
+            "type": "shell",
+            "dependsOrder": "parallel",
+            "dependsOn":[
+                "clean-m4",
+                "clean-fpga",
+            ],
+            "group": "build"
+        },
+        {
+            // build-m4 : invoke make to build the cortex-m4 code
+            "label": "build-m4",
+            "type": "shell",
+            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make",
+            "options": {
+                "cwd": "${workspaceFolder}/GCC_Project",
             },
-            // auto close terminal after task exits: https://stackoverflow.com/a/67872135
+            "group": "build",
+            "problemMatcher": {
+                "base": "$gcc",
+                // https://github.com/microsoft/vscode-cpptools/blob/c694184fea81845543daaf9039839425b81d197b/Extension/package.json#L264
+                // to suppress warnings and show errors only, remove warnings in below regex
+                // and enable the pattern: (☠ don't ☠)
+                // "pattern": {
+                //     "regexp": "^(.*?):(\\d+):(\\d*):?\\s+(?:fatal\\s+)?(warning|error):\\s+(.*)$",
+                //     "file": 1,
+                //     "line": 2,
+                //     "column": 3,
+                //     "severity": 4,
+                //     "message": 5
+                // }
+            },
             "presentation": {
-                // reveal terminal only if problems encountered : 'silent'
-                "reveal": "silent",
+                "reveal": "always",
                 "revealProblems": "onProblem",
-                // comment below line out if you want to see the build terminal output always.
+                "panel": "new",
                 "close": true
             }
         },
         {
+            // clean-m4 : invoke make clean to clean the cortex-m4 code
+            "label": "clean-m4",
             "type": "shell",
-            "label": "m4-clean",
             "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean",
             "options": {
                 "cwd": "${workspaceFolder}/GCC_Project"
@@ -43,15 +72,33 @@
                 "base": "$gcc", 
             },
             "presentation": {
-                "reveal": "silent",
+                "reveal": "always",
                 "revealProblems": "onProblem",
                 "close": true
             }
         },
         {
+            // build-fpga : invoke ql_symbiflow to build verilog code
+            "label": "build-fpga",
             "type": "shell",
-            "label": "fpga-build",
-            "command": "./fpga_build.sh --qorc-sdk-path=${config:qorc_sdk_path}",
+            "command": "./build_fpga.sh --qorc-sdk-path=${config:qorc_sdk_path}",
+            "options": {
+                "cwd": "${workspaceFolder}/.scaffolding"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "panel": "new",
+                "close": true
+            }
+        },
+        {
+            // clean-fpga : remove fpga build artifacts
+            "label": "clean-fpga",
+            "type": "shell",
+            "command": "./clean_fpga.sh --qorc-sdk-path=${config:qorc_sdk_path}",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
@@ -64,93 +111,15 @@
             }
         },
         {
-            "type": "shell",
-            "label": "fpga-clean",
-            "command": "./fpga_clean.sh --qorc-sdk-path=${config:qorc_sdk_path}",
-            "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
-            },
-            "group": "build",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "silent",
-                "revealProblems": "onProblem",
-                "close": true
-            }
-        },
-        {
+            // flash-fpga-m4 : flash the fpga and m4 images into the board's flash via UART
             // !!!NOTE: ensure that python is available on PATH, and pySerial is installed!!!
             // Otherwise, run the script as in the command: "" below directly in bash shell to flash.
+            "label": "flash-fpga-m4",
             "type": "shell",
-            "label": "fpga-m4-flash",
-            "command": "./fpga_m4_flash.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortFromExt}",
+            "command": "./flash_fpga_m4.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortFromExt}",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
-            "group": "build",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always", 
-                "revealProblems": "onProblem",
-                "close": false
-            },
-            "dependsOrder": "parallel",
-            "dependsOn":[
-                "m4-build",
-                "fpga-build",
-            ]
-        },
-        {
-            "type": "shell",
-            "label": "fpga-m4-load (JLink)",
-            "command": "./fpga_m4_load_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
-            "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
-            },
-            "group": "build",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always", 
-                "revealProblems": "onProblem",
-                "close": false
-            },
-            "dependsOrder": "parallel",
-            "dependsOn":[
-                "m4-build",
-                "fpga-build"
-            ]
-        },
-        {
-            "type": "shell",
-            "label": "fpga-m4-load (OpenOCD) JLink",
-            "command": "./fpga_m4_load_openocd_gdb.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=jlink_swd.cfg --gdb-path=${config:qorc_arm_toolchain_path}/arm-none-eabi-gdb",
-            "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
-            },
-            "group": "build",
-            "problemMatcher": [],
-            "presentation": {
-                "reveal": "always",
-                "revealProblems": "onProblem",
-                "close": false
-            },
-            "dependsOrder": "parallel",
-            "dependsOn":[
-                "m4-build",
-                "fpga-build"
-            ]
-        },
-        {
-            // debug-fpga-load (JLink) : used only for debugging, with JLinkExe
-            // in launch.json Debug (JLink), ensure we have run to entrypoint "main", and start debugging
-            // once we are at "main" -> run this task -> continue debugging as usual
-            "type": "shell",
-            "label": "debug-fpga-load (JLink)",
-            "command": "./debug_fpga_load_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
-            "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
-            },
-            "group": "build",
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always", 
@@ -159,24 +128,92 @@
             },
             "dependsOrder": "parallel",
             "dependsOn":[
-                "m4-build",
-                "fpga-build"
+                "build-m4",
+                "build-fpga",
             ]
         },
-        // generate a compile_commands.json db from the make output using 'bear'
-        // install using the regular package manager ('apt install bear' on Ubuntu)
-        // recommend this one over compiledb - in some cases compiledb produced blank files.
-        // https://github.com/rizsotto/Bear
         {
+            // load-fpga-m4 : load the fpga and m4 images into EOS_S3 using OpenOCD and a JLink probe
+            "label": "load-fpga-m4 (OpenOCD) JLink",
             "type": "shell",
+            "command": "./load_fpga_m4_openocd_gdb.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=jlink_swd.cfg --gdb-path=${config:qorc_arm_toolchain_path}/arm-none-eabi-gdb",
+            "options": {
+                "cwd": "${workspaceFolder}/.scaffolding"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "close": false
+            },
+            "dependsOrder": "parallel",
+            "dependsOn":[
+                "build-m4",
+                "build-fpga"
+            ]
+        },
+        {
+            // load-fpga-m4 : load the fpga and m4 images into EOS_S3 using JLink Commander and a JLink probe
+            "label": "load-fpga-m4 (JLink)",
+            "type": "shell",
+            "command": "./load_fpga_m4_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
+            "options": {
+                "cwd": "${workspaceFolder}/.scaffolding"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always", 
+                "revealProblems": "onProblem",
+                "close": false
+            },
+            "dependsOrder": "parallel",
+            "dependsOn":[
+                "build-m4",
+                "build-fpga"
+            ]
+        },
+        {
+            // debug-load-fpga (JLink) : used only for debugging, with JLink GDB Server
+            // in launch.json 'Debug (JLink)', ensure we have run to entrypoint "main", and start debugging
+            // once we are at "main" -> run this task -> continue debugging as usual
+            // this is the only way we can load the fpga into EOS_S3 while debugging with the JLink GDB Server
+            "label": "debug-load-fpga (JLink)",
+            "detail": "run this task *after* entrypoint main is hit when debugging with JLink GDB Server",
+            "type": "shell",
+            "command": "./debug_load_fpga_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
+            "options": {
+                "cwd": "${workspaceFolder}/.scaffolding"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always", 
+                "revealProblems": "onProblem",
+                "close": true
+            },
+            "dependsOrder": "parallel",
+            "dependsOn":[
+                "build-m4",
+                "build-fpga"
+            ]
+        },
+        {
+            // generate-json-db : generate a compile_commands.json db from the make output using 'bear'
+            // this is ideally the first step to do after opening a project folder in VSCode for the first time,
+            // and improves the intellisense significantly!
+            // install using the regular package manager ('apt install bear' on Ubuntu)
+            // recommend this one over compiledb - in some cases compiledb produced blank files.
+            // https://github.com/rizsotto/Bear
             "label": "generate-json-db",
+            "detail": "generate compile_commands.json using bear",
+            "type": "shell",
             "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean && bear make",
             "options": {
                 "cwd": "${workspaceFolder}/GCC_Project"
             },
             "group": "build",
             "presentation": {
-                "reveal": "silent",
+                "reveal": "always",
                 "revealProblems": "onProblem",
                 "close": true
             }
@@ -184,6 +221,11 @@
     ],
     "inputs": [
         {
+            // uses the 'augustocdias.tasks-shell-input' extension to show a nice user friendly
+            // 'quickpick' dropdown in vscode for the user to select the serial port while
+            // flashing the images into the board
+            // - requires the extension to be installed.
+            // - requires that python and pySerial are installed on the HOST machine already.
             "id": "serialPortFromExt",
             "type": "command",
             "command": "shellCommand.execute",

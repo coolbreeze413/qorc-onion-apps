@@ -69,6 +69,7 @@ while true ; do
         ;;
     esac
 done
+################################################################################
 
 # arg checks
 if [ -z "$OPENOCD_PATH" ] ; then
@@ -96,8 +97,6 @@ printf "OPENOCD_PATH=$OPENOCD_PATH\n"
 printf "OPENOCD_INTERFACE_CFG=$OPENOCD_INTERFACE_CFG\n"
 printf "GDB_PATH=$GDB_PATH\n"
 printf "\n"
-################################################################################
-
 
 
 PROJECT_ROOT_DIR=$(cd .. ; printf %s "$PWD")
@@ -132,9 +131,8 @@ sleep 1
 # ref: https://stackoverflow.com/a/46867839
 # run gdb, load m4, load fpga, wait for user commands.
 # use -q to suppress banner: https://stackoverflow.com/a/61473013, but still enter the gdb shell after that.
-# use -batch to fully automate the steps and close gdb automatically - uncomment this if needed.
+# use -batch to fully automate the steps and close gdb automatically
 "$GDB_PATH" \
-#        -batch \
         -q \
         -ex "target extended-remote localhost:3333" \
         -ex "monitor init" \

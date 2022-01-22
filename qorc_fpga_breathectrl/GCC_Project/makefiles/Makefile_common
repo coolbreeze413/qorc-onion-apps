@@ -34,9 +34,5 @@ clean:
 ifneq (,${DELETEME})
 	-$(HIDE)$(RM) $(D_FILES)
 	-$(HIDE)$(RM) $(O_FILES) 
-ifneq (,$(FPGA_RTL_OBJ))
-	-$(HIDE)$(RM) $(MAIN_FPGA_RTL_DIR)/$(FPGA_RTL_OBJ)
-endif
-	-$(HIDE)$(RMDIR) $(MAIN_FPGA_RTL_DIR)/build
 endif
 
