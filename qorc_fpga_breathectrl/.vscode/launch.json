@@ -20,7 +20,7 @@
             // svd
             "svdFile": "${config:qorc_svd_file_path}",
             // do we want to run anything before launching debug?
-            "preLaunchTask": "build", // refer to this 'label' in tasks.json
+            //"preLaunchTask": "fpga-load (JLink)", // refer to this 'label' in tasks.json
         },
         // Attach - JLink GDB Server - JLink Probe
         {

@@ -79,12 +79,11 @@
             }
         },
         {
+            // !!!NOTE: ensure that python is available on PATH, and pySerial is installed!!!
+            // Otherwise, run the script as in the command: "" below directly in bash shell to flash.
             "type": "shell",
             "label": "fpga-m4-flash",
             "command": "./fpga_m4_flash.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortFromExt}",
-            // "args": [
-            //     "${input:serialPort}"
-            // ],
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
@@ -98,7 +97,7 @@
             "dependsOrder": "parallel",
             "dependsOn":[
                 "m4-build",
-                "fpga-build"
+                "fpga-build",
             ]
         },
         {
@@ -134,6 +133,29 @@
                 "reveal": "always",
                 "revealProblems": "onProblem",
                 "close": false
+            },
+            "dependsOrder": "parallel",
+            "dependsOn":[
+                "m4-build",
+                "fpga-build"
+            ]
+        },
+        {
+            // debug-fpga-load (JLink) : used only for debugging, with JLinkExe
+            // in launch.json Debug (JLink), ensure we have run to entrypoint "main", and start debugging
+            // once we are at "main" -> run this task -> continue debugging as usual
+            "type": "shell",
+            "label": "debug-fpga-load (JLink)",
+            "command": "./debug_fpga_load_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
+            "options": {
+                "cwd": "${workspaceFolder}/.scaffolding"
+            },
+            "group": "build",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always", 
+                "revealProblems": "onProblem",
+                "close": true
             },
             "dependsOrder": "parallel",
             "dependsOn":[
