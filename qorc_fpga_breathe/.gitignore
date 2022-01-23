@@ -50,8 +50,9 @@
 ### build artifacts -- ###
 
 ### scaffolding artifacts ++ ###
-custom_eoss3.jlink*
-custom_eoss3_reset.jlink
-custom_eoss3.openocd*
+custom_eoss3_*.jlink
+custom_eoss3_*.log
 fpga_load_custom_openocd_gdb.log
+fpga_m4_load_custom_openocd_gdb.log
+m4_load_custom_openocd_gdb.log
 ### scaffolding artifacts -- ###
