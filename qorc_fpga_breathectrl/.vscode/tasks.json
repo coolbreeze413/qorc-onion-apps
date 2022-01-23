@@ -133,10 +133,10 @@
             ]
         },
         {
-            // load-fpga-m4 : load the fpga and m4 images into EOS_S3 using OpenOCD and a JLink probe
-            "label": "load-fpga-m4 (OpenOCD) JLink",
+            // load-fpga-m4 : load the fpga and m4 images into EOS_S3 using OpenOCD and a selectable probe
+            "label": "load-fpga-m4 (OpenOCD)",
             "type": "shell",
-            "command": "./load_fpga_m4_openocd_gdb.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=jlink_swd.cfg --gdb-path=${config:qorc_arm_toolchain_path}/arm-none-eabi-gdb",
+            "command": "./load_fpga_m4_openocd_gdb.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=${input:openocdProbe} --gdb-path=${config:qorc_arm_toolchain_path}/arm-none-eabi-gdb",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
@@ -237,7 +237,18 @@
                 //"useSingleResult": true,
                 "env" : {}
             },
-            
+        },
+        {
+            "id": "openocdProbe",
+            "description": "select debug probe to use with OpenOCD",
+            "type": "pickString",
+            "options": [
+                "jlink_swd.cfg",
+                "ft2232h_swd.cfg",
+                "interface/stlink-v2.cfg",
+                "interface/cmsis-dap.cfg"
+            ],
+            "default": "jlink_swd.cfg"
         }
     ],
 }
