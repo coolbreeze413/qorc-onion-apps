@@ -1,6 +1,8 @@
 #!/bin/bash
 
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 ################################################################################
 #   getopt based parsing
 ################################################################################
@@ -93,7 +95,7 @@ fi
 
 
 
-PROJECT_ROOT_DIR=$(cd .. ; printf %s "$PWD")
+PROJECT_ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
 
 PROJECT_OUTPUT_BIN_DIR="${PROJECT_ROOT_DIR}/GCC_Project/output/bin"
 PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin)

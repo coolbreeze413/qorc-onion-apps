@@ -1,6 +1,9 @@
 #!/bin/bash
 
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+
 ################################################################################
 #   getopt based parsing
 ################################################################################
@@ -82,7 +85,7 @@ fi
 
 
 
-PROJECT_ROOT_DIR=$(cd .. ; printf %s "$PWD")
+PROJECT_ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
 PROJECT_RTL_DIR="${PROJECT_ROOT_DIR}/fpga/rtl"
 
 #PROJECT_VERILOG_FILES="AL4S3B_FPGA_Top.v AL4S3B_FPGA_IP.v AL4S3B_FPGA_ONION_BREATHECTRL.v ONION_BREATHE.v AL4S3B_FPGA_QL_Reserved.v"

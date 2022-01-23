@@ -25,8 +25,8 @@ BREATHE function.
 How To
 ======
 
-Build FPGA and M4
------------------
+Build M4
+--------
 
 From the project root dir, execute:
 
@@ -34,27 +34,25 @@ From the project root dir, execute:
   
   make -C GCC_Project
 
-This will generate:
-
-- m4app binary: :code:`GCC_Project/output/bin/qorc_fpga_breathectrl.bin`
-- appfpga binary: :code:`fpga/rtl/AL4S3B_FPGA_Top.bin`
+This will generate m4app binary: :code:`GCC_Project/output/bin/qorc_fpga_breathectrl.bin`
 
 
-Build only FPGA (optional)
---------------------------
-
-It is recommended to always use the :code:`make` to build both M4 and FPGA, as only the changed files are 
-actually built.
-
-If you really want to build only the FPGA binary, you can do so as below.
+Build FPGA
+----------
 
 From the project root dir, execute:
 
 ::
   
-  ql_symbiflow -compile -src fpga/rtl -d ql-eos-s3 -P pu64 -v AL4S3B_FPGA_Top.v AL4S3B_FPGA_IP.v AL4S3B_FPGA_QL_Reserved.v AL4S3B_FPGA_ONION_BREATHECTRL.v ONION_BREATHE.v -t AL4S3B_FPGA_Top -p quickfeather.pcf -dump binary
+  ql_symbiflow -compile -src fpga/rtl -d ql-eos-s3 -P PU64 -v AL4S3B_FPGA_Top.v AL4S3B_FPGA_IP.v AL4S3B_FPGA_QL_Reserved.v AL4S3B_FPGA_ONION_BREATHECTRL.v ONION_BREATHE.v -t AL4S3B_FPGA_Top -p quickfeather.pcf -dump binary
 
 This will create the appfpga binary: :code:`fpga/rtl/AL4S3B_FPGA_Top.bin`
+
+Alternatively, use the 'build_fpga.sh' script:
+
+::
+
+  ./.scaffolding/fpga_build.sh
 
 
 

@@ -3,6 +3,8 @@
 # currently we don't need the QORC_SDK or any of its env for this step, but keeping it
 # for uniformity.
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 ################################################################################
 #   getopt based parsing
 ################################################################################
@@ -86,7 +88,7 @@ fi
 
 # to adapt to a new fpga-only project: nothing needs to be changed
 
-PROJECT_ROOT_DIR=$(cd .. ; printf %s "$PWD")
+PROJECT_ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
 PROJECT_RTL_DIR="${PROJECT_ROOT_DIR}/fpga/rtl"
 
 rm -rf "$PROJECT_RTL_DIR"/build || true

@@ -1,8 +1,8 @@
 {
     "version": "0.2.0",
     "configurations": [
-        // Debug - OpenOCD GDB Server - selectable probe
         {
+            // Debug - OpenOCD GDB Server - selectable probe
             "name": "Debug (OpenOCD)",
             "type": "cortex-debug",
             "request": "launch",
@@ -45,8 +45,11 @@
             // enable this to debug gdb output if any issues
             "showDevDebugOutput": "none"
         },
-        // Debug - JLink GDB Server - JLink probe
         {
+            // Debug - JLink GDB Server - JLink probe
+            // ensure we have run to entrypoint "main", and start debugging
+            // once we are at "main" -> run the task "debug-load-fpga (JLink)" -> continue debugging as usual
+            // this is the only way we can load the fpga into EOS_S3 while debugging with the JLink GDB Server
             "name": "Debug (JLink)",
             "type": "cortex-debug",
             "request": "launch",
