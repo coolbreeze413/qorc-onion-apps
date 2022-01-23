@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# currently we don't need the QORC_SDK or any of its env for this step, but keeping it
-# for uniformity.
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 ################################################################################
 #   getopt based parsing
@@ -9,7 +9,7 @@
 # option strings
 SHORT="" # no short options at all, clearer that way.
 # reference on how to enforce no short options: https://unix.stackexchange.com/questions/162624/how-to-use-getopt-in-bash-command-line-with-only-long-options
-LONG="qorc-sdk-path:,help"
+LONG="qorc-sdk-path:,port:,help"
 
 
 # read the options
@@ -26,9 +26,9 @@ usage()
     printf "\n"
     printf "build the fpga design\n"
     printf "\n"
-    printf " syntax: $0 --qorc-sdk-path=/path/to/qorc/sdk\n"
+    printf " syntax: $0 --qorc-sdk-path=/path/to/qorc/sdk --port=serial_port_id\n"
     printf "\n"
-    printf "example: $0 --qorc-sdk-path=$HOME/qorc-sdk\n"
+    printf "example: $0 --qorc-sdk-path=$HOME/qorc-sdk --port=/dev/ttyUSB0\n"
     printf "\n"
 }
 
@@ -37,6 +37,10 @@ while true ; do
     case "$1" in
         --qorc-sdk-path )
             QORC_SDK_PATH="$2"
+            shift 2
+        ;;
+        --port )
+            PORT="$2"
             shift 2
         ;;
         -- )
@@ -53,6 +57,12 @@ done
 # arg checks
 if [ -z "$QORC_SDK_PATH" ] ; then
     printf "\nWARNING: QORC_SDK_PATH is not defined!\n"
+fi
+
+if [ -z "$PORT" ] ; then
+    printf "\nERROR: PORT is not defined!\n"
+    usage
+    exit 1
 fi
 
 
@@ -75,6 +85,7 @@ if [ ! -z "$QORC_SDK_PATH" ] ; then
     cd - > /dev/null
 fi
 
+
 # setup QORC_SDK debug environment (optional)
 # if [ ! -z "$QORC_SDK_PATH" ] ; then
 #     cd $QORC_SDK_PATH/qorc-onion-apps/qorc_utils
@@ -84,14 +95,12 @@ fi
 
 
 
-# to adapt to a new fpga-only project: nothing needs to be changed
+PROJECT_ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
 
-PROJECT_ROOT_DIR=$(cd .. ; printf %s "$PWD")
 PROJECT_RTL_DIR="${PROJECT_ROOT_DIR}/fpga/rtl"
+PROJECT_FPGA_DESIGN_BIN=$(ls "$PROJECT_RTL_DIR"/*.bin)
 
-rm -rf "$PROJECT_RTL_DIR"/build || true
-rm "$PROJECT_RTL_DIR"/*bit.h || true
-rm "$PROJECT_RTL_DIR"/*.bin || true
-rm "$PROJECT_RTL_DIR"/*.jlink || true
-rm "$PROJECT_RTL_DIR"/*.openocd || true
-rm "$PROJECT_RTL_DIR"/Makefile.symbiflow || true
+printf "flash using port [%s], design [%s] with mode [%s]\n\n" "$PORT" "$PROJECT_FPGA_DESIGN_BIN" "fpga"
+
+# qfprog is a function(earlier alias) created in envsetup.sh
+qfprog --port "$PORT" --appfpga "$PROJECT_FPGA_DESIGN_BIN" --mode fpga --reset

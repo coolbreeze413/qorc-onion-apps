@@ -24,6 +24,10 @@
 
 
 import serial.tools.list_ports
+#import inspect
+
+#print(inspect.getfile(serial.tools.list_ports))
+#print(inspect.getfile(inspect))
 
 ports = serial.tools.list_ports.comports(include_links=False)
 

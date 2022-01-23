@@ -1,13 +1,16 @@
 #!/bin/bash
 
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+
 ################################################################################
 #   getopt based parsing
 ################################################################################
 # option strings
 SHORT="" # no short options at all, clearer that way.
 # reference on how to enforce no short options: https://unix.stackexchange.com/questions/162624/how-to-use-getopt-in-bash-command-line-with-only-long-options
-LONG="qorc-sdk-path:,port:,help"
+LONG="qorc-sdk-path:,help"
 
 
 # read the options
@@ -24,9 +27,9 @@ usage()
     printf "\n"
     printf "build the fpga design\n"
     printf "\n"
-    printf " syntax: $0 --qorc-sdk-path=/path/to/qorc/sdk --port=serial_port_id\n"
+    printf " syntax: $0 --qorc-sdk-path=/path/to/qorc/sdk\n"
     printf "\n"
-    printf "example: $0 --qorc-sdk-path=$HOME/qorc-sdk --port=/dev/ttyUSB0\n"
+    printf "example: $0 --qorc-sdk-path=$HOME/qorc-sdk\n"
     printf "\n"
 }
 
@@ -36,11 +39,7 @@ while true ; do
         --qorc-sdk-path )
             QORC_SDK_PATH="$2"
             shift 2
-        ;;
-        --port )
-            PORT="$2"
-            shift 2
-        ;;
+        ;;        
         -- )
             shift
             break
@@ -55,12 +54,6 @@ done
 # arg checks
 if [ -z "$QORC_SDK_PATH" ] ; then
     printf "\nWARNING: QORC_SDK_PATH is not defined!\n"
-fi
-
-if [ -z "$PORT" ] ; then
-    printf "\nERROR: PORT is not defined!\n"
-    usage
-    exit 1
 fi
 
 
@@ -83,7 +76,6 @@ if [ ! -z "$QORC_SDK_PATH" ] ; then
     cd - > /dev/null
 fi
 
-
 # setup QORC_SDK debug environment (optional)
 # if [ ! -z "$QORC_SDK_PATH" ] ; then
 #     cd $QORC_SDK_PATH/qorc-onion-apps/qorc_utils
@@ -93,16 +85,34 @@ fi
 
 
 
-PROJECT_ROOT_DIR=$(cd .. ; printf %s "$PWD")
-PROJECT_OUTPUT_BIN_DIR="${PROJECT_ROOT_DIR}/GCC_Project/output/bin"
+PROJECT_ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
+PROJECT_RTL_DIR="${PROJECT_ROOT_DIR}/fpga/rtl"
 
-PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin)
+#PROJECT_VERILOG_FILES="AL4S3B_FPGA_Top.v AL4S3B_FPGA_IP.v AL4S3B_FPGA_ONION_BREATHECTRL.v ONION_BREATHE.v AL4S3B_FPGA_QL_Reserved.v"
+PROJECT_VERILOG_FILES=$(cd ${PROJECT_RTL_DIR};ls *.v)
+echo "$PROJECT_VERILOG_FILES" > ${PROJECT_RTL_DIR}/tmp_v_list
+sed '/^$/d' $PROJECT_RTL_DIR/tmp_v_list > $PROJECT_RTL_DIR/tmp_f_list
+PROJECT_VERILOG_FILES=$(cat $PROJECT_RTL_DIR/tmp_f_list)
+rm $PROJECT_RTL_DIR/tmp_v_list $PROJECT_RTL_DIR/tmp_f_list
 
-printf "flash using port [%s], design [%s] with mode [%s]\n\n" "$PORT" "$PROJECT_M4_BIN" "m4"
+# name of the "top" module in the fpga design
+PROJECT_TOP_MODULE="AL4S3B_FPGA_Top"
 
-# qfprog is a function(earlier alias) created in envsetup.sh
-qfprog --port "$PORT" --appfpga "$PROJECT_M4_BIN" --mode m4 --reset
+#PROJECT_PCF_FILE="quickfeather.pcf"
+PROJECT_PCF_FILE=$(cd ${PROJECT_RTL_DIR};ls *.pcf)
 
-# without the alias in envsetup.sh available, we can also do:
-#qfprog="python3 ${QORC_SDK_PATH}/TinyFPGA-Programmer-Application/tinyfpga-programmer-gui.py"
-#$qfprog --port "$PORT" --appfpga "$PROJECT_FPGA_DESIGN_BIN" --mode fpga --reset
+# PD64/PU64/WD48
+PROJECT_PACKAGE="PU64"
+
+PROJECT_DEVICE="ql-eos-s3"
+
+# note: provide an absolute path to the -src parameter (especially when dumping multiple output formats at the same time)
+# note: for m4-fpga-standalone projects, fpga is built independently, always specify dump binary (and openocd,jlink for debugging or loading over SWD)
+ql_symbiflow -compile \
+             -src "$PROJECT_RTL_DIR" \
+             -d "$PROJECT_DEVICE" \
+             -t "$PROJECT_TOP_MODULE" \
+             -v "$PROJECT_VERILOG_FILES" \
+             -p "$PROJECT_PCF_FILE" \
+             -P "$PROJECT_PACKAGE" \
+             -dump binary openocd jlink
