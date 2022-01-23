@@ -12,6 +12,10 @@ then
     exit 1
 fi
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+#printf "\nSCRIPT_DIR=$SCRIPT_DIR\n\n"
+
+
 # this section is as long as this is a standalone script separate from the envsetup.sh
 #printf "$#"
 if [ "$#" != "1" ] ; then
@@ -30,7 +34,7 @@ if [ ! -d "$1" ] ; then
 fi
 
 # convert to absolute path
-QORC_SDK_PATH=$(cd "$1"; printf %s "$PWD")
+QORC_SDK_PATH=$(cd "$1" && pwd)
 
 QORC_SDK_DEBUGENVSETUP_VER=1.5.1
 
@@ -42,7 +46,9 @@ OPENOCD_INSTALL_BASE_DIR="${QORC_SDK_PATH}/openocd_install"
 OPENOCD_INSTALL_DIR="${OPENOCD_INSTALL_BASE_DIR}/xpack-openocd-0.11.0-3"
 EXPECTED_OPENOCD_PATH="${OPENOCD_INSTALL_DIR}/bin/openocd"
 # additionally, the custom openocd cfg files as needed:
-OPENOCD_CFG_FILE_LIST=("ft2232h_swd.cfg" "jlink_swd.cfg")
+# we are not doing this as we can keep the cfg files in the .scaffolding dir for the project
+# this is much clearer than injecting files into a third-party installation, unless it was necessary
+#OPENOCD_CFG_FILE_LIST=("ft2232h_swd.cfg" "jlink_swd.cfg")
 
 # JLink: https://www.segger.com/downloads/jlink/ -> get the Linux/'64-bit TGZ Archive' from this page
 # note that there is a EULA which needs a POST request, as described here: https://github.com/ScoopInstaller/Scoop/issues/4336
@@ -96,12 +102,12 @@ if [ ! -d "$OPENOCD_INSTALL_DIR" ]; then
         printf "    openocd installation looks good\n"
     fi
 
-    # copy the additional OpenOCD interface cfg files as needed (currently we use FT2232H/JLink as swd,
-    #  which is not in the default OpenOCD distributions)
-    for OPENOCD_CFG_FILE in "${OPENOCD_CFG_FILE_LIST[@]}"
-    do
-        cp -v "${OPENOCD_CFG_FILE}" "${OPENOCD_INSTALL_DIR}/scripts/interface"
-    done
+    # we are not doing this anymore, see note near OPENOCD_CFG_FILE_LIST declaration
+    # copy the additional OpenOCD interface cfg files as needed
+    # for OPENOCD_CFG_FILE in "${OPENOCD_CFG_FILE_LIST[@]}"
+    # do
+    #     cp -v "${OPENOCD_CFG_FILE}" "${OPENOCD_INSTALL_DIR}/scripts/interface"
+    # done
 
 
 fi
