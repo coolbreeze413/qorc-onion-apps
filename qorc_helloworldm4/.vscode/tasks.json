@@ -5,35 +5,39 @@
     "version": "2.0.0",
     "tasks": [
         {
+            // build-m4 : invoke make to build the cortex-m4 code
+            "label": "build-m4",
             "type": "shell",
-            // 'label' is the name of the task: https://stackoverflow.com/a/51550043
-            "label": "build",
             "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make",
             "options": {
                 "cwd": "${workspaceFolder}/GCC_Project",
-                // TODO other options to be documented
             },
-            "group": {
-                // this sets the current task as the 'default' build task
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "problemMatcher": {
-                "base": "$gcc", 
-                //"fileLocation": ["relative", "${workspaceFolder}/GCC_Project/output"]
+                "base": "$gcc",
+                // https://github.com/microsoft/vscode-cpptools/blob/c694184fea81845543daaf9039839425b81d197b/Extension/package.json#L264
+                // to suppress warnings and show errors only, remove warnings in below regex
+                // and enable the pattern: (☠ don't ☠)
+                // "pattern": {
+                //     "regexp": "^(.*?):(\\d+):(\\d*):?\\s+(?:fatal\\s+)?(warning|error):\\s+(.*)$",
+                //     "file": 1,
+                //     "line": 2,
+                //     "column": 3,
+                //     "severity": 4,
+                //     "message": 5
+                // }
             },
-            // auto close terminal after task exits: https://stackoverflow.com/a/67872135
             "presentation": {
-                // reveal terminal only if problems encountered : 'silent'
-                "reveal": "silent",
+                "reveal": "always",
                 "revealProblems": "onProblem",
-                // comment below line out if you want to see the build terminal output always.
+                "panel": "new",
                 "close": true
             }
         },
         {
+            // clean-m4 : invoke make clean to clean the cortex-m4 code
+            "label": "clean-m4",
             "type": "shell",
-            "label": "clean",
             "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean",
             "options": {
                 "cwd": "${workspaceFolder}/GCC_Project"
@@ -43,68 +47,56 @@
                 "base": "$gcc", 
             },
             "presentation": {
-                "reveal": "silent",
+                "reveal": "always",
                 "revealProblems": "onProblem",
                 "close": true
             }
         },
         {
+            // flash-m4 : flash the m4 image into the board's flash via UART
+            // !!!NOTE: ensure that python is available on PATH, and pySerial is installed!!!
+            // Otherwise, run the script as in the command: "" below directly in bash shell to flash.
+            "label": "flash-m4",
             "type": "shell",
-            "label": "clean-build",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean && make",
-            "options": {
-                "cwd": "${workspaceFolder}/GCC_Project"
-            },
-            "group": "build",
-            "problemMatcher": {
-                "base": "$gcc", 
-            },
-            "presentation": {
-                "reveal": "silent",
-                "revealProblems": "onProblem",
-                "close": true
-            }
-        },
-        {
-            "type": "shell",
-            "label": "m4-flash",
-            "command": "./m4_flash.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortExt}",
-            // "args": [
-            //     "${input:serialPort}"
-            // ],
+            "command": "./flash_m4.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortFromExt}",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
-            "group": "build",
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always", 
                 "revealProblems": "onProblem",
                 "close": true
-            }
+            },
+            "dependsOrder": "parallel",
+            "dependsOn":[
+                "build-m4",
+            ]
         },
         {
+            // load-m4 : load m4 image into EOS_S3 using OpenOCD and a selectable probe
+            "label": "load-m4 (OpenOCD)",
             "type": "shell",
-            "label": "m4-flash-manual",
-            "command": "./m4_flash.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPort}",
-            // "args": [
-            //     "${input:serialPort}"
-            // ],
+            "command": "./load_m4_openocd_gdb.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=${input:openocdProbe} --gdb-path=${config:qorc_arm_toolchain_path}/arm-none-eabi-gdb",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
-            "group": "build",
             "problemMatcher": [],
             "presentation": {
-                "reveal": "always", 
+                "reveal": "always",
                 "revealProblems": "onProblem",
-                "close": true
-            }
+                "close": false
+            },
+            "dependsOrder": "parallel",
+            "dependsOn":[
+                "build-m4",
+            ]
         },
         {
+            // load-m4 : load m4 image into EOS_S3 using JLink Commander and a JLink probe
+            "label": "load-m4 (JLink)",
             "type": "shell",
-            "label": "m4-load (JLink)",
-            "command": "./m4_load_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
+            "command": "./load_m4_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
@@ -114,40 +106,29 @@
                 "reveal": "always", 
                 "revealProblems": "onProblem",
                 "close": false
-            }
+            },
+            "dependsOrder": "parallel",
+            "dependsOn":[
+                "build-m4",
+            ]
         },
-        // generate a compile_commands.json db from the make output using 'bear'
-        // install using the regular package manager ('apt install bear' on Ubuntu)
-        // recommend this one over compiledb - in some cases compiledb produced blank files.
-        // https://github.com/rizsotto/Bear
         {
+            // generate-json-db : generate a compile_commands.json db from the make output using 'bear'
+            // this is ideally the first step to do after opening a project folder in VSCode for the first time,
+            // and improves the intellisense significantly!
+            // install using the regular package manager ('apt install bear' on Ubuntu)
+            // recommend this one over compiledb - in some cases compiledb produced blank files.
+            // https://github.com/rizsotto/Bear
+            "label": "generate-json-db",
+            "detail": "generate compile_commands.json using bear",
             "type": "shell",
-            "label": "json-db-bear",
             "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean && bear make",
             "options": {
                 "cwd": "${workspaceFolder}/GCC_Project"
             },
             "group": "build",
             "presentation": {
-                "reveal": "silent",
-                "revealProblems": "onProblem",
-                "close": true
-            }
-        },
-        // generate a compile_commands.json db from the make output using 'compiledb'
-        // install using pip (pip install compiledb)
-        // it doesn't need a make clean, it can use dry-run instead, so faster, and python, so easier on many platforms.
-        // https://github.com/nickdiego/compiledb
-        {
-            "type": "shell",
-            "label": "json-db-compiledb",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean && compiledb make",
-            "options": {
-                "cwd": "${workspaceFolder}/GCC_Project"
-            },
-            "group": "build",
-            "presentation": {
-                "reveal": "silent",
+                "reveal": "always",
                 "revealProblems": "onProblem",
                 "close": true
             }
@@ -155,24 +136,34 @@
     ],
     "inputs": [
         {
-            "id": "serialPort",
-            "type": "promptString",
-            "description": "serialPort identifier",
-            "default": "/dev/ttyUSB0"
-        },
-        {
-            "id": "serialPortExt",
+            // uses the 'augustocdias.tasks-shell-input' extension to show a nice user friendly
+            // 'quickpick' dropdown in vscode for the user to select the serial port while
+            // flashing the images into the board
+            // - requires the extension to be installed.
+            // - requires that python and pySerial are installed on the HOST machine already.
+            "id": "serialPortFromExt",
             "type": "command",
             "command": "shellCommand.execute",
-            "args" :{
+            "args" : {
                 "command": "python ./get_serial_ports_list.py",
                 "cwd": "${workspaceFolder}/.scaffolding",
                 "fieldSeparator": "|",
-                "description": "select serial port",
-                "useSingleResult": true,
+                "description": "select serial port [>> ensure it is not opened in another program <<]",
+                //"useSingleResult": true,
                 "env" : {}
             },
-            
+        },
+        {
+            "id": "openocdProbe",
+            "description": "select debug probe to use with OpenOCD",
+            "type": "pickString",
+            "options": [
+                "jlink_swd.cfg",
+                "ft2232h_swd.cfg",
+                "interface/stlink-v2.cfg",
+                "interface/cmsis-dap.cfg"
+            ],
+            "default": "jlink_swd.cfg"
         }
     ],
 }

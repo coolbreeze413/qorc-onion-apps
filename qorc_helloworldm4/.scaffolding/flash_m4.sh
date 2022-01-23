@@ -1,6 +1,8 @@
 #!/bin/bash
 
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 ################################################################################
 #   getopt based parsing
 ################################################################################
@@ -93,16 +95,12 @@ fi
 
 
 
-PROJECT_ROOT_DIR=$(cd .. ; printf %s "$PWD")
-PROJECT_OUTPUT_BIN_DIR="${PROJECT_ROOT_DIR}/GCC_Project/output/bin"
+PROJECT_ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
 
+PROJECT_OUTPUT_BIN_DIR="${PROJECT_ROOT_DIR}/GCC_Project/output/bin"
 PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin)
 
-printf "flash using port [%s], design [%s] with mode [%s]\n\n" "$PORT" "$PROJECT_M4_BIN" "m4"
+printf "flash using port [%s], m4 [%s], with mode [%s]\n\n" "$PORT" "$PROJECT_M4_BIN" "m4"
 
 # qfprog is a function(earlier alias) created in envsetup.sh
-qfprog --port "$PORT" --appfpga "$PROJECT_M4_BIN" --mode m4 --reset
-
-# without the alias in envsetup.sh available, we can also do:
-#qfprog="python3 ${QORC_SDK_PATH}/TinyFPGA-Programmer-Application/tinyfpga-programmer-gui.py"
-#$qfprog --port "$PORT" --appfpga "$PROJECT_FPGA_DESIGN_BIN" --mode fpga --reset
+qfprog --port "$PORT" --m4app "$PROJECT_M4_BIN" --mode m4 --reset
