@@ -32,6 +32,8 @@ usage()
     printf "\n"
     printf "example: $0 --qorc-sdk-path=$HOME/qorc-sdk --port=/dev/ttyUSB0\n"
     printf "\n"
+    printf "add --confirm=yes to override confirmation prompt."
+    printf "\n"
 }
 
 # extract options and their arguments into variables
@@ -71,7 +73,7 @@ if [ -z "$PORT" ] ; then
     exit 1
 fi
 
-# --confirm="no" or --confirm="yes" neither passed in
+# --confirm not passed in: pester user (command-line usage)
 if [ "$CONFIRM" == "undefined" ] ; then
     printf "\nCAUTION: This will replace the bootloader on the board with this one!\n\n"
     read -p "          Are you sure ? (no/yes): " CONFIRM
@@ -80,14 +82,15 @@ if [ "$CONFIRM" == "undefined" ] ; then
         printf "\nAborting, as we did not get a yes!\n"
         exit 0
     fi
+# --confirm=yes passed in: skip query, user knows what he is doing, or from vs code task
 elif [ "$CONFIRM" == "yes" ] ; then
     printf "\nreceived --confirm=yes in the args, flashing bootloader...\n\n"
+# unknown input, abort
 else
-    printf "\nnegative input received, aborting flash\n\n"
+    printf "\ninvalid input received, aborting flash\n\n"
     exit 0
 fi
 
-exit 0
 
 # confirmation print
 printf "\n"
