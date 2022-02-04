@@ -1,9 +1,4 @@
 #
-# Symbiflow options for QORK SDK
-#
-export RTL_TOP_MODULE=
-
-#
 # GCC Configuration options for QORC SDK
 #
 

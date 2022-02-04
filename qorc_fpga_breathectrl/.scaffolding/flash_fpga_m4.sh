@@ -90,5 +90,5 @@ PROJECT_FPGA_DESIGN_BIN=$(ls "$PROJECT_RTL_DIR"/*.bin)
 
 printf "flash using port [%s], m4 [%s], design [%s] with mode [%s]\n\n" "$PORT" "$PROJECT_M4_BIN" "$PROJECT_FPGA_DESIGN_BIN" "fpga-m4"
 
-# qfprog is a function(earlier alias) created in envsetup.sh
+# qfprog is a function created in envsetup.sh
 qfprog --port "$PORT" --m4app "$PROJECT_M4_BIN" --appfpga "$PROJECT_FPGA_DESIGN_BIN" --mode fpga-m4 --reset

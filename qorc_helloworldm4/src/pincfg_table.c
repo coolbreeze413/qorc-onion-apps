@@ -37,9 +37,37 @@ PadConfig pincfg_table[] =
     .ucMode = PAD_MODE_INPUT_EN,
     .ucPull = PAD_NOPULL,
   },
-
-
-
+  // LEDS
+   { // setup blue LED
+    .ucPin = PAD_18,
+    .ucFunc = PAD18_FUNC_SEL_GPIO_4,
+    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGTH_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+  { // setup green LED
+    .ucPin = PAD_21,
+    .ucFunc = PAD21_FUNC_SEL_GPIO_5,
+    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGTH_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
+  { // setup red LED
+    .ucPin = PAD_22,
+    .ucFunc = PAD22_FUNC_SEL_GPIO_6,
+    .ucCtrl = PAD_CTRL_SRC_A0,
+    .ucMode = PAD_MODE_OUTPUT_EN,
+    .ucPull = PAD_NOPULL,
+    .ucDrv = PAD_DRV_STRENGTH_4MA,
+    .ucSpeed = PAD_SLEW_RATE_SLOW,
+    .ucSmtTrg = PAD_SMT_TRIG_DIS,
+  },
   { // setup debug input pins Pad 14 - S3_SW_DP_CLK
     .ucMode = PAD_MODE_INPUT_EN,
     .ucCtrl = PAD_CTRL_SRC_OTHER,

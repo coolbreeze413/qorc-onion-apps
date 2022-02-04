@@ -69,6 +69,7 @@ $(info Building on Windows $(BUILD_SYS))
 
 export DIR_SEP=\\
 
+
 #Configuration options for GNU Win32 GCC Toolchain
 export MKDIR=mkdir
 export RM=del /S /Q
@@ -84,7 +85,6 @@ _tmp2=$(subst /,\,${_tmp})
 # Resolve this once, now, thus we assign with := not =
 export PROJ_DIR := ${_tmp2}
 
-$(info PROJ_DIR = ${PROJ_DIR})
 export PROJ_ROOT=$(PROJ_DIR)\..\..\..
 export OUTPUT_PATH=output
 export DEPEND_PATH=output\depend
@@ -95,11 +95,13 @@ TMPVAR = $(subst \, ,${APP_DIR})
 PROJ_NAME=$(word $(words ${TMPVAR}),${TMPVAR})
 export PROJ_NAME
 
+ifndef QORC_TC_PATH
 FIND_TOOL_DIR := $(shell where arm-none-eabi-gcc)
 ifndef FIND_TOOL_DIR
 $(info using recursive search)
 FIND_TOOL_DIR := $(shell where /r c:\progra~2 arm-none-eabi-gcc)
 endif
+endif #QORC_TC_PATH
 
 ifdef FIND_TOOL_DIR
 export QORC_TC_PATH = $(subst \arm-none-eabi-gcc.exe,,$(FIND_TOOL_DIR))
@@ -155,7 +157,7 @@ ifndef QORC_TC_PATH
 #use full path. do not use ~/ as a relative path
 #export QORC_TC_PATH="~/arm-gnu/gcc-arm-none-eabi-7-2017-q4-major/bin"  <<<=== will not work
 #export QORC_TC_PATH="/home/user_name/arm-gnu/gcc-arm-none-eabi-7-2017-q4-major/bin" <<<=== works
-export QORC_TC_PATH=/usr/local/gcc-arm-none-eabi-7-2017-q4-major/bin
+#export QORC_TC_PATH=/usr/local/gcc-arm-none-eabi-7-2017-q4-major/bin
 endif
 
 ifndef QORC_TC_PATH
@@ -170,8 +172,15 @@ export ELF2BIN="$(QORC_TC_PATH)/arm-none-eabi-objcopy"
 ################
 endif
 ################
-
+$(info )
 $(info PROJ_NAME = ${PROJ_NAME})
+$(info )
+$(info PROJ_DIR = ${PROJ_DIR})
+$(info )
+$(info APP_DIR = ${APP_DIR})
+$(info )
+$(info )
+$(info )
 
 #Ouput binary name
 export OUTPUT_FILE=${PROJ_NAME}
