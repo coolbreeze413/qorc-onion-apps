@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # fpga load:
-# load both fpga image -> fpga jlink script generated from symbiflow tools
+# load fpga image -> fpga jlink script generated from symbiflow tools
 
 # note that the entire sequence is done using jlink gdb server itself, without gdb due to the scripting interface it exposes.
 # alternatively, it can also be done with gdb script, talking to jlink gdb server.

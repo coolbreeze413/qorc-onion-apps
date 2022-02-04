@@ -21,59 +21,139 @@ the following color sequence:
 - 2x cyan
 - [repeats from blue]
 
-Prerequisites
--------------
-
-- Ensure that you have cloned the latest qorc-sdk, and you are able to build basic fpga/m4 
-  application in :code:`qorc-sdk/qf_apps/qf_helloworldhw` to ensure that your (ARM GCC/SymbiFlow)toolchain setup 
-  is working correctly, and setup according to the qorc-sdk instructions.
-
-  https://qorc-sdk.readthedocs.io/en/latest/qorc-setup/qorc-setup.html
-
-
-
-- Ensure that the bootloader in the QuickFeather is updated to the latest available from 
-  the qorc-sdk repository.
-
-  This is also covered in the setup steps above, the specific link is:
-  https://qorc-sdk.readthedocs.io/en/latest/qorc-setup/qorc-setup.html#bootloader-update
-
-- Clone the qorc-onion-apps inside the qorc-sdk directory:
-  
-  ::
-
-    cd PATH/TO/qorc-sdk
-    git clone https://github.com/coolbreeze413/qorc-onion-apps
-
-  This will create :code:`qorc-onion-apps` at the same level as qf_apps in qorc-sdk directory.
-
 
 How To
 ------
 
-- Navigate to the the application directory in :code:`qorc-sdk/qorc-onion-apps/qorc_fpga_breathe`
+Command Line Usage
+~~~~~~~~~~~~~~~~~~
+
+Note that, all the commands below are run from the root of this directory.
+
+Initialize Environment
+**********************
+
+Before clean/build/load/flash, ensure that the bash environment is setup by doing the below:
+
+1. Ensure that QORC-SDK is initialized and ready (to use :code:`JLinkExe` or :code:`OpenOCD` for loading, :code:`qfprog` for flashing):
+
+   ::
+
+     cd <QORC_SDK_PATH> && source envsetup.sh && cd -
+
+
+Clean/Build/Load/Flash (Command Line)
+*************************************
+
+- Clean the design using: :code:`.scaffolding/clean_fpga.sh`
+
+- Build the design using: :code:`.scaffolding/build_fpga.sh`
+
+- Load and run the design on the board using JLinkExe, using: :code:`.scaffolding/load_fpga_jlink.sh`
+
+  (assumes the board has been booted in DEBUG mode)
+
+- Load and run the design on the board using OpenOCD, using:
+
+  (assumes the board has been booted in DEBUG mode)
 
   ::
 
-    cd PATH/TO/qorc-sdk
-    cd qorc-onion-apps/qorc_fpga_breathe
+    .scaffolding/load_fpga_openocd_gdb.sh --openocd-if-cfg=<PATH_TO_INTERFACE_CFG>
 
-- Build the FPGA design (from this project root directory) using:
+  The INTERFACE_CFG file depends on the debug adapter chosen.
+
+  Here are a few common adapters that can be used with the EOS_S3:
   
-  ::
-  
-    ql_symbiflow -compile -src fpga/rtl -d ql-eos-s3 -t AL4S3B_FPGA_Top -v AL4S3B_FPGA_Top.v ONION_BREATHE.v -p quickfeather.pcf -P PU64 -dump binary
+  1. JLink Adapters: :code:`--openocd-if-cfg=.scaffolding/jlink_swd.cfg` (available in the current dir)
+  2. FT2232H Boards: :code:`--openocd-if-cfg=.scaffolding/ft2232h_swd.cfg` (available in the current dir)
+  3. STLinkv2 Adapters: :code:`--openocd-if-cfg=interface/stlink-v2.cfg` (available in the OpenOCD install scripts dir)
+  4. DAPLink Adapters: :code:`--openocd-if-cfg=interface/cmsis-dap.cfg` (available in the OpenOCD install scripts dir)
+
+  Practically, any adapter that supports OpenOCD and SWD can be used with the appropriate cfg file passed in.
+
+- Flash and run the design on the board using qfprog: :code:`.scaffolding/flash_fpga.sh --port=/dev/ttyACM0`
+
+  (assumes the board is put into :code:`programming` mode)
+
+  Change the serial port as applicable.
+
+
+VS Code Usage
+~~~~~~~~~~~~~
+
+Initialize Project Configuration
+********************************
+
+The first time the project is going to be used from VS Code, we need to do the following:
+
+1. copy :code:`.vscode/settings.template.jsonc` as :code:`.vscode/settings.json`
+
+   Ensure the following variables are correctly defined:
+
+   ::
+
+     "qorc_sdk_path" : "${workspaceFolder}/../..",
+
+   In VS Code:
+
+   :code:`${env:HOME}` refers to $HOME of the current user
+
+   :code:`${workspaceFolder}` refers to the current directory
+
+   Remaining variables don't need to be changed.
+
+2. Open the current directory in VS Code using :code:`File > Open Folder` menu
    
-  The fpga binary will be generated as : :code:`fpga/rtl/AL4S3B_FPGA_Top.bin`
+   - To be able to run the 'flash' task, remember to install the extension: :code:`augustocdias.tasks-shell-input`
+     
+     Also, the 'flash' task needs to scan for available serial ports in the system, so python, and pySerial need to be installed.
 
-- Put the QuickFeather in "Flash Mode", and Flash the fpga binary (from the project root directory) 
-  using:
+
+Clean/Build/Load/Flash (VS Code)
+********************************
+
+Any "task" can be run in VS Code using the :code:`Terminal > Run Task` menu, which shows a drop down list of tasks
+
+-OR-
+
+Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, which shows a drop down list of tasks
+
+- Clean the design using:
   
-  ::
-    
-    qfprog --port /dev/ttyACM0 --appfpga fpga/rtl/AL4S3B_FPGA_Top.bin --mode fpga --reset
+  :code:`clean-fpga` task
 
-- The fpga binary should get flashed, and the board should get automatically reset, and the bootloader 
-  will start running this application.
+- Build the design using:
 
-  You should see the "breathing-effect" glow of the RGB LED on the QuickFeather as in the Intro above.
+  :code:`build-fpga` task
+
+- Load and run the design on the board using JLinkExe, using:
+
+  (assumes the board has been booted in DEBUG mode)
+
+  :code:`load-fpga (JLink)` task
+
+- Load and run the design on the board using OpenOCD, using:
+
+  (assumes the board has been booted in DEBUG mode)
+
+  :code:`load-fpga (OpenOCD)` task
+
+  This will show a drop down menu with the options of debug adapters currently tested:
+
+  - JLink Adapters :code:`jlink_swd.cfg`
+  - FT2232H Boards :code:`ft2232h_swd.cfg`
+  - STLinkv2 Adapters :code:`interface/stlink-v2.cfg`
+  - DAPLink Adapters :code:`interface/cmsis-dap.cfg`
+
+  select the appropriate one.
+
+- Flash and run the design on the board using qfprog:
+
+  (assumes the board is put into :code:`programming` mode)
+
+  :code:`flash-fpga` task
+
+  This will show a drop down menu with the available serial ports in the system, select the appropriate one.
+  
+  (This is usually :code:`/dev/ttyACM0`)
