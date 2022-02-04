@@ -53,12 +53,12 @@
             }
         },
         {
-            // flash-m4 : flash the m4 image into the board's flash via UART
+            // flash-bootloader : flash the m4 bootloader image into the board's flash via UART
             // !!!NOTE: ensure that python is available on PATH, and pySerial is installed!!!
             // Otherwise, run the script as in the command: "" below directly in bash shell to flash.
-            "label": "flash-m4",
+            "label": "flash-bootloader",
             "type": "shell",
-            "command": "./flash_m4.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortFromExt}",
+            "command": "./flash_bootloader.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortFromExt} --confirm=${input:yesOrNoFromExt}",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
@@ -164,6 +164,16 @@
                 "interface/cmsis-dap.cfg"
             ],
             "default": "jlink_swd.cfg"
+        },
+        {
+            "id": "yesOrNoFromExt",
+            "description": "Confirm if you want to replace bootloader on the board with this one",
+            "type": "pickString",
+            "options": [
+                "no",
+                "yes"
+            ],
+            "default": "no"
         }
     ],
 }

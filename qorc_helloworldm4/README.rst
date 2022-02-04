@@ -73,11 +73,11 @@ Clean/Build/Load/Flash (Command Line)
 
   m4: :code:`make -C GCC_Project/`
 
-- Load and run the design on the board using JLinkExe, using: :code:`.scaffolding/load_m4_jlink.sh`
+- Load and run the code on the board using JLinkExe, using: :code:`.scaffolding/load_m4_jlink.sh`
 
   (assumes the board has been booted in DEBUG mode)
 
-- Load and run the design on the board using OpenOCD, using:
+- Load and run the code on the board using OpenOCD, using:
 
   (assumes the board has been booted in DEBUG mode)
 
@@ -96,7 +96,7 @@ Clean/Build/Load/Flash (Command Line)
 
   Practically, any adapter that supports OpenOCD and SWD can be used with the appropriate cfg file passed in.
 
-- Flash and run the design on the board using qfprog: :code:`.scaffolding/flash_m4.sh --port=/dev/ttyACM0`
+- Flash and run the code on the board using qfprog: :code:`.scaffolding/flash_m4.sh --port=/dev/ttyACM0`
   
   (assumes the board is put into :code:`programming` mode)
 
@@ -155,13 +155,13 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
 
   - m4: :code:`build-m4` task
 
-- Load and run the design on the board using JLinkExe, using:
+- Load and run the code on the board using JLinkExe, using:
   
   (assumes the board has been booted in DEBUG mode)
 
   :code:`load-m4 (JLink)` task
 
-- Load and run the design on the board using OpenOCD, using:
+- Load and run the code on the board using OpenOCD, using:
 
   (assumes the board has been booted in DEBUG mode)
 
@@ -176,7 +176,7 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
 
   select the appropriate one.
 
-- Flash and run the design on the board using qfprog:
+- Flash and run the code on the board using qfprog:
 
   (assumes the board is put into :code:`programming` mode)
 
