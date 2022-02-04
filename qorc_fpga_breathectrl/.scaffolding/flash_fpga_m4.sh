@@ -72,27 +72,12 @@ printf "QORC_SDK_PATH=$QORC_SDK_PATH\n"
 printf "\n"
 ################################################################################
 
-
-# scripts are run in non-interactive mode in bash, so aliases are not expanded by default.
-# we need to enable this as we want to use aliases *before* sourcing the script creating the alias
-# https://unix.stackexchange.com/a/1498
-shopt -s expand_aliases
-
 # setup QORC_SDK environment
 if [ ! -z "$QORC_SDK_PATH" ] ; then
     cd $QORC_SDK_PATH
     source envsetup.sh
     cd - > /dev/null
 fi
-
-
-# setup QORC_SDK debug environment (optional)
-# if [ ! -z "$QORC_SDK_PATH" ] ; then
-#     cd $QORC_SDK_PATH/qorc-onion-apps/qorc_utils
-#     source debugenvsetup.sh
-#     cd - > /dev/null
-# fi
-
 
 
 PROJECT_ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)

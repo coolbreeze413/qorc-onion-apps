@@ -63,26 +63,12 @@ printf "QORC_SDK_PATH=$QORC_SDK_PATH\n"
 printf "\n"
 ################################################################################
 
-
-# scripts are run in non-interactive mode in bash, so aliases are not expanded by default.
-# we need to enable this as we want to use aliases *before* sourcing the script creating the alias
-# https://unix.stackexchange.com/a/1498
-shopt -s expand_aliases
-
 # setup QORC_SDK environment
 if [ ! -z "$QORC_SDK_PATH" ] ; then
     cd $QORC_SDK_PATH
     source envsetup.sh
     cd - > /dev/null
 fi
-
-# setup QORC_SDK debug environment (optional)
-# if [ ! -z "$QORC_SDK_PATH" ] ; then
-#     cd $QORC_SDK_PATH/qorc-onion-apps/qorc_utils
-#     source debugenvsetup.sh
-#     cd - > /dev/null
-# fi
-
 
 
 PROJECT_ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
@@ -108,11 +94,8 @@ PROJECT_DEVICE="ql-eos-s3"
 
 # note: provide an absolute path to the -src parameter (especially when dumping multiple output formats at the same time)
 # note: for m4-fpga-standalone projects, fpga is built independently, always specify dump binary (and openocd,jlink for debugging or loading over SWD)
-ql_symbiflow -compile \
-             -src "$PROJECT_RTL_DIR" \
-             -d "$PROJECT_DEVICE" \
-             -t "$PROJECT_TOP_MODULE" \
-             -v "$PROJECT_VERILOG_FILES" \
-             -p "$PROJECT_PCF_FILE" \
-             -P "$PROJECT_PACKAGE" \
-             -dump binary openocd jlink
+
+printf "running symbiflow command:\n\n"
+printf "ql_symbiflow -compile -src "$PROJECT_RTL_DIR" -d "$PROJECT_DEVICE" -t "$PROJECT_TOP_MODULE" -v "$PROJECT_VERILOG_FILES" -p "$PROJECT_PCF_FILE" -P "$PROJECT_PACKAGE" -dump binary openocd jlink\n\n"
+
+ql_symbiflow -compile -src "$PROJECT_RTL_DIR" -d "$PROJECT_DEVICE" -t "$PROJECT_TOP_MODULE" -v "$PROJECT_VERILOG_FILES" -p "$PROJECT_PCF_FILE" -P "$PROJECT_PACKAGE" -dump binary openocd jlink
