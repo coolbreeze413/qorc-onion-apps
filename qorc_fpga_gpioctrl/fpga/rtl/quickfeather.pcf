@@ -34,8 +34,8 @@ set_io      io_pad(10)          IO_10
 set_io      io_pad(11)          IO_11
 set_io      io_pad(12)          IO_12
 set_io      io_pad(13)          IO_13
-set_io      io_pad(14)          IO_14
-set_io      io_pad(15)          IO_15
+//set_io      io_pad(14)          IO_14
+//set_io      io_pad(15)          IO_15
 set_io      io_pad(16)          IO_16
 set_io      io_pad(17)          IO_17
 set_io      io_pad(18)          IO_18
