@@ -33,9 +33,9 @@
             // build-m4 : invoke make to build the cortex-m4 code
             "label": "build-m4",
             "type": "shell",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make m4",
             "options": {
-                "cwd": "${workspaceFolder}/GCC_Project",
+                "cwd": "${workspaceFolder}",
             },
             "group": "build",
             "problemMatcher": {
@@ -63,9 +63,9 @@
             // clean-m4 : invoke make clean to clean the cortex-m4 code
             "label": "clean-m4",
             "type": "shell",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make clean-m4",
             "options": {
-                "cwd": "${workspaceFolder}/GCC_Project"
+                "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "problemMatcher": {
@@ -81,9 +81,9 @@
             // build-fpga : invoke ql_symbiflow to build verilog code
             "label": "build-fpga",
             "type": "shell",
-            "command": "./build_fpga.sh --qorc-sdk-path=${config:qorc_sdk_path}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make fpga",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "problemMatcher": [],
@@ -98,9 +98,9 @@
             // clean-fpga : remove fpga build artifacts
             "label": "clean-fpga",
             "type": "shell",
-            "command": "./clean_fpga.sh --qorc-sdk-path=${config:qorc_sdk_path}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make clean-fpga",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "problemMatcher": [],
@@ -116,9 +116,9 @@
             // Otherwise, run the script as in the command: "" below directly in bash shell to flash.
             "label": "flash-fpga-m4",
             "type": "shell",
-            "command": "./flash_fpga_m4.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortFromExt}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make flash QORC_PORT=${input:serialPortFromExt}",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [],
             "presentation": {
@@ -136,9 +136,9 @@
             // load-fpga-m4 : load the fpga and m4 images into EOS_S3 using OpenOCD and a selectable probe
             "label": "load-fpga-m4 (OpenOCD)",
             "type": "shell",
-            "command": "./load_fpga_m4_openocd_gdb.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=${input:openocdProbe} --gdb-path=${config:qorc_arm_toolchain_path}/arm-none-eabi-gdb",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-openocd OPENOCD_IF_CFG=${input:openocdProbe}",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [],
             "presentation": {
@@ -156,9 +156,9 @@
             // load-fpga-m4 : load the fpga and m4 images into EOS_S3 using JLink Commander and a JLink probe
             "label": "load-fpga-m4 (JLink)",
             "type": "shell",
-            "command": "./load_fpga_m4_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-jlink",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "problemMatcher": [],
@@ -181,9 +181,9 @@
             "label": "debug-load-fpga (JLink)",
             "detail": "run this task *after* entrypoint main is hit when debugging with JLink GDB Server",
             "type": "shell",
-            "command": "./debug_load_fpga_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && .scaffolding/debug_load_fpga_jlink.sh",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [],
             "presentation": {
@@ -207,7 +207,7 @@
             "label": "generate-json-db",
             "detail": "generate compile_commands.json using bear",
             "type": "shell",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean && bear make",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make clean && bear make",
             "options": {
                 "cwd": "${workspaceFolder}/GCC_Project"
             },
@@ -243,12 +243,12 @@
             "description": "select debug probe to use with OpenOCD",
             "type": "pickString",
             "options": [
-                "jlink_swd.cfg",
-                "ft2232h_swd.cfg",
+                ".scaffolding/jlink_swd.cfg",
+                ".scaffolding/ft2232h_swd.cfg",
                 "interface/stlink-v2.cfg",
                 "interface/cmsis-dap.cfg"
             ],
-            "default": "jlink_swd.cfg"
+            "default": ".scaffolding/jlink_swd.cfg"
         }
     ],
 }

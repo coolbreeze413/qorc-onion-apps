@@ -14,7 +14,7 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 OPENOCD_PATH=$(which openocd)
-OPENOCD_INTERFACE_CFG="jlink_swd.cfg"
+OPENOCD_INTERFACE_CFG=
 GDB_PATH=$(which arm-none-eabi-gdb)
 ################################################################################
 #   getopt based parsing

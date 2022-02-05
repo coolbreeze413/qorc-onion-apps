@@ -119,6 +119,7 @@ export LD="$(QORC_TC_PATH)\arm-none-eabi-gcc"
 export AS="$(QORC_TC_PATH)\arm-none-eabi-gcc" -c
 export CC="$(QORC_TC_PATH)\arm-none-eabi-gcc" -c
 export ELF2BIN="$(QORC_TC_PATH)\arm-none-eabi-objcopy"
+export SIZE="$(QORC_TC_PATH)\arm-none-eabi-size"
 ################
 else
 ################ Linux ###################
@@ -169,6 +170,7 @@ export LD="$(QORC_TC_PATH)/arm-none-eabi-gcc"
 export AS="$(QORC_TC_PATH)/arm-none-eabi-gcc" -c
 export CC="$(QORC_TC_PATH)/arm-none-eabi-gcc" -c
 export ELF2BIN="$(QORC_TC_PATH)/arm-none-eabi-objcopy"
+export SIZE="$(QORC_TC_PATH)/arm-none-eabi-size"
 ################
 endif
 ################
