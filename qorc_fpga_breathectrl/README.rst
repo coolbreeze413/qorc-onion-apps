@@ -151,7 +151,7 @@ Initialize Environment
 
 Before clean/build/load/flash, ensure that the bash environment is setup by doing the below:
 
-1. Ensure that QORC-SDK is initialized and ready (to use :code:`JLinkExe` or :code:`OpenOCD` for loading, :code:`qfprog` for flashing):
+1. Ensure that QORC-SDK is initialized and ready:
 
    ::
 
