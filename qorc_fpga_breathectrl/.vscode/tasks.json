@@ -114,7 +114,7 @@
             // flash-fpga-m4 : flash the fpga and m4 images into the board's flash via UART
             // !!!NOTE: ensure that python is available on PATH, and pySerial is installed!!!
             // Otherwise, run the script as in the command: "" below directly in bash shell to flash.
-            "label": "flash-fpga-m4",
+            "label": "flash",
             "type": "shell",
             "command": "source ${config:qorc_sdk_path}/envsetup.sh && make flash QORC_PORT=${input:serialPortFromExt}",
             "options": {
@@ -134,9 +134,9 @@
         },
         {
             // load-fpga-m4 : load the fpga and m4 images into EOS_S3 using OpenOCD and a selectable probe
-            "label": "load-fpga-m4 (OpenOCD)",
+            "label": "load (OpenOCD)",
             "type": "shell",
-            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-openocd OPENOCD_IF_CFG=${input:openocdProbe}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-openocd QORC_OCD_IF_CFG=${input:openocdProbe}",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -154,7 +154,7 @@
         },
         {
             // load-fpga-m4 : load the fpga and m4 images into EOS_S3 using JLink Commander and a JLink probe
-            "label": "load-fpga-m4 (JLink)",
+            "label": "load (JLink)",
             "type": "shell",
             "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-jlink",
             "options": {

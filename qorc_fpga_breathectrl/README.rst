@@ -155,7 +155,7 @@ Before clean/build/load/flash, ensure that the bash environment is setup by doin
 
    ::
 
-     cd <QORC_SDK_PATH> && source envsetup.sh && cd -
+     source <QORC_SDK_PATH>/envsetup.sh
 
 
 Clean/Build/Load/Flash (Command Line)
@@ -163,19 +163,27 @@ Clean/Build/Load/Flash (Command Line)
 
 - Clean using:
 
-  fpga: :code:`.scaffolding/clean_fpga.sh`
+  fpga: :code:`make clean-fpga`
 
-  m4: :code:`make -C GCC_Project/ clean`
+  m4: :code:`make clean-m4`
+
+  both: :code:`make clean`
 
 - Build using:
 
-  fpga: :code:`.scaffolding/build_fpga.sh`
+  fpga: :code:`make fpga`
 
-  m4: :code:`make -C GCC_Project/`
+  m4: :code:`make m4`
 
-- Load and run the design on the board using JLinkExe, using: :code:`.scaffolding/load_fpga_m4_jlink.sh`
+  both: :code:`make`
+
+- Load and run the design on the board using JLinkExe, using:
 
   (assumes the board has been booted in DEBUG mode)
+
+  ::
+      
+    make load-jlink
 
 - Load and run the design on the board using OpenOCD, using:
 
@@ -183,24 +191,30 @@ Clean/Build/Load/Flash (Command Line)
 
   ::
 
-    .scaffolding/load_fpga_m4_openocd_gdb.sh --openocd-if-cfg=<PATH_TO_INTERFACE_CFG>
+    export QORC_OCD_IF_CFG=/path/to/inteface/cfg    # needs to be done only once in the current shell
+    make load-openocd
 
-  The INTERFACE_CFG file depends on the debug adapter chosen.
+  The interface cfg file depends on the debug adapter chosen.
 
   Here are a few common adapters that can be used with the EOS_S3:
   
-  1. JLink Adapters: :code:`--openocd-if-cfg=.scaffolding/jlink_swd.cfg` (available in the current dir)
-  2. FT2232H Boards: :code:`--openocd-if-cfg=.scaffolding/ft2232h_swd.cfg` (available in the current dir)
-  3. STLinkv2 Adapters: :code:`--openocd-if-cfg=interface/stlink-v2.cfg` (available in the OpenOCD install scripts dir)
-  4. DAPLink Adapters: :code:`--openocd-if-cfg=interface/cmsis-dap.cfg` (available in the OpenOCD install scripts dir)
+  1. JLink Adapters: :code:`export QORC_OCD_IF_CFG=.scaffolding/jlink_swd.cfg` (available in the current dir)
+  2. FT2232H Boards: :code:`export QORC_OCD_IF_CFG=.scaffolding/ft2232h_swd.cfg` (available in the current dir)
+  3. STLinkv2 Adapters: :code:`export QORC_OCD_IF_CFG=interface/stlink-v2.cfg` (available in the OpenOCD install scripts dir)
+  4. DAPLink Adapters: :code:`export QORC_OCD_IF_CFG=interface/cmsis-dap.cfg` (available in the OpenOCD install scripts dir)
 
   Practically, any adapter that supports OpenOCD and SWD can be used with the appropriate cfg file passed in.
 
-- Flash and run the design on the board using qfprog: :code:`.scaffolding/flash_fpga_m4.sh --port=/dev/ttyACM0`
+- Flash and run the design on the board using qfprog:
   
   (assumes the board is put into :code:`programming` mode)
 
-  Change the serial port as applicable.
+  ::
+
+    export QORC_PORT=/path/to/serial/port   # needs to be done only once in current shell
+    make flash
+
+  Set the serial port as applicable, this is generally :code:`export QORC_PORT=/dev/ttyACM0`
 
 
 VS Code Usage
@@ -235,7 +249,8 @@ The first time the project is going to be used from VS Code, we need to do the f
 
    - To be able to 'debug' the code with gdb, remember to install the extension: :code:`marus25.cortex-debug`
 
-   On opening the folder, VS Code should prompt to install "recommended extensions" and this can install them automatically.
+   On opening the folder, VS Code should prompt to install these "recommended extensions", if not already installed, 
+   select :code:`Install All` to automatically install them.
 
 
 Clean/Build/Load/Flash (VS Code)
@@ -263,18 +278,18 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
   
   (assumes the board has been booted in DEBUG mode)
 
-  :code:`load-fpga-m4 (JLink)` task
+  :code:`load (JLink)` task
 
 - Load and run the design on the board using OpenOCD, using:
 
   (assumes the board has been booted in DEBUG mode)
 
-  :code:`load-fpga-m4 (OpenOCD)` task
+  :code:`load (OpenOCD)` task
 
   This will show a drop down menu with the options of debug adapters currently tested:
 
-  - JLink Adapters :code:`jlink_swd.cfg`
-  - FT2232H Boards :code:`ft2232h_swd.cfg`
+  - JLink Adapters :code:`.scaffolding/jlink_swd.cfg`
+  - FT2232H Boards :code:`.scaffolding/ft2232h_swd.cfg`
   - STLinkv2 Adapters :code:`interface/stlink-v2.cfg`
   - DAPLink Adapters :code:`interface/cmsis-dap.cfg`
 
@@ -284,13 +299,13 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
 
   (assumes the board is put into :code:`programming` mode)
 
-  :code:`flash-fpga-m4` task
+  :code:`flash` task
 
   This will show a drop down menu with the available serial ports in the system, select the appropriate one.
   
   (This is usually :code:`/dev/ttyACM0`)
 
-- :code:`debug-load-fpga (JLink)` : this is a special task used only while debugging the code with JLink.
+- :code:`debug-load-fpga (JLink)` : this is a special task required only while debugging the code with JLink.
 
   Refer to the Debug sections for details.
 
@@ -323,8 +338,8 @@ Debug
   
   4. A drop-down menu appears to select the debug adapter being used, currently the choices are:
    
-     - :code:`jlink_swd.cfg`
-     - :code:`ft2232h_swd.cfg`
+     - :code:`.scaffolding/jlink_swd.cfg`
+     - :code:`.scaffolding/ft2232h_swd.cfg`
      - :code:`interface/stlink-v2.cfg`
      - :code:`interface/cmsis-dap.cfg`
 

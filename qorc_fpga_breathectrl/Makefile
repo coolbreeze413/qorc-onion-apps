@@ -1,10 +1,11 @@
-# simple makefile wrapper
+# simple makefile wrapper for QORC SDK projects
 SHELL:=bash
 
+# for all targets, check whether the QORC SDK environment has been setup first.
 ifndef QORC_SDK_PATH
 $(info )
 $(info QORC_SDK_PATH is not set in the environment, is the QORC SDK initialized?)
-$(info initialize with: source envsetup.sh from the QORC SDK directory in the current shell)
+$(info initialize with: 'source envsetup.sh' from the QORC SDK directory in the current shell)
 $(info )
 $(error QORC_SDK_PATH not defined)
 endif
@@ -20,22 +21,22 @@ clean: clean-fpga clean-m4
 
 .PHONY: m4
 m4:
-	$(MAKE) -C GCC_Project
+	@$(MAKE) -C GCC_Project
 
 
 .PHONY: clean-m4
 clean-m4:
-	$(MAKE) -C GCC_Project clean
+	@$(MAKE) -C GCC_Project clean
 
 
 .PHONY: fpga
 fpga:
-	.scaffolding/build_fpga.sh
+	@$(MAKE) -C fpga
 
 
 .PHONY: clean-fpga
 clean-fpga:
-	.scaffolding/clean_fpga.sh
+	@$(MAKE) -C fpga clean
 
 
 .PHONY: load-jlink
@@ -48,10 +49,20 @@ load-jlink:
 # or
 # 2. pass in value while invoking: make load-openocd QORC_OCD_IF_CFG=/path/to/cfg
 # default fallback, if not specified, is to assume a JLink adapter, with the cfg file in the .scaffolding dir
-QORC_OCD_IF_CFG?=.scaffolding/jlink_swd.cfg
+QORC_OCD_IF_CFG?=
 .PHONY: load-openocd
 load-openocd:
-	.scaffolding/load_fpga_m4_openocd_gdb.sh --openocd-if-cfg=$(QORC_OCD_IF_CFG)
+	@{ \
+	if [ -z $$QORC_OCD_IF_CFG ] ; then \
+		printf "\nERROR: QORC_OCD_IF_CFG not defined\n\n" ;\
+		printf "    use: 'QORC_OCD_IF_CFG=/path/to/cfg', before invoking make $@\n" ;\
+		printf "    >>OR<<\n" ;\
+		printf "    use 'make $@ QORC_OCD_IF_CFG=/port/name'\n\n" ;\
+		exit 1 ;\
+	else \
+		.scaffolding/load_fpga_m4_openocd_gdb.sh --openocd-if-cfg=$(QORC_OCD_IF_CFG) ;\
+	fi \
+	}
 
 
 # QORC_PORT is used, to be able to flash using the correct serial port.
@@ -64,12 +75,11 @@ flash:
 	@{ \
 	if [ -z $$QORC_PORT ] ; then \
 		printf "\nERROR: QORC_PORT not defined\n\n" ;\
-		printf "    use: 'QORC_PORT=/port/name', before invoking make flash\n" ;\
+		printf "    use: 'QORC_PORT=/port/name', before invoking make $@\n" ;\
 		printf "    >>OR<<\n" ;\
-		printf "    use 'make flash QORC_PORT=/port/name'\n\n" ;\
+		printf "    use 'make $@ QORC_PORT=/port/name'\n\n" ;\
 		exit 1 ;\
 	else \
 		.scaffolding/flash_fpga_m4.sh --port=$(QORC_PORT) ;\
 	fi \
 	}
-
