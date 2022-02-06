@@ -36,7 +36,7 @@ usage()
 while true ; do
     case "$1" in
         --qorc-sdk-path )
-            QORC_SDK_PATH="$2"
+            ARG_QORC_SDK_PATH="$2"
             shift 2
         ;;
         --port )
@@ -55,8 +55,15 @@ while true ; do
 done
 
 # arg checks
-if [ -z "$QORC_SDK_PATH" ] ; then
-    printf "\nWARNING: QORC_SDK_PATH is not defined!\n"
+if [ -z "$ARG_QORC_SDK_PATH" ] ; then
+    # check if QORC_SDK_PATH is already setup (source envsetup.sh has already been invoked in the current shell)
+    if [ -z "$QORC_SDK_PATH" ] ; then
+        printf "\nERROR: QORC_SDK_PATH is not set in env, AND --qorc-sdk-path is not passed in!\n\n"
+        printf "    run source envsetup.sh from the QORC SDK directory in the current shell\n"
+        printf "    >>OR<<\n"
+        printf "    set the QORC SDK PATH using the --qorc-sdk-path=/path/to/qorc-sdk parameter\n\n"
+        exit 1
+    fi
 fi
 
 if [ -z "$PORT" ] ; then
@@ -68,13 +75,17 @@ fi
 
 # confirmation print
 printf "\n"
-printf "QORC_SDK_PATH=$QORC_SDK_PATH\n"
+printf "ARG_QORC_SDK_PATH=$ARG_QORC_SDK_PATH\n"
+printf "PORT=$PORT\n"
 printf "\n"
 ################################################################################
 
-# setup QORC_SDK environment
-if [ ! -z "$QORC_SDK_PATH" ] ; then
-    cd $QORC_SDK_PATH
+
+# setup QORC_SDK environment, if needed.
+# we check that the QORC_SDK_PATH env variable is not already set, only then we need to do this,
+# because source envsetup.sh sets the QORC_SDK_PATH env variable.
+if [ -z "$QORC_SDK_PATH" ] ; then
+    cd $ARG_QORC_SDK_PATH
     source envsetup.sh
     cd - > /dev/null
 fi

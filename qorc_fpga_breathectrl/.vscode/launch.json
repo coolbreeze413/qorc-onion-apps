@@ -6,7 +6,7 @@
             "name": "Debug (OpenOCD)",
             "type": "cortex-debug",
             "request": "launch",
-            "cwd": "${workspaceFolder}/.scaffolding",
+            "cwd": "${workspaceFolder}",
             "executable": "${workspaceFolder}/GCC_Project/output/bin/${workspaceFolderBasename}.elf",
             "runToEntryPoint": "main",
             "interface": "swd",
@@ -53,7 +53,7 @@
             "name": "Debug (JLink)",
             "type": "cortex-debug",
             "request": "launch",
-            "cwd": "${workspaceFolder}/.scaffolding",
+            "cwd": "${workspaceFolder}",
             "executable": "${workspaceFolder}/GCC_Project/output/bin/${workspaceFolderBasename}.elf",
             "runToEntryPoint": "main",
             "interface": "swd",
@@ -75,12 +75,12 @@
             "description": "select debug probe to use with OpenOCD",
             "type": "pickString",
             "options": [
-                "jlink_swd.cfg",
-                "ft2232h_swd.cfg",
+                ".scaffolding/jlink_swd.cfg",
+                ".scaffolding/ft2232h_swd.cfg",
                 "interface/stlink-v2.cfg",
                 "interface/cmsis-dap.cfg"
             ],
-            "default": "jlink_swd.cfg"
+            "default": ".scaffolding/jlink_swd.cfg",
         }
     ]
 }

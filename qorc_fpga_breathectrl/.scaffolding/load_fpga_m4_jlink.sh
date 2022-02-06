@@ -82,9 +82,11 @@ printf "\n"
 
 
 
-PROJECT_ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
+PROJECT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
+PROJECT_M4_DIR="${PROJECT_DIR}/GCC_Project"
+PROJECT_FPGA_DIR="${PROJECT_DIR}/fpga"
 
-PROJECT_OUTPUT_BIN_DIR="${PROJECT_ROOT_DIR}/GCC_Project/output/bin"
+PROJECT_OUTPUT_BIN_DIR="${PROJECT_DIR}/GCC_Project/output/bin"
 PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin)
 
 if [ ! -f "$PROJECT_M4_BIN" ] ; then
@@ -92,7 +94,7 @@ if [ ! -f "$PROJECT_M4_BIN" ] ; then
     exit 1
 fi
 
-PROJECT_RTL_DIR="${PROJECT_ROOT_DIR}/fpga/rtl"
+PROJECT_RTL_DIR="${PROJECT_DIR}/fpga/rtl"
 PROJECT_FPGA_DESIGN_JLINK=$(ls "$PROJECT_RTL_DIR"/*.jlink)
 
 if [ ! -f "$PROJECT_FPGA_DESIGN_JLINK" ] ; then

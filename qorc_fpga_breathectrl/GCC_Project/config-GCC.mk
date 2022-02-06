@@ -11,7 +11,7 @@ export AS_FLAGS= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfpu=
 
 #Preprocessor macros
 
-export MACROS=-D__FPU_USED=1 -D__FPU_USED=1 \
+export MACROS=-D__FPU_USED=1 \
         -D__M4_DEBUG \
         -D__EOSS3_CHIP \
         -D__RTOS \
@@ -58,10 +58,11 @@ export CFLAGS= $(MACROS) \
 export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
             ${DASH_O} $(OPT_FLAGS) -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  \
             ${DASH_G} -T "$(PROJ_DIR)/quickfeather.ld" -Xlinker --gc-sections -Wall -Werror \
-	-Wl,--fatal-warnings -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
+            -Wl,--fatal-warnings -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
+            -Wl,--print-memory-usage \
             --specs=nano.specs --specs=nosys.specs -Wl,--no-wchar-size-warning \
-            -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" -lm\
-    -L$(LIBCMSIS_GCC_DIR) -larm_cortexM4lf_math 
+            -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" -lm \
+            -L$(LIBCMSIS_GCC_DIR) -larm_cortexM4lf_math 
 
 
 export ELF2BIN_OPTIONS=-O binary
