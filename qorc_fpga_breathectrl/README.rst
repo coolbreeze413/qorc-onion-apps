@@ -144,7 +144,7 @@ How To
 Command Line Usage
 ~~~~~~~~~~~~~~~~~~
 
-Note that, all the commands below are run from the root of this directory.
+:code:`Note: all the commands below are run from the root of this directory.`
 
 Initialize Environment
 **********************
