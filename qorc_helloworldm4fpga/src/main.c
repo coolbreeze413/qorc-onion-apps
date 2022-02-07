@@ -14,13 +14,6 @@
  * limitations under the License.
  *==========================================================*/
 
-/*==========================================================
- *
- *    File   : main.c
- *    Purpose: simple m4 only hello world example
- *                                                          
- *=========================================================*/
-
 #include "Fw_global_config.h"   // This defines application specific charactersitics
 
 #include <stdio.h>
@@ -47,17 +40,11 @@
 
 extern const struct cli_cmd_entry my_main_menu[];
 
-
 const char *SOFTWARE_VERSION_STR;
-
-
-/*
- * Global variable definition
- */
-
 
 extern void qf_hardwareSetup();
 static void nvic_init(void);
+
 
 I2C_Config i2c0config =
 {
@@ -71,36 +58,34 @@ uint8_t i2c_read_data;
 int main(void)
 {
 
-    SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_helloworldm4";
+    SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc_helloworldm4fpga";
     
     qf_hardwareSetup();
     nvic_init();
 
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "Quicklogic QuickFeather M4 standalone\n");
+    dbg_str( "QORC ONION HELLO WORLD FPGA + M4\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
     dbg_str( __DATE__ " " __TIME__ "\n" );
     dbg_str( "##########################\n\n");
 
-    dbg_str( "\n\nHello World!!\n\n");
-
+    dbg_str( "\n\nHello Onion!!\n\n");
 
     HAL_Delay_Init();
     HAL_I2C_Init(i2c0config);
 
-
     HAL_I2C0_Select();
 
     HAL_I2C_Read(0x68, 0x00, &i2c_read_data, 1);
-    dbg_str_hex8("read 0x68,0x00",i2c_read_data);
+    dbg_str_hex8("read 0x68, 0x00", i2c_read_data);
 
     HAL_DelayUSec(2000000);
 
     HAL_I2C_Read(0x68, 0x00, &i2c_read_data, 1);
-    dbg_str_hex8("read 0x68,0x00",i2c_read_data);
+    dbg_str_hex8("read 0x68, 0x00", i2c_read_data);
 
 
     CLI_start_task( my_main_menu );
@@ -112,6 +97,7 @@ int main(void)
     while(1);
 }
 
+
 static void nvic_init(void)
  {
     // To initialize system, this interrupt should be triggered at main.
@@ -121,7 +107,8 @@ static void nvic_init(void)
     NVIC_SetPriority(CfgDma_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
     NVIC_SetPriority(Uart_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
     NVIC_SetPriority(FbMsg_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
- }    
+ }
+
 
 //needed for startup_EOSS3b.s asm file
 void SystemInit(void)

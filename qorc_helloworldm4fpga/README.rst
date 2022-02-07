@@ -1,45 +1,26 @@
-QORC HelloWorldM4 Application
-=============================
+QORC HelloWorld M4 FPGA Application
+====================================
 
-This test/example contains the :code:`qorc_helloworldm4` example, which is derived from the :code:`qf_helloworldsw` example.
-This is a simple M4-only application, which uses the EOS S3 UART to expose a command line interface (CLI).
+Intro
+-----
+
+A template project with both m4 code and fpga design.
+
+:code:`note: the fpga design and m4 code in this template are independent and do not communicate.`
+
+- if m4 code exists, it should have a top-level makefile in GCC_Project/.
+- if fpga design exists, it should have a top-level makefile in fpga/.
+- fpga rtl code should be in fpga/rtl/.
+- if the fpga has an API/driver, the sources should be fpga/src and includes should be in fpga/inc.
+- top-level Makefile in the root of this directory should not need to be changed.
+- fpga top-level makefile should only need change to :code:`export QORC_FPGA_TOP_MODULE=helloworldfpga` 
+  according to the 'top' verilog module name
 
 
 Usage
 ------
-:code:`note: ensure that you have connected a USB-UART adapter connected to the EOSS3 UART pins (IO_44/IO_45), and you have a serial terminal connected to that port at 115200 8N1.`
 
-Once the code is running, you should see a banner similar to below on the EOS S3 UART:  
-
-::
-
-    ##########################
-    Quicklogic QuickFeather M4 standalone
-    SW Version: qorc-sdk/qf_apps/qf_helloworldm4
-    Sep 20 2020 14:24:43
-    ##########################
-
-    #*******************
-    Command Line Interface
-    App SW Version: qorc-sdk/qf_apps/qf_helloworldm4
-    #*******************
-    [0] >
-
-
-- | The :code:`diag` submenu option is available, and can be used to toggle the RGB leds or detect the USR button press:
-  |
-  | Toggle LEDs:
-  | At the :code:`[0] >` prompt, which is the level 0 prompt, use:
-
-- :code:`diag red` to toggle the red led
-- :code:`diag green` to toggle the green led
-- :code:`diag blue` to toggle the blue led
-
-| Detect USR button press:
-| At the :code:`[0] >` prompt, which is the level 0 prompt, do: 
-
-- Keep the USR button pressed (connected to IO_6 on QuickFeather) and execute: :code:`diag userbutton` to check state - it should show :code:`Pressed`
-- Without the USR button pressed, :code:`diag userbutton` should show: :code:`Not Pressed`
+NULL.
 
 
 How To
@@ -48,18 +29,18 @@ How To
 Command Line Usage
 ~~~~~~~~~~~~~~~~~~
 
-Note that, all the commands below are run from the root of this directory.
+:code:`Note: all the commands below are run from the root of this directory.`
 
 Initialize Environment
 **********************
 
 Before clean/build/load/flash, ensure that the bash environment is setup by doing the below:
 
-1. Ensure that QORC-SDK is initialized and ready (to use :code:`JLinkExe` or :code:`OpenOCD` for loading, :code:`qfprog` for flashing):
+1. Ensure that QORC-SDK is initialized and ready:
 
    ::
 
-     cd <QORC_SDK_PATH> && source envsetup.sh && cd -
+     source <QORC_SDK_PATH>/envsetup.sh
 
 
 Clean/Build/Load/Flash (Command Line)
@@ -67,44 +48,81 @@ Clean/Build/Load/Flash (Command Line)
 
 - Clean using:
 
-  m4: :code:`make -C GCC_Project/ clean`
+  fpga: :code:`make clean-fpga`
+
+  m4: :code:`make clean-m4`
+
+  both: :code:`make clean`
 
 - Build using:
 
-  m4: :code:`make -C GCC_Project/`
+  fpga: :code:`make fpga`
 
-- Load and run the code on the board using JLinkExe, using: :code:`.scaffolding/load_m4_jlink.sh`
+  m4: :code:`make m4`
+
+  both: :code:`make`
+
+- Load and run the design on the board using JLinkExe, using:
 
   (assumes the board has been booted in DEBUG mode)
 
-- Load and run the code on the board using OpenOCD, using:
+  ::
+      
+    make load-jlink
+
+- Load and run the design on the board using OpenOCD, using:
 
   (assumes the board has been booted in DEBUG mode)
 
   ::
 
-    .scaffolding/load_m4_openocd_gdb.sh --openocd-if-cfg=<PATH_TO_INTERFACE_CFG>
+    export QORC_OCD_IF_CFG=/path/to/inteface/cfg    # needs to be done only once in the current shell
+    make load-openocd
 
-  The INTERFACE_CFG file depends on the debug adapter chosen.
+  The interface cfg file depends on the debug adapter chosen.
 
   Here are a few common adapters that can be used with the EOS_S3:
   
-  1. JLink Adapters: :code:`--openocd-if-cfg=.scaffolding/jlink_swd.cfg` (available in the current dir)
-  2. FT2232H Boards: :code:`--openocd-if-cfg=.scaffolding/ft2232h_swd.cfg` (available in the current dir)
-  3. STLinkv2 Adapters: :code:`--openocd-if-cfg=interface/stlink-v2.cfg` (available in the OpenOCD install scripts dir)
-  4. DAPLink Adapters: :code:`--openocd-if-cfg=interface/cmsis-dap.cfg` (available in the OpenOCD install scripts dir)
+  1. JLink Adapters: :code:`export QORC_OCD_IF_CFG=.scaffolding/jlink_swd.cfg` (available in the current dir)
+  2. FT2232H Boards: :code:`export QORC_OCD_IF_CFG=.scaffolding/ft2232h_swd.cfg` (available in the current dir)
+  3. STLinkv2 Adapters: :code:`export QORC_OCD_IF_CFG=interface/stlink-v2.cfg` (available in the OpenOCD install scripts dir)
+  4. DAPLink Adapters: :code:`export QORC_OCD_IF_CFG=interface/cmsis-dap.cfg` (available in the OpenOCD install scripts dir)
 
   Practically, any adapter that supports OpenOCD and SWD can be used with the appropriate cfg file passed in.
 
-- Flash and run the code on the board using qfprog: :code:`.scaffolding/flash_m4.sh --port=/dev/ttyACM0`
+- Flash and run the design on the board using qfprog:
   
   (assumes the board is put into :code:`programming` mode)
 
-  Change the serial port as applicable.
+  ::
+
+    export QORC_PORT=/path/to/serial/port   # needs to be done only once in current shell
+    make flash
+
+  Set the serial port as applicable, this is generally :code:`export QORC_PORT=/dev/ttyACM0`
 
 
 VS Code Usage
 ~~~~~~~~~~~~~
+
+Dependencies
+************
+
+- | VS Code Extension: :code:`ms-vscode.cpptools`
+  | link: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools
+  | why: C/C++ Intellisense, Debugging
+  |
+
+- | VS Code Extension: :code: `marus25.cortex-debug`
+  | link: https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug
+  | why: Cortex-M Debug Launch Configuration
+  |
+
+- | VS Code Extension: :code:`augustocdias.tasks-shell-input`
+  | link: https://marketplace.visualstudio.com/items?itemName=augustocdias.tasks-shell-input
+  | why: Scan serial-ports for :code:`flash` task, Select FPGA '.openocd' file for :code:`Debug (OpenOCD)` debug launch config
+  |
+
 
 Initialize Project Configuration
 ********************************
@@ -129,13 +147,12 @@ The first time the project is going to be used from VS Code, we need to do the f
 
 2. Open the current directory in VS Code using :code:`File > Open Folder` menu
    
-   - To be able to run the 'flash' task, remember to install the extension: :code:`augustocdias.tasks-shell-input`
+   - To be able to run the 'flash' task or 'Debug (OpenOCD)' launch config, remember to install the extension: :code:`augustocdias.tasks-shell-input`
      
-     Also, the 'flash' task needs to scan for available serial ports in the system, so python, and pySerial need to be installed.
-
    - To be able to 'debug' the code with gdb, remember to install the extension: :code:`marus25.cortex-debug`
 
-   On opening the folder, VS Code should prompt to install "recommended extensions" and this can install them automatically.
+   On opening the folder, VS Code should prompt to install these "recommended extensions", if not already installed, 
+   select :code:`Install All` to automatically install them.
 
 
 Clean/Build/Load/Flash (VS Code)
@@ -149,42 +166,54 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
 
 - Clean using:
   
-  - m4: :code:`clean-m4` task
+  - fpga: run the :code:`clean-fpga` task
+  - m4: run the :code:`clean-m4` task
+  - both: run the :code:`clean` task
 
 - Build using:
 
-  - m4: :code:`build-m4` task
+  - fpga: run the :code:`build-fpga` task
+  - m4: run the :code:`build-m4` task
+  - both: run the :code:`build` task
 
-- Load and run the code on the board using JLinkExe, using:
+- Load and run the design on the board using JLinkExe, using:
   
   (assumes the board has been booted in DEBUG mode)
 
-  :code:`load-m4 (JLink)` task
+  run the :code:`load (JLink)` task
 
-- Load and run the code on the board using OpenOCD, using:
+- Load and run the design on the board using OpenOCD, using:
 
   (assumes the board has been booted in DEBUG mode)
 
-  :code:`load-m4 (OpenOCD)` task
+  run the :code:`load (OpenOCD)` task
 
   This will show a drop down menu with the options of debug adapters currently tested:
 
-  - JLink Adapters :code:`jlink_swd.cfg`
-  - FT2232H Boards :code:`ft2232h_swd.cfg`
+  - JLink Adapters :code:`.scaffolding/jlink_swd.cfg`
+  - FT2232H Boards :code:`.scaffolding/ft2232h_swd.cfg`
   - STLinkv2 Adapters :code:`interface/stlink-v2.cfg`
   - DAPLink Adapters :code:`interface/cmsis-dap.cfg`
 
   select the appropriate one.
 
-- Flash and run the code on the board using qfprog:
+- Flash and run the design on the board using qfprog:
 
   (assumes the board is put into :code:`programming` mode)
 
-  :code:`flash-m4` task
+  run the :code:`flash` task
 
-  This will show a drop down menu with the available serial ports in the system, select the appropriate one.
+  This will show a 'pickstring' drop down menu with the available serial ports in the system, select the appropriate one.
   
   (This is usually :code:`/dev/ttyACM0`)
+
+- :code:`debug-load-fpga (JLink)` : This is a special task required only while debugging the code with JLink.
+
+  Refer to the Debug sections for details.
+
+- :code:`x-get-ports` : this is an **internal** task, which is used by the :code:`flash` task to obtain a list of
+  available serial ports on the system to use for flashing. This list is displayed to the user as a 'pickstring'
+  dropdown menu, as described in the :code:`flash` task above.
 
 
 Debug
@@ -200,7 +229,9 @@ Debug
   
   4. The code should load and break at :code:`main()`
   
-  5. Resume/Continue debugging using the blue :code:`Continue/Break` button at the top or using :code:`F8`
+  5. Run the :code:`load-fpga-debug (JLink)` task at this point, to load the FPGA design
+  
+  6. Resume/Continue debugging using the blue :code:`Continue/Break` button at the top or using :code:`F8`
 
 
 - Debug the code via OpenOCD :
@@ -213,8 +244,8 @@ Debug
   
   4. A drop-down menu appears to select the debug adapter being used, currently the choices are:
    
-     - :code:`jlink_swd.cfg`
-     - :code:`ft2232h_swd.cfg`
+     - :code:`.scaffolding/jlink_swd.cfg`
+     - :code:`.scaffolding/ft2232h_swd.cfg`
      - :code:`interface/stlink-v2.cfg`
      - :code:`interface/cmsis-dap.cfg`
 
@@ -222,7 +253,7 @@ Debug
      
      Select the appropriate one.
 
-  5. The m4 code should load and break at :code:`main()`
+  5. The fpga bitstream (.openocd) should get loaded, then the m4 code should load and break at :code:`main()`
   
   6. Resume/Continue debugging using the blue :code:`Continue/Break` button at the top or using :code:`F8`
 

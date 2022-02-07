@@ -112,25 +112,42 @@
         },
         {
             // flash : flash the fpga, m4, or both images into the board's flash via UART
-            // !!!NOTE: ensure that python is available on PATH, and pySerial is installed!!!
-            // Otherwise, run the script as in the command: "" below directly in bash shell to flash.
             "label": "flash",
             "type": "shell",
             "command": "source ${config:qorc_sdk_path}/envsetup.sh && make flash QORC_PORT=${input:serialPortFromExt}",
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/.scaffolding"
             },
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always", 
                 "revealProblems": "onProblem",
-                "close": true
+                "close": false
             },
             "dependsOrder": "parallel",
             "dependsOn":[
                 "build-m4",
-                "build-fpga"
+                "build-fpga",
+                "x-get-ports"
             ]
+        },
+        {
+            // x-get-ports : get serial ports available on the system using python from the qorc sdk installation
+            //               and save the list into a file, which will be read in the flash task to display a 
+            //               pickstring dropdown for the user to select.
+            "label": "x-get-ports",
+            "detail": "internal task used by the 'flash' task, do not run this directly",
+            "type": "shell",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && python get_serial_ports_list.py > custom_eoss3_ports.log",
+            "options": {
+                "cwd": "${workspaceFolder}/.scaffolding"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "never", 
+                "revealProblems": "never",
+                "close": true
+            }
         },
         {
             // load (OpenOCD) : load the fpga, m4, or both images into EOS_S3 using OpenOCD and a selectable probe
@@ -225,12 +242,13 @@
             // 'quickpick' dropdown in vscode for the user to select the serial port while
             // flashing the images into the board
             // - requires the extension to be installed.
-            // - requires that python and pySerial are installed on the HOST machine already.
             "id": "serialPortFromExt",
             "type": "command",
             "command": "shellCommand.execute",
             "args" : {
-                "command": "python ./get_serial_ports_list.py",
+                // we should have run the x-get-ports task, which populates the file containing
+                // serial ports available on the system using the qorc sdk python installation
+                "command": "cat custom_eoss3_ports.log",
                 "cwd": "${workspaceFolder}/.scaffolding",
                 "fieldSeparator": "|",
                 "description": "select serial port [>> ensure it is not opened in another program <<]",
