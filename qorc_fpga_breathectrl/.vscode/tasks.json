@@ -129,7 +129,7 @@
             "dependsOrder": "parallel",
             "dependsOn":[
                 "build-m4",
-                "build-fpga",
+                "build-fpga"
             ]
         },
         {
@@ -153,7 +153,7 @@
             ]
         },
         {
-            // load (JLink) : load the fpga, m4, or both images into EOS_S3 using JLink Commander and a JLink probe
+            // load (JLink) : load the fpga, m4, or both images into EOS-S3 using JLink Commander and a JLink probe
             "label": "load (JLink)",
             "type": "shell",
             "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-jlink",
@@ -181,7 +181,7 @@
             "label": "load-fpga-debug (JLink)",
             "detail": "run this task *after* entrypoint main is hit when debugging with JLink GDB Server",
             "type": "shell",
-            "command": "source ${config:qorc_sdk_path}/envsetup.sh && .scaffolding/load_fpga_x_jlink_debug_only",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && .scaffolding/load_fpga_x_jlink_debug_only.sh",
             "options": {
                 "cwd": "${workspaceFolder}"
             },

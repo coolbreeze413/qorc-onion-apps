@@ -10,6 +10,34 @@ $(info )
 $(error QORC_SDK_PATH not defined)
 endif
 
+# get the path of the directory where this makefile resides
+MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+MAKEFILE_DIR_PATH := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
+MAKEFILE_DIR_NAME := $(notdir $(MAKEFILE_DIR_PATH))
+# $(info )
+# $(info MAKEFILE_LIST=$(MAKEFILE_LIST))
+# $(info MAKEFILE_PATH=$(MAKEFILE_PATH))
+# $(info MAKEFILE_DIR_PATH=$(MAKEFILE_DIR_PATH))
+# $(info MAKEFILE_DIR_NAME=$(MAKEFILE_DIR_NAME))
+# $(info )
+
+# get the expected paths of the 'GCC_Project' and 'fpga' directories
+# the existence of these indicate whether m4 code exists, and fpga design exists
+PROJECT_FPGA_DIR:=$(MAKEFILE_DIR_PATH)/fpga
+PROJECT_M4_DIR:=$(MAKEFILE_DIR_PATH)/GCC_Project
+$(info )
+$(info PROJECT_FPGA_DIR=$(PROJECT_FPGA_DIR))
+$(info PROJECT_M4_DIR=$(PROJECT_M4_DIR))
+$(info )
+ifneq ($(wildcard $(PROJECT_FPGA_DIR)),)
+$(info fpga design exists)
+endif
+ifneq ($(wildcard $(PROJECT_M4_DIR)),)
+$(info m4 code exists)
+endif
+$(info )
+#$(error uncomment for using make to print info only and stop)
+
 
 .PHONY: all
 all: fpga m4
@@ -20,23 +48,35 @@ clean: clean-fpga clean-m4
 
 
 .PHONY: m4
+# execute only if m4-code exists
+ifneq ($(wildcard $(PROJECT_M4_DIR)),)
 m4:
 	@$(MAKE) -C GCC_Project
+endif
 
 
 .PHONY: clean-m4
+# execute only if m4-code exists
+ifneq ($(wildcard $(PROJECT_M4_DIR)),)
 clean-m4:
 	@$(MAKE) -C GCC_Project clean
+endif
 
 
 .PHONY: fpga
+# execute only if fpga-design exists
+ifneq ($(wildcard $(PROJECT_FPGA_DIR)),)
 fpga:
 	@$(MAKE) -C fpga
+endif
 
 
 .PHONY: clean-fpga
+# execute only if fpga-design exists
+ifneq ($(wildcard $(PROJECT_FPGA_DIR)),)
 clean-fpga:
 	@$(MAKE) -C fpga clean
+endif
 
 
 .PHONY: load-jlink
@@ -55,7 +95,7 @@ load-openocd:
 	@{ \
 	if [ -z $$QORC_OCD_IF_CFG ] ; then \
 		printf "\nERROR: QORC_OCD_IF_CFG not defined\n\n" ;\
-		printf "    use: 'QORC_OCD_IF_CFG=/path/to/cfg', before invoking make $@\n" ;\
+		printf "    use: 'export QORC_OCD_IF_CFG=/path/to/cfg', before invoking make $@\n" ;\
 		printf "    >>OR<<\n" ;\
 		printf "    use 'make $@ QORC_OCD_IF_CFG=/port/name'\n\n" ;\
 		exit 1 ;\
@@ -75,7 +115,7 @@ flash:
 	@{ \
 	if [ -z $$QORC_PORT ] ; then \
 		printf "\nERROR: QORC_PORT not defined\n\n" ;\
-		printf "    use: 'QORC_PORT=/port/name', before invoking make $@\n" ;\
+		printf "    use: 'export QORC_PORT=/port/name', before invoking make $@\n" ;\
 		printf "    >>OR<<\n" ;\
 		printf "    use 'make $@ QORC_PORT=/port/name'\n\n" ;\
 		exit 1 ;\

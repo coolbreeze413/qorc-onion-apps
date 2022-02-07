@@ -30,7 +30,6 @@ JLINK_EXE_PATH=$(which JLinkExe)
 if [ -z "$JLINK_EXE_PATH" ] ; then
     printf "\nERROR: JLINK_EXE_PATH is not defined!\n"
     printf "\nJLinkExe should be on the path, is the QORC SDK initialized with 'source envsetup.sh'?\n"
-    usage
     exit 1
 fi
 
@@ -71,8 +70,8 @@ fi
 
 # sanity: atleast one of m4 code, or fpga design should exist.
 if [ ! -d "$PROJECT_M4_DIR" ] && [ ! -d "$PROJECT_FPGA_DIR" ] ; then
-    printf "\nERROR: neither 'GCC_Project', nor 'fpga' directories exist!\n"
-    printf "check the code strucure!\n\n"
+    printf "\nERROR: neither 'GCC_Project/', nor 'fpga/' directories exist!\n"
+    printf "check the code structure!\n\n"
     exit 1
 fi
 
@@ -116,10 +115,12 @@ fi
 # [step 4] run the m4 code, stay in the jlink commander for further debugging
 if [ -f "$PROJECT_M4_BIN" ] ; then
     echo "g" >> "$CUSTOM_JLINK_SCRIPT"
-    # note we can automatically quit jlink after this point, uncomment the below line this is needed.
-    #echo "q" >> "$CUSTOM_JLINK_SCRIPT"
     echo "" >> "$CUSTOM_JLINK_SCRIPT"
 fi
+
+# note we can automatically quit jlink after this point, uncomment the below line if this is needed.
+#echo "q" >> "$CUSTOM_JLINK_SCRIPT"
+#echo "" >> "$CUSTOM_JLINK_SCRIPT"
 
 
 # moar: https://wiki.segger.com/J-Link_Commander

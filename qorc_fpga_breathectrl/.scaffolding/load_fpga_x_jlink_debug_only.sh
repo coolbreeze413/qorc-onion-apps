@@ -51,6 +51,9 @@ if [ -d "$PROJECT_FPGA_DIR" ] ; then
         printf "\nERROR: fpga .jlink does not exist! (is build done?)\n"
         exit 1
     fi
+else
+    printf "\nThis project does not have an 'fpga/' directory\n\n!"
+    exit 0
 fi
 
 
