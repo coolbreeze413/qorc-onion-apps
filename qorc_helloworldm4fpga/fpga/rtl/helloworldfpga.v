@@ -26,6 +26,6 @@ module helloworldfpga (
         end
     end
 
-    assign greenled = led;    // Change to redled = led;
+    assign redled = led;    // Change to greenled = led;
 
 endmodule

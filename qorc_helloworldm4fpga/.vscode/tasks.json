@@ -116,13 +116,13 @@
             "type": "shell",
             "command": "source ${config:qorc_sdk_path}/envsetup.sh && make flash QORC_PORT=${input:serialPortFromExt}",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always", 
                 "revealProblems": "onProblem",
-                "close": false
+                "close": true
             },
             "dependsOrder": "parallel",
             "dependsOn":[

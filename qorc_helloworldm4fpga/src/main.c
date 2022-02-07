@@ -64,13 +64,13 @@ int main(void)
     nvic_init();
 
     dbg_str("\n\n");
-    dbg_str( "##########################\n");
-    dbg_str( "QORC ONION HELLO WORLD FPGA + M4\n");
+    dbg_str( "################################\n");
+    dbg_str( "QORC ONION HELLO WORLD M4 + FPGA\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
     dbg_str( __DATE__ " " __TIME__ "\n" );
-    dbg_str( "##########################\n\n");
+    dbg_str( "################################\n\n");
 
     dbg_str( "\n\nHello Onion!!\n\n");
 

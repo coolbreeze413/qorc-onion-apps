@@ -15,12 +15,23 @@ A template project with both m4 code and fpga design.
 - top-level Makefile in the root of this directory should not need to be changed.
 - fpga top-level makefile should only need change to :code:`export QORC_FPGA_TOP_MODULE=helloworldfpga` 
   according to the 'top' verilog module name
+- copy the settings.template.jsonc as settings.json, adjust the values in the file according to the instructions at the top of the file.
+  most of the time, it can be used as is, without any changes.
+
+The fpga design is a simple LED-toggle, which toggles the red LED regularly.
+
+The m4 code is a simple CLI application, which also executes a couple of I2C transactions.
 
 
 Usage
 ------
 
-NULL.
+Once the fpga design and m4 code is loaded and running 
+(load using debugger/reset after flashing on the board) :
+
+- you should see the red LED toggling periodically (fpga design)
+
+- you should see a couple of I2C transactions, and a banner and CLI on the EOS-S3 UART at IO_44/IO_45 (m4 code)
 
 
 How To
@@ -62,7 +73,7 @@ Clean/Build/Load/Flash (Command Line)
 
   both: :code:`make`
 
-- Load and run the design on the board using JLinkExe, using:
+- Load and run the code/design on the board using JLinkExe, using:
 
   (assumes the board has been booted in DEBUG mode)
 
@@ -70,7 +81,7 @@ Clean/Build/Load/Flash (Command Line)
       
     make load-jlink
 
-- Load and run the design on the board using OpenOCD, using:
+- Load and run the code/design on the board using OpenOCD, using:
 
   (assumes the board has been booted in DEBUG mode)
 
@@ -90,7 +101,7 @@ Clean/Build/Load/Flash (Command Line)
 
   Practically, any adapter that supports OpenOCD and SWD can be used with the appropriate cfg file passed in.
 
-- Flash and run the design on the board using qfprog:
+- Flash and run the code/design on the board using qfprog:
   
   (assumes the board is put into :code:`programming` mode)
 
@@ -143,7 +154,7 @@ The first time the project is going to be used from VS Code, we need to do the f
 
    :code:`${workspaceFolder}` refers to the current directory
 
-   Remaining variables don't need to be changed
+   Remaining variables don't need to be changed.
 
 2. Open the current directory in VS Code using :code:`File > Open Folder` menu
    
@@ -176,13 +187,13 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
   - m4: run the :code:`build-m4` task
   - both: run the :code:`build` task
 
-- Load and run the design on the board using JLinkExe, using:
+- Load and run the code/design on the board using JLinkExe, using:
   
   (assumes the board has been booted in DEBUG mode)
 
   run the :code:`load (JLink)` task
 
-- Load and run the design on the board using OpenOCD, using:
+- Load and run the code/design on the board using OpenOCD, using:
 
   (assumes the board has been booted in DEBUG mode)
 
@@ -197,7 +208,7 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
 
   select the appropriate one.
 
-- Flash and run the design on the board using qfprog:
+- Flash and run the code/design on the board using qfprog:
 
   (assumes the board is put into :code:`programming` mode)
 
