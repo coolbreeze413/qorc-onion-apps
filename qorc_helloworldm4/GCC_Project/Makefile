@@ -1,6 +1,17 @@
 #
-# Makefile for Quick-AI SDK
+# Makefile for QORC SDK
 #
+
+
+# for all targets, check whether the QORC SDK environment has been setup first.
+ifndef QORC_SDK_PATH
+$(info )
+$(info QORC_SDK_PATH is not set in the environment, is the QORC SDK initialized?)
+$(info initialize with: 'source envsetup.sh' from the QORC SDK directory in the current shell)
+$(info )
+$(error QORC_SDK_PATH not defined)
+endif
+
 
 include config.mk
 
@@ -26,6 +37,14 @@ _makedirs_:
 .PHONY: external_srcs
 external_srcs: Startup HAL FreeRTOS Libraries BSP
 	@echo "External sources built"
+
+.PHONY: appfpga
+appfpga:
+	make -f makefiles/Makefile_appfpga
+clean_appfpga:
+	make -f makefiles/Makefile_appfpga clean
+	
+CLEAN_TARGET += appfpga
 
 .PHONY: appdir
 appdir:
