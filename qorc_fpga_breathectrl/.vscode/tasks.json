@@ -30,7 +30,7 @@
             "group": "build"
         },
         {
-            // build-m4 : invoke make to build the cortex-m4 code
+            // build-m4 : build m4 code
             "label": "build-m4",
             "type": "shell",
             "command": "source ${config:qorc_sdk_path}/envsetup.sh && make m4",
@@ -60,7 +60,7 @@
             }
         },
         {
-            // clean-m4 : invoke make clean to clean the cortex-m4 code
+            // clean-m4 : clean m4 build
             "label": "clean-m4",
             "type": "shell",
             "command": "source ${config:qorc_sdk_path}/envsetup.sh && make clean-m4",
@@ -78,7 +78,7 @@
             }
         },
         {
-            // build-fpga : invoke ql_symbiflow to build verilog code
+            // build-fpga : build fpga design
             "label": "build-fpga",
             "type": "shell",
             "command": "source ${config:qorc_sdk_path}/envsetup.sh && make fpga",
@@ -111,7 +111,7 @@
             }
         },
         {
-            // flash-fpga-m4 : flash the fpga and m4 images into the board's flash via UART
+            // flash : flash the fpga, m4, or both images into the board's flash via UART
             // !!!NOTE: ensure that python is available on PATH, and pySerial is installed!!!
             // Otherwise, run the script as in the command: "" below directly in bash shell to flash.
             "label": "flash",
@@ -133,7 +133,7 @@
             ]
         },
         {
-            // load-fpga-m4 : load the fpga and m4 images into EOS_S3 using OpenOCD and a selectable probe
+            // load (OpenOCD) : load the fpga, m4, or both images into EOS_S3 using OpenOCD and a selectable probe
             "label": "load (OpenOCD)",
             "type": "shell",
             "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-openocd QORC_OCD_IF_CFG=${input:openocdProbe}",
@@ -153,7 +153,7 @@
             ]
         },
         {
-            // load-fpga-m4 : load the fpga and m4 images into EOS_S3 using JLink Commander and a JLink probe
+            // load (JLink) : load the fpga, m4, or both images into EOS_S3 using JLink Commander and a JLink probe
             "label": "load (JLink)",
             "type": "shell",
             "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-jlink",
@@ -174,14 +174,14 @@
             ]
         },
         {
-            // debug-load-fpga (JLink) : used only for debugging, with JLink GDB Server
+            // load-fpga-debug (JLink) : used only for debugging, with JLink GDB Server
             // in launch.json 'Debug (JLink)', ensure we have run to entrypoint "main", and start debugging
             // once we are at "main" -> run this task -> continue debugging as usual
             // this is the only way we can load the fpga into EOS_S3 while debugging with the JLink GDB Server
-            "label": "debug-load-fpga (JLink)",
+            "label": "load-fpga-debug (JLink)",
             "detail": "run this task *after* entrypoint main is hit when debugging with JLink GDB Server",
             "type": "shell",
-            "command": "source ${config:qorc_sdk_path}/envsetup.sh && .scaffolding/debug_load_fpga_jlink.sh",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && .scaffolding/load_fpga_x_jlink_debug_only",
             "options": {
                 "cwd": "${workspaceFolder}"
             },

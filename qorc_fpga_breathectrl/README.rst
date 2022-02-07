@@ -220,6 +220,30 @@ Clean/Build/Load/Flash (Command Line)
 VS Code Usage
 ~~~~~~~~~~~~~
 
+Dependencies
+************
+
+- | VS Code Extension: :code:`ms-vscode.cpptools`
+  | link: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools
+  | why: C/C++ Intellisense, Debugging
+  |
+
+- | VS Code Extension: :code: `marus25.cortex-debug`
+  | link: https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug
+  | why: Cortex-M Debug Launch Configuration
+  |
+
+- | VS Code Extension: :code:`augustocdias.tasks-shell-input`
+  | link: https://marketplace.visualstudio.com/items?itemName=augustocdias.tasks-shell-input
+  | why: Scan serial-ports for :code:`flash` task, Select FPGA '.openocd' file for :code:`Debug (OpenOCD)` debug launch config
+  |
+
+- | python, pySerial
+  | link: https://pythonhosted.org/pyserial/pyserial.html
+  | why: Scan serial-ports for :code:`flash` task
+  |
+
+
 Initialize Project Configuration
 ********************************
 
@@ -243,7 +267,7 @@ The first time the project is going to be used from VS Code, we need to do the f
 
 2. Open the current directory in VS Code using :code:`File > Open Folder` menu
    
-   - To be able to run the 'flash' task, remember to install the extension: :code:`augustocdias.tasks-shell-input`
+   - To be able to run the 'flash' task or 'Debug (OpenOCD)' launch config, remember to install the extension: :code:`augustocdias.tasks-shell-input`
      
      Also, the 'flash' task needs to scan for available serial ports in the system, so python, and pySerial need to be installed.
 
@@ -264,27 +288,27 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
 
 - Clean using:
   
-  - fpga: :code:`clean-fpga` task
-  - m4: :code:`clean-m4` task
-  - both: :code:`clean` task
+  - fpga: run the :code:`clean-fpga` task
+  - m4: run the :code:`clean-m4` task
+  - both: run the :code:`clean` task
 
 - Build using:
 
-  - fpga: :code:`build-fpga` task
-  - m4: :code:`build-m4` task
-  - both: :code:`build` task
+  - fpga: run the :code:`build-fpga` task
+  - m4: run the :code:`build-m4` task
+  - both: run the :code:`build` task
 
 - Load and run the design on the board using JLinkExe, using:
   
   (assumes the board has been booted in DEBUG mode)
 
-  :code:`load (JLink)` task
+  run the :code:`load (JLink)` task
 
 - Load and run the design on the board using OpenOCD, using:
 
   (assumes the board has been booted in DEBUG mode)
 
-  :code:`load (OpenOCD)` task
+  run the :code:`load (OpenOCD)` task
 
   This will show a drop down menu with the options of debug adapters currently tested:
 
@@ -299,7 +323,7 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
 
   (assumes the board is put into :code:`programming` mode)
 
-  :code:`flash` task
+  run the :code:`flash` task
 
   This will show a drop down menu with the available serial ports in the system, select the appropriate one.
   
@@ -323,7 +347,7 @@ Debug
   
   4. The code should load and break at :code:`main()`
   
-  5. Run the task :code:`debug-load-fpga (JLink)` at this point, to load the FPGA design
+  5. Run the :code:`load-fpga-debug (JLink)` task at this point, to load the FPGA design
   
   6. Resume/Continue debugging using the blue :code:`Continue/Break` button at the top or using :code:`F8`
 
