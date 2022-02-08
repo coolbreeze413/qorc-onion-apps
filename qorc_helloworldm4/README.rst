@@ -27,24 +27,24 @@ Restructuring Existing QORC SDK Project
 
 - compare :code:`GCC_Project/` with this project, and:
     
-    - top-level :code:`GCC_Project/Makefile`: copy and replace from this template
+  - top-level :code:`GCC_Project/Makefile`: copy and replace from this template
 
-      diff: adds QORC_SDK_PATH check, and removes extra 'FPGA' (loader) dependency, as it is already covered
-      by :code:`GCC_Project/makefiles/Makefile_Libraries`
+    diff: adds QORC_SDK_PATH check, and removes extra 'FPGA' (loader) dependency, as it is already covered
+    by :code:`GCC_Project/makefiles/Makefile_Libraries`
 
-    - :code:`GCC_Project/makefiles/Makefile_common`: copy and replace from this template
+  - :code:`GCC_Project/makefiles/Makefile_common`: copy and replace from this template
 
-      diff: removes fpga design build rules
+    diff: removes fpga design build rules
 
-    - :code:`GCC_Project/makefiles/Makefile_appfpga`: copy and replace from this template
+  - :code:`GCC_Project/makefiles/Makefile_appfpga`: copy and replace from this template
 
-      diff: removes fpga design build variables
+    diff: removes fpga design build variables
 
-    - :code:`GCC_Project/makefiles/Makefile_appdir`: copy and replace from this template
+  - :code:`GCC_Project/makefiles/Makefile_appdir`: copy and replace from this template
 
-      diff: removes unnecessary source file filters for m4-code
+    diff: removes unnecessary source file filters for m4-code
 
-    For any other diffs, use your discretion.
+  For any other diffs, use your discretion.
 
 - copy the :code:`.scaffolding` directory into the root of the existing project
 
