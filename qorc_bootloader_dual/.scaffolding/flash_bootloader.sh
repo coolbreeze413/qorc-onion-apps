@@ -3,7 +3,16 @@
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-CONFIRM="undefined"
+# check if QORC_SDK_PATH is already setup (source envsetup.sh has already been invoked in the current shell)
+# paranoid check - Makefile does this already.
+if [ -z "$QORC_SDK_PATH" ] ; then
+    printf "\nERROR: QORC_SDK_PATH is not set in the environment, is the QORC SDK initialized?\n\n"
+    printf "    initialize with: 'source envsetup.sh' from the QORC SDK directory in the current shell\n"
+    exit 1
+fi
+
+
+CONFIRM=
 
 ################################################################################
 #   getopt based parsing
@@ -11,7 +20,7 @@ CONFIRM="undefined"
 # option strings
 SHORT="" # no short options at all, clearer that way.
 # reference on how to enforce no short options: https://unix.stackexchange.com/questions/162624/how-to-use-getopt-in-bash-command-line-with-only-long-options
-LONG="qorc-sdk-path:,confirm:,port:,help"
+LONG="confirm:,port:,help"
 
 
 # read the options
@@ -28,9 +37,9 @@ usage()
     printf "\n"
     printf "flash the bootloader\n"
     printf "\n"
-    printf " syntax: $0 --qorc-sdk-path=/path/to/qorc/sdk --port=serial_port_id\n"
+    printf " syntax: $0 --port=serial-port\n"
     printf "\n"
-    printf "example: $0 --qorc-sdk-path=$HOME/qorc-sdk --port=/dev/ttyUSB0\n"
+    printf "example: $0 --port=/dev/ttyUSB0\n"
     printf "\n"
     printf "add --confirm=yes to override confirmation prompt."
     printf "\n"
@@ -39,10 +48,6 @@ usage()
 # extract options and their arguments into variables
 while true ; do
     case "$1" in
-        --qorc-sdk-path )
-            QORC_SDK_PATH="$2"
-            shift 2
-        ;;
         --confirm )
             CONFIRM="$2"
             shift 2
@@ -62,19 +67,20 @@ while true ; do
     esac
 done
 
-# arg checks
-if [ -z "$QORC_SDK_PATH" ] ; then
-    printf "\nWARNING: QORC_SDK_PATH is not defined!\n"
-fi
-
 if [ -z "$PORT" ] ; then
     printf "\nERROR: PORT is not defined!\n"
     usage
     exit 1
 fi
 
+
+# confirmation print
+printf "\n"
+printf "PORT=$PORT\n"
+printf "\n"
+
 # --confirm not passed in: pester user (command-line usage)
-if [ "$CONFIRM" == "undefined" ] ; then
+if [ -z "$CONFIRM" ] ; then
     printf "\nCAUTION: This will replace the bootloader on the board with this one!\n\n"
     read -p "          Are you sure ? (no/yes): " CONFIRM
     CONFIRM=$(echo "$CONFIRM" | tr [:upper:] [:lower:])
@@ -87,31 +93,26 @@ elif [ "$CONFIRM" == "yes" ] ; then
     printf "\nreceived --confirm=yes in the args, flashing bootloader...\n\n"
 # unknown input, abort
 else
-    printf "\ninvalid input received, aborting flash\n\n"
+    printf "\nnegative input received, aborting flash\n\n"
     exit 0
 fi
 
-
-# confirmation print
-printf "\n"
-printf "QORC_SDK_PATH=$QORC_SDK_PATH\n"
-printf "\n"
 ################################################################################
 
-# setup QORC_SDK environment
-if [ ! -z "$QORC_SDK_PATH" ] ; then
-    cd $QORC_SDK_PATH
-    source envsetup.sh
-    cd - > /dev/null
+PROJECT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
+PROJECT_M4_DIR="${PROJECT_DIR}/GCC_Project"
+
+# check if we have m4 code in the current project
+PROJECT_M4_BIN=
+if [ -d "$PROJECT_M4_DIR" ] ; then
+    PROJECT_OUTPUT_BIN_DIR="${PROJECT_DIR}/GCC_Project/output/bin"
+    PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin)
+    if [ ! -f "$PROJECT_M4_BIN" ] ; then
+        printf "\nERROR: m4 binary does not exist! (is build done?)\n"
+        exit 1
+    fi
 fi
 
-
-PROJECT_ROOT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
-
-PROJECT_OUTPUT_BIN_DIR="${PROJECT_ROOT_DIR}/GCC_Project/output/bin"
-PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin)
-
-printf "flash using port [%s], m4 [%s], with mode [%s]\n\n" "$PORT" "$PROJECT_M4_BIN" "m4"
-
-# qfprog is a function created in envsetup.sh
-qfprog --port "$PORT" --bootloader "$PROJECT_M4_BIN" --reset
+printf "\nrunning command:\n"
+printf "qfprog --port $PORT --bootloader $PROJECT_M4_BIN --mode --reset\n\n"
+qfprog --port "$PORT" --bootloader "$PROJECT_M4_BIN" --mode --reset

@@ -1,6 +1,17 @@
 #
-# Makefile for Quick-AI SDK
+# Makefile for QORC SDK
 #
+
+
+# for all targets, check whether the QORC SDK environment has been setup first.
+ifndef QORC_SDK_PATH
+$(info )
+$(info QORC_SDK_PATH is not set in the environment, is the QORC SDK initialized?)
+$(info initialize with: 'source envsetup.sh' from the QORC SDK directory in the current shell)
+$(info )
+$(error QORC_SDK_PATH not defined)
+endif
+
 
 include config.mk
 
@@ -9,25 +20,33 @@ VPATH:=$(OUTPUT_PATH)
 all: _makedirs_ external_srcs appdir s3gw_drivers
 	-${HIDE}$(RM) $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*
 	make -f makefiles/Makefile_output
-	-${HIDE}${MKDIR} $(OUTPUT_PATH)$(DIR_SEP)bin
+	-${HIDE}$(MKDIR) $(OUTPUT_PATH)$(DIR_SEP)bin
 	@echo Copy output files ...
 	${HIDE}$(CP) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).bin $(OUTPUT_PATH)$(DIR_SEP)bin
 	${HIDE}$(CP) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).map $(OUTPUT_PATH)$(DIR_SEP)bin
 	${HIDE}$(CP) $(OUTPUT_PATH)$(DIR_SEP)$(OUTPUT_FILE).elf $(OUTPUT_PATH)$(DIR_SEP)bin
 
 _makedirs_:
-	@-${MKDIR} ${DEPEND_PATH}
-	@-${MKDIR} ${OUTPUT_PATH}
+	@-$(MKDIR) $(DEPEND_PATH)
+	@-$(MKDIR) $(OUTPUT_PATH)
 
 
 .PHONY: _makedirs_
 
-external_srcs: Startup HAL FreeRTOS Libraries BSP
-	@echo "Build complete"
 
 .PHONY: external_srcs
+external_srcs: Startup HAL FreeRTOS Libraries BSP
+	@echo "External sources built"
 
-.PHONY:appdir
+# .PHONY: appfpga
+# appfpga:
+# 	make -f makefiles/Makefile_appfpga
+# clean_appfpga:
+# 	make -f makefiles/Makefile_appfpga clean
+	
+# CLEAN_TARGET += appfpga
+
+.PHONY: appdir
 appdir:
 	make -f makefiles/Makefile_appdir
 clean_appdir:
@@ -35,12 +54,11 @@ clean_appdir:
 
 CLEAN_TARGET += appdir
 
-
 .PHONY:Startup
 Startup:
 	make -f makefiles/Makefile_Startup
 clean_Startup:
-	make -f makefiles/Makefile_Startup clean    
+	make -f makefiles/Makefile_Startup clean
 
 CLEAN_TARGET += Startup
 
@@ -52,6 +70,13 @@ clean_HAL:
 
 CLEAN_TARGET += HAL
 
+# .PHONY:CLI
+# CLI:
+# 	make -f makefiles/Makefile_cli
+# clean_CLI:
+# 	make -f makefiles/Makefile_cli clean
+
+# CLEAN_TARGET += CLI
 
 FreeRTOS:
 	make -f makefiles/Makefile_FreeRTOS

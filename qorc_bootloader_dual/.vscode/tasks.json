@@ -5,14 +5,17 @@
     "version": "2.0.0",
     "tasks": [
         {
-            // build-m4 : invoke make to build the cortex-m4 code
+            // build-m4 : build m4 code
             "label": "build-m4",
             "type": "shell",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make m4",
             "options": {
-                "cwd": "${workspaceFolder}/GCC_Project",
+                "cwd": "${workspaceFolder}",
             },
-            "group": "build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "problemMatcher": {
                 "base": "$gcc",
                 // https://github.com/microsoft/vscode-cpptools/blob/c694184fea81845543daaf9039839425b81d197b/Extension/package.json#L264
@@ -35,12 +38,12 @@
             }
         },
         {
-            // clean-m4 : invoke make clean to clean the cortex-m4 code
+            // clean-m4 : clean m4 build
             "label": "clean-m4",
             "type": "shell",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make clean-m4",
             "options": {
-                "cwd": "${workspaceFolder}/GCC_Project"
+                "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "problemMatcher": {
@@ -53,14 +56,12 @@
             }
         },
         {
-            // flash-bootloader : flash the m4 bootloader image into the board's flash via UART
-            // !!!NOTE: ensure that python is available on PATH, and pySerial is installed!!!
-            // Otherwise, run the script as in the command: "" below directly in bash shell to flash.
+            // flash-bootloader : flash the m4 image as bootloader into the board's flash via UART
             "label": "flash-bootloader",
             "type": "shell",
-            "command": "./flash_bootloader.sh --qorc-sdk-path=${config:qorc_sdk_path} --port=${input:serialPortFromExt} --confirm=${input:yesOrNoFromExt}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make flash-bootloader QORC_PORT=${input:serialPortFromExt} QORC_CONFIRM_FLASH_BOOTLOADER=${input:yesOrNoFromExt}",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [],
             "presentation": {
@@ -71,21 +72,40 @@
             "dependsOrder": "parallel",
             "dependsOn":[
                 "build-m4",
+                "x-get-ports"
             ]
         },
         {
-            // load-m4 : load m4 image into EOS_S3 using OpenOCD and a selectable probe
-            "label": "load-m4 (OpenOCD)",
+            // x-get-ports : get serial ports available on the system using python from the qorc sdk installation
+            //               and save the list into a file, which will be read in the flash task to display a 
+            //               pickstring dropdown for the user to select.
+            "label": "x-get-ports",
+            "detail": "internal task used by the 'flash' task, do not run this directly",
             "type": "shell",
-            "command": "./load_m4_openocd_gdb.sh --openocd-path=${config:qorc_openocd_server_path} --openocd-if-cfg=${input:openocdProbe} --gdb-path=${config:qorc_arm_toolchain_path}/arm-none-eabi-gdb",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && python get_serial_ports_list.py > custom_eoss3_ports.log",
             "options": {
                 "cwd": "${workspaceFolder}/.scaffolding"
             },
             "problemMatcher": [],
             "presentation": {
+                "reveal": "never", 
+                "revealProblems": "never",
+                "close": true
+            }
+        },
+        {
+            // load (OpenOCD) : load the fpga, m4, or both images into EOS_S3 using OpenOCD and a selectable probe
+            "label": "load (OpenOCD)",
+            "type": "shell",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-openocd QORC_OCD_IF_CFG=${input:openocdProbe}",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
                 "reveal": "always",
                 "revealProblems": "onProblem",
-                "close": false
+                "close": true
             },
             "dependsOrder": "parallel",
             "dependsOn":[
@@ -93,19 +113,19 @@
             ]
         },
         {
-            // load-m4 : load m4 image into EOS_S3 using JLink Commander and a JLink probe
-            "label": "load-m4 (JLink)",
+            // load (JLink) : load the fpga, m4, or both images into EOS-S3 using JLink Commander and a JLink probe
+            "label": "load (JLink)",
             "type": "shell",
-            "command": "./load_m4_jlink.sh --jlink-exe-path=${config:qorc_jlink_commander_path}",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-jlink",
             "options": {
-                "cwd": "${workspaceFolder}/.scaffolding"
+                "cwd": "${workspaceFolder}"
             },
             "group": "build",
             "problemMatcher": [],
             "presentation": {
                 "reveal": "always", 
                 "revealProblems": "onProblem",
-                "close": false
+                "close": true
             },
             "dependsOrder": "parallel",
             "dependsOn":[
@@ -122,7 +142,7 @@
             "label": "generate-json-db",
             "detail": "generate compile_commands.json using bear",
             "type": "shell",
-            "command": "cd ${config:qorc_sdk_path} && source envsetup.sh && cd - && make clean && bear make",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && make clean && bear make",
             "options": {
                 "cwd": "${workspaceFolder}/GCC_Project"
             },
@@ -136,16 +156,27 @@
     ],
     "inputs": [
         {
+            "id": "yesOrNoFromExt",
+            "description": "Confirm if you want to replace bootloader on the board with this one",
+            "type": "pickString",
+            "options": [
+                "no",
+                "yes"
+            ],
+            "default": "no"
+        },
+        {
             // uses the 'augustocdias.tasks-shell-input' extension to show a nice user friendly
             // 'quickpick' dropdown in vscode for the user to select the serial port while
             // flashing the images into the board
             // - requires the extension to be installed.
-            // - requires that python and pySerial are installed on the HOST machine already.
             "id": "serialPortFromExt",
             "type": "command",
             "command": "shellCommand.execute",
             "args" : {
-                "command": "python ./get_serial_ports_list.py",
+                // we should have run the x-get-ports task, which populates the file containing
+                // serial ports available on the system using the qorc sdk python installation
+                "command": "cat custom_eoss3_ports.log && rm custom_eoss3_ports.log",
                 "cwd": "${workspaceFolder}/.scaffolding",
                 "fieldSeparator": "|",
                 "description": "select serial port [>> ensure it is not opened in another program <<]",
@@ -158,22 +189,12 @@
             "description": "select debug probe to use with OpenOCD",
             "type": "pickString",
             "options": [
-                "jlink_swd.cfg",
-                "ft2232h_swd.cfg",
+                ".scaffolding/jlink_swd.cfg",
+                ".scaffolding/ft2232h_swd.cfg",
                 "interface/stlink-v2.cfg",
                 "interface/cmsis-dap.cfg"
             ],
-            "default": "jlink_swd.cfg"
-        },
-        {
-            "id": "yesOrNoFromExt",
-            "description": "Confirm if you want to replace bootloader on the board with this one",
-            "type": "pickString",
-            "options": [
-                "no",
-                "yes"
-            ],
-            "default": "no"
+            "default": ".scaffolding/jlink_swd.cfg"
         }
     ],
 }

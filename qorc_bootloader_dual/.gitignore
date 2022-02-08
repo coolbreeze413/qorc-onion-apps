@@ -1,9 +1,8 @@
 ### vscode ++ ###
-
 # ignore vscode/ dir and everything inside
 /.vscode/*
 
-# remove this AFTER the settings.json is completely independent of HOST specific paths
+# template for settings.json
 !/.vscode/settings.template.jsonc
 
 # tasks for build/clean/...
@@ -47,12 +46,23 @@
 /**/rtl/*.openocd
 /**/rtl/build
 /**/rtl/Makefile.symbiflow
+
+# au/mx generated files and dirs
+fpga/rtl/config_bit_gen
+fpga/rtl/*_linux_cache
+fpga/rtl/logic_optimizer/
+fpga/rtl/*_yosys.log
+fpga/rtl/*.blif
+fpga/rtl/*.edf
+fpga/rtl/*.html
+fpga/rtl/*.log
+fpga/rtl/*.rpt
+fpga/rtl/*.tcl
+fpga/rtl/*.ys
+fpga/rtl/*.timing.db
 ### build artifacts -- ###
 
 ### scaffolding artifacts ++ ###
 custom_eoss3_*.jlink
 custom_eoss3_*.log
-fpga_load_custom_openocd_gdb.log
-fpga_m4_load_custom_openocd_gdb.log
-m4_load_custom_openocd_gdb.log
 ### scaffolding artifacts -- ###

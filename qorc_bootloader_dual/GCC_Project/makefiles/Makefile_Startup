@@ -14,7 +14,7 @@ all: $(OBJS)
 $(OUTPUT_PATH)/%.o:$(SRC_PATH)/%.c $(DEPEND_PATH)/%.d
 	@echo Compile: $<
 	$(HIDE)$(CC) $< $(CFLAGS) $(DEPFLAGS) $(INCLUDE_DIRS) -o $@
-    
+
 -include $(D_FILES))
 
 $(DEPEND_PATH)/%.d: ;

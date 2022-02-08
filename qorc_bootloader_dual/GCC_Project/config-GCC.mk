@@ -11,7 +11,7 @@ export AS_FLAGS= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfpu=
 
 #Preprocessor macros
 
-export MACROS=-D__FPU_USED=1 -D__FPU_USED=1 \
+export MACROS=-D__FPU_USED=1 \
         -D__M4_DEBUG \
         -D__EOSS3_CHIP \
         -D__RTOS \
@@ -30,12 +30,17 @@ export MACROS=-D__FPU_USED=1 -D__FPU_USED=1 \
         -D__STARTUP_COPY_MULTIPLE
 
 export OPT_FLAGS=-fmerge-constants -fomit-frame-pointer -fcrossjumping -fexpensive-optimizations -ftoplevel-reorder
+export LIBCMSIS_GCC_DIR=$(PROJ_ROOT)$(DIR_SEP)Libraries$(DIR_SEP)CMSIS$(DIR_SEP)lib$(DIR_SEP)GCC
 
 export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(APP_DIR)/inc" \
+		 -I"$(APP_DIR)/fpga/inc" \
+                 -I"$(PROJ_ROOT)/s3-gateware/" \
                  -I"$(PROJ_ROOT)/freertos_gateware/inc" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS/inc" \
                  -I"$(PROJ_ROOT)/HAL/inc" \
+                 -I"$(PROJ_ROOT)/Libraries/cli/inc" \
+                 -I"$(PROJ_ROOT)/Libraries/Power/inc" \
                  -I"$(PROJ_ROOT)/FreeRTOS/include" \
                  -I"$(PROJ_ROOT)/FreeRTOS/portable/GCC/ARM_CM4F_quicklogic_s3XX" \
                  -I"$(PROJ_ROOT)/Libraries/Power/inc" \
@@ -46,7 +51,7 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/Libraries/FPGA/inc"\
                  -I"$(PROJ_ROOT)/Libraries/DatablockManager/inc" 
     
-        
+
 # C compiler flags
 export CFLAGS= $(MACROS) \
         -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
@@ -58,9 +63,10 @@ export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfp
             ${DASH_O} $(OPT_FLAGS) -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  \
             ${DASH_G} -T "$(PROJ_DIR)/quickfeather.ld" -Xlinker --gc-sections -Wall -Werror \
             -Wl,--fatal-warnings -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
+            -Wl,--print-memory-usage \
             --specs=nano.specs --specs=nosys.specs -Wl,--no-wchar-size-warning \
-            -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" -lm
-
+            -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" -lm \
+            -L$(LIBCMSIS_GCC_DIR) -larm_cortexM4lf_math 
 
 
 export ELF2BIN_OPTIONS=-O binary
@@ -76,9 +82,12 @@ export HAL_DIR        = $(PROJ_ROOT)$(DIR_SEP)HAL$(DIR_SEP)src
 export FREERTOS_DIR   = $(PROJ_ROOT)$(DIR_SEP)FreeRTOS
 export LIB_DIR        = $(PROJ_ROOT)$(DIR_SEP)Libraries
 
-export POWER_DIR      = $(LIB_DIR)$(DIR_SEP)Power$(DIR_SEP)src
-export SYSFLASH_DIR   = $(LIB_DIR)$(DIR_SEP)SysFlash$(DIR_SEP)src
-export UTILS_DIR      = $(LIB_DIR)$(DIR_SEP)Utils$(DIR_SEP)src
-export FPGA_DIR       = $(LIB_DIR)$(DIR_SEP)FPGA$(DIR_SEP)src
-export MAIN_DIR       = $(APP_DIR)$(DIR_SEP)src
-export S3GW_DRIVERS_DIR = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
+export POWER_DIR        = $(LIB_DIR)$(DIR_SEP)Power$(DIR_SEP)src
+export SYSFLASH_DIR     = $(LIB_DIR)$(DIR_SEP)SysFlash$(DIR_SEP)src
+export UTILS_DIR        = $(LIB_DIR)$(DIR_SEP)Utils$(DIR_SEP)src
+export FPGA_DIR       		= $(LIB_DIR)$(DIR_SEP)FPGA$(DIR_SEP)src
+export CLI_DIR        		= $(LIB_DIR)$(DIR_SEP)cli$(DIR_SEP)src
+export MAIN_DIR       		= $(APP_DIR)$(DIR_SEP)src
+#export MAIN_FPGA_SRC_DIR    = $(APP_DIR)$(DIR_SEP)fpga$(DIR_SEP)src
+#export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)src
+export S3GW_DRIVERS_DIR     = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
