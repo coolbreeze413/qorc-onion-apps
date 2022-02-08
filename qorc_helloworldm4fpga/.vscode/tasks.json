@@ -161,7 +161,7 @@
             "presentation": {
                 "reveal": "always",
                 "revealProblems": "onProblem",
-                "close": false
+                "close": true
             },
             "dependsOrder": "parallel",
             "dependsOn":[
@@ -182,7 +182,7 @@
             "presentation": {
                 "reveal": "always", 
                 "revealProblems": "onProblem",
-                "close": false
+                "close": true
             },
             "dependsOrder": "parallel",
             "dependsOn":[
@@ -248,7 +248,7 @@
             "args" : {
                 // we should have run the x-get-ports task, which populates the file containing
                 // serial ports available on the system using the qorc sdk python installation
-                "command": "cat custom_eoss3_ports.log",
+                "command": "cat custom_eoss3_ports.log && rm custom_eoss3_ports.log",
                 "cwd": "${workspaceFolder}/.scaffolding",
                 "fieldSeparator": "|",
                 "description": "select serial port [>> ensure it is not opened in another program <<]",
