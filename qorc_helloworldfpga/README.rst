@@ -6,17 +6,38 @@ Intro
 
 A template project with an fpga design.
 
-- if m4 code exists, it should have a top-level makefile in GCC_Project/.
-- if fpga design exists, it should have a top-level makefile in fpga/.
-- fpga rtl code should be in fpga/rtl/.
-- if the fpga has an API/driver, the sources should be fpga/src and includes should be in fpga/inc.
-- top-level Makefile in the root of this directory should not need to be changed.
-- fpga top-level makefile should only need change to :code:`export QORC_FPGA_TOP_MODULE=helloworldfpga` 
-  according to the 'top' verilog module name
-- copy the settings.template.jsonc as settings.json, adjust the values in the file according to the instructions at the top of the file.
-  most of the time, it can be used as is, without any changes.
-
 The FPGA design is a simple LED-toggle, which toggles the red LED regularly.
+
+
+Project Structure Guide
+~~~~~~~~~~~~~~~~~~~~~~~
+
+- top-level :code:`Makefile` should be in the root of this directory
+- if m4 code exists, it should have a top-level makefile at :code:`GCC_Project/Makefile`
+- if fpga design exists, it should have a top-level Makefile at :code:`fpga/Makefile`
+- fpga rtl verilog code should be in :code:`fpga/rtl/`
+- if the fpga rtl has API/driver code, the sources should be :code:`fpga/src` and includes should be in :code:`fpga/inc`
+
+
+Restructuring Existing QORC SDK Project
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:code:`note: this is only a guideline`
+
+- top-level :code:`Makefile`: copy into the existing project root directory
+
+- copy :code:`fpga/Makefile`: into the existing project :code:`fpga/` directory
+  
+  :code:`fpga/Makefile` should then be modified with correct 'top' verilog module name instead of :code:`export QORC_FPGA_TOP_MODULE=helloworldfpga`
+
+- copy the :code:`.scaffolding` directory into the root of the existing project
+
+- [VS Code] copy the :code:`.vscode` directory into the root of the existing project
+
+  delete any existing :code:`settings.json` file in the :code:`.vscode` directory
+
+  copy the :code:`settings.template.jsonc` as :code:`settings.json`, adjust the values in the file according to the 
+  instructions at the top of the file.
 
 
 Usage
@@ -33,7 +54,7 @@ How To
 Command Line Usage
 ~~~~~~~~~~~~~~~~~~
 
-:code:`Note: all the commands below are run from the root of this directory.`
+:code:`note: all the commands below are run from the root of this directory.`
 
 Initialize Environment
 **********************
