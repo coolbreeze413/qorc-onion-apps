@@ -14,10 +14,9 @@ or a USB cable connected to the USB-Serial µUSB port.
 
     note: 
     The bootloader loads the fpga image from the bootfpga partition, ensure that this is already flashed on the board.
-    
+
     If this is a blank board, which does not have the bootfpga partition flashed with the usb-serial image,
-    use the qorc_loadflash_dual project, and run it using a debugger, to be able to flash the bootfpga/bootloader 
-    to initialize the flash on the board for the remaining qorc projects to be run.
+    use the qorc_loadflash_dual project, to 'initialize' the board with the bootloader/bootfpga.
 
     Refer to the qorc_loadflash_dual project readme for details.
 

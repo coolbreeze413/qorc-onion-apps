@@ -15,10 +15,10 @@
  *==========================================================*/
 
 /*==========================================================
- *                                                          
+ *
  *    File   : c_lib_retarget.c
- *    Purpose: 
- *                                                          
+ *    Purpose:
+ *
  *=========================================================*/
 
 #include "Fw_global_config.h"
@@ -29,35 +29,32 @@
 #include <stdio.h>
 #include <eoss3_hal_uart.h>
 
-
-
-int fgetc(FILE * file)
+int fgetc(FILE *file)
 {
 #ifdef DISABLE_UART_PRINTS
-  return 0;
-#else  
-  return uart_rx(UART_ID_HW);
-#endif  
+    return 0;
+#else
+    return uart_rx(UART_ID_HW);
+#endif
 }
 
-int fputc(int ch, FILE * file)
+int fputc(int ch, FILE *file)
 {
 #ifdef DISABLE_UART_PRINTS
-  return 0;
-#else  
-  uart_tx(UART_ID_HW,ch);
-  return ch;
-#endif 
+    return 0;
+#else
+    uart_tx(UART_ID_HW, ch);
+    return ch;
+#endif
 }
 
-
-#if (defined( __CELERIES_GCC) || defined( __GNUC__))
+#if (defined(__CELERIES_GCC) || defined(__GNUC__))
 #include <sys/stat.h>
 #include <sys/unistd.h>
-#endif   
+#endif
 
-//FILE __stdout;
-//FILE __stdin;
+// FILE __stdout;
+// FILE __stdin;
 
 #if 0
 int fgetc(FILE * file)
@@ -72,28 +69,27 @@ int fputc(int ch, FILE * file)
 }
 #endif
 
-#if (defined( __CELERIES_GCC) || defined( __GNUC__))
-
+#if (defined(__CELERIES_GCC) || defined(__GNUC__))
 
 int _write(int file, char *ptr, int len)
 {
-	(void)file;
- 	uart_tx_buf( UART_ID_CONSOLE, ptr, len );
-	return len;
+    (void)file;
+    uart_tx_buf(UART_ID_CONSOLE, ptr, len);
+    return len;
 }
 
 int _close(int file)
 {
-	return -1;
+    return -1;
 }
 
 int _lseek(int file, int ptr, int dir)
 {
-	return 0;
+    return 0;
 }
 
-int _read (int file, char *ptr, int len)
+int _read(int file, char *ptr, int len)
 {
-	return 0;
+    return 0;
 }
 #endif
