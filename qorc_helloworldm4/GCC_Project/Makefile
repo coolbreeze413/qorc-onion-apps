@@ -35,7 +35,7 @@ _makedirs_:
 
 
 .PHONY: external_srcs
-external_srcs: Startup HAL FreeRTOS Libraries BSP
+external_srcs: Startup HAL FreeRTOS Libraries
 	@echo "External sources built"
 
 .PHONY: appfpga
@@ -85,13 +85,13 @@ clean_FreeRTOS:
 
 CLEAN_TARGET += FreeRTOS
 
-.PHONY:BSP
-BSP:
-	make -f makefiles/Makefile_quickfeather_BSP
-clean_BSP:
-	make -f makefiles/Makefile_quickfeather_BSP clean
+# .PHONY:BSP
+# BSP:
+# 	make -f makefiles/Makefile_quickfeather_BSP
+# clean_BSP:
+# 	make -f makefiles/Makefile_quickfeather_BSP clean
 
-CLEAN_TARGET += BSP
+# CLEAN_TARGET += BSP
 
 .PHONY:Libraries
 Libraries:
@@ -100,7 +100,6 @@ clean_Libraries:
 	make -f makefiles/Makefile_Libraries clean
 
 CLEAN_TARGET += Libraries
-
 
 DELETEME=
 DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*)

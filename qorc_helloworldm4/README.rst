@@ -153,7 +153,7 @@ Dependencies
 
 - | VS Code Extension: :code:`augustocdias.tasks-shell-input`
   | link: https://marketplace.visualstudio.com/items?itemName=augustocdias.tasks-shell-input
-  | why: Scan serial-ports for :code:`flash` task, Select FPGA '.openocd' file for :code:`Debug (OpenOCD)` debug launch config
+  | why: Scan serial-ports for :code:`flash-bootloader` task
   |
 
 
@@ -205,7 +205,7 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
 
   - m4: run the :code:`build-m4` task
 
-- Load and run the code/sign on the board using JLinkExe, using:
+- Load and run the code on the board using JLinkExe, using:
   
   (assumes the board has been booted in DEBUG mode)
 
