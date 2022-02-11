@@ -58,8 +58,7 @@
             "compileCommands": "${workspaceFolder}/GCC_Project/compile_commands.json",
             "cStandard": "c99",
             "cppStandard": "c++11",
-            "intelliSenseMode": "gcc-arm",
-            "configurationProvider": "ms-vscode.makefile-tools"
+            "intelliSenseMode": "gcc-arm"
         }
     ],
     "version": 4

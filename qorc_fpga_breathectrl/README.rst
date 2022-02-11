@@ -238,11 +238,6 @@ Dependencies
   | why: Scan serial-ports for :code:`flash` task, Select FPGA '.openocd' file for :code:`Debug (OpenOCD)` debug launch config
   |
 
-- | python, pySerial
-  | link: https://pythonhosted.org/pyserial/pyserial.html
-  | why: Scan serial-ports for :code:`flash` task
-  |
-
 
 Initialize Project Configuration
 ********************************
@@ -269,8 +264,6 @@ The first time the project is going to be used from VS Code, we need to do the f
    
    - To be able to run the 'flash' task or 'Debug (OpenOCD)' launch config, remember to install the extension: :code:`augustocdias.tasks-shell-input`
      
-     Also, the 'flash' task needs to scan for available serial ports in the system, so python, and pySerial need to be installed.
-
    - To be able to 'debug' the code with gdb, remember to install the extension: :code:`marus25.cortex-debug`
 
    On opening the folder, VS Code should prompt to install these "recommended extensions", if not already installed, 
@@ -325,13 +318,17 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
 
   run the :code:`flash` task
 
-  This will show a drop down menu with the available serial ports in the system, select the appropriate one.
+  This will show a 'pickstring' drop down menu with the available serial ports in the system, select the appropriate one.
   
   (This is usually :code:`/dev/ttyACM0`)
 
-- :code:`debug-load-fpga (JLink)` : this is a special task required only while debugging the code with JLink.
+- :code:`load-fpga-debug (JLink)` : This is a special task required only while debugging the code with JLink.
 
   Refer to the Debug sections for details.
+
+- :code:`x-get-ports` : this is an **internal** task, which is used by the :code:`flash` task to obtain a list of
+  available serial ports on the system to use for flashing. This list is displayed to the user as a 'pickstring'
+  dropdown menu, as described in the :code:`flash` task above.
 
 
 Debug

@@ -33,7 +33,9 @@ export LIBCMSIS_GCC_DIR=$(PROJ_ROOT)$(DIR_SEP)Libraries$(DIR_SEP)CMSIS$(DIR_SEP)
 
 export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(APP_DIR)/inc" \
-                 -I"$(APP_DIR)/fpga/inc" \
+		 -I"$(APP_DIR)/fpga/inc" \
+                 -I"$(PROJ_ROOT)/s3-gateware/" \
+                 -I"$(PROJ_ROOT)/freertos_gateware/inc" \
                  -I"$(PROJ_ROOT)/Libraries/CMSIS/inc" \
                  -I"$(PROJ_ROOT)/HAL/inc" \
                  -I"$(PROJ_ROOT)/Libraries/cli/inc" \
@@ -45,6 +47,7 @@ export INCLUDE_DIRS=-I"$(PROJ_DIR)" \
                  -I"$(PROJ_ROOT)/Libraries/SysFlash/inc" \
                  -I"$(PROJ_ROOT)/BSP/quickfeather/inc" \
                  -I"$(PROJ_ROOT)/Libraries/Utils/inc" \
+                 -I"$(PROJ_ROOT)/Libraries/FPGA/inc"\
                  -I"$(PROJ_ROOT)/Libraries/DatablockManager/inc" 
     
 
@@ -71,16 +74,19 @@ export ELF2BIN_OPTIONS=-O binary
 # Export the files and Directoris that work for both Windows and Linux
 # The DIR_SEP is needed only for OS specific command, whereas make can deal with any
 #
-export COMMON_STUB          = $(PROJ_DIR)$(DIR_SEP)makefiles$(DIR_SEP)Makefile_common
+export COMMON_STUB =$(PROJ_DIR)$(DIR_SEP)makefiles$(DIR_SEP)Makefile_common
 
-export BSP_DIR              = $(PROJ_ROOT)$(DIR_SEP)BSP$(DIR_SEP)quickfeather$(DIR_SEP)src
-export HAL_DIR              = $(PROJ_ROOT)$(DIR_SEP)HAL$(DIR_SEP)src
-export FREERTOS_DIR         = $(PROJ_ROOT)$(DIR_SEP)FreeRTOS
-export LIB_DIR              = $(PROJ_ROOT)$(DIR_SEP)Libraries
-export POWER_DIR            = $(LIB_DIR)$(DIR_SEP)Power$(DIR_SEP)src
-export SYSFLASH_DIR         = $(LIB_DIR)$(DIR_SEP)SysFlash$(DIR_SEP)src
-export UTILS_DIR            = $(LIB_DIR)$(DIR_SEP)Utils$(DIR_SEP)src
-export CLI_DIR              = $(LIB_DIR)$(DIR_SEP)cli$(DIR_SEP)src
-export MAIN_DIR             = $(APP_DIR)$(DIR_SEP)src
-export MAIN_FPGA_RTL_DIR    = $(APP_DIR)$(DIR_SEP)fpga$(DIR_SEP)rtl
+export BSP_DIR        = $(PROJ_ROOT)$(DIR_SEP)BSP$(DIR_SEP)quickfeather$(DIR_SEP)src
+export HAL_DIR        = $(PROJ_ROOT)$(DIR_SEP)HAL$(DIR_SEP)src
+export FREERTOS_DIR   = $(PROJ_ROOT)$(DIR_SEP)FreeRTOS
+export LIB_DIR        = $(PROJ_ROOT)$(DIR_SEP)Libraries
+
+export POWER_DIR        = $(LIB_DIR)$(DIR_SEP)Power$(DIR_SEP)src
+export SYSFLASH_DIR     = $(LIB_DIR)$(DIR_SEP)SysFlash$(DIR_SEP)src
+export UTILS_DIR        = $(LIB_DIR)$(DIR_SEP)Utils$(DIR_SEP)src
+#export FPGA_DIR       		= $(LIB_DIR)$(DIR_SEP)FPGA$(DIR_SEP)src
+export CLI_DIR        		= $(LIB_DIR)$(DIR_SEP)cli$(DIR_SEP)src
+export MAIN_DIR       		= $(APP_DIR)$(DIR_SEP)src
 export MAIN_FPGA_SRC_DIR    = $(APP_DIR)$(DIR_SEP)fpga$(DIR_SEP)src
+#export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)src
+#export S3GW_DRIVERS_DIR     = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
