@@ -44,7 +44,7 @@ This can be see in the code of `src/main.c [Line 92 - Line 117] <src/main.c#L92-
 
 This is followed by a banner like the below on the serial terminal:
 
-.. code-block::
+.. code-block:: none
 
   ##########################
   ONION FPGA BREATHE Controller Experiment
@@ -63,7 +63,7 @@ This is followed by a banner like the below on the serial terminal:
 
 Enter the Breathe Controller submenu using :code:`breathectrl` and then type :code:`help` in the breathectrl submenu for commands.
 
-.. code-block::
+.. code-block:: none
 
   
   [0] > breathectrl
@@ -82,7 +82,7 @@ To set a GPIO as breathe output with specific period, use :code:`enbreathe IO_PA
 
 For example, set IO_22 to 2 sec (1 sec inhale, 1 sec exhale):
 
-.. code-block::
+.. code-block:: none
 
   [1] breathectrl > enbreathe 22 2000
   io = 22
@@ -94,7 +94,7 @@ To read current breathe config, use :code:`getbreathe IO_PADNUMBER`
 
 For reading IO_22 for example:
 
-.. code-block::
+.. code-block:: none
   
   [1] breathectrl > getbreathe 22
   io = 22
@@ -104,7 +104,7 @@ For reading IO_22 for example:
 
 To set IO_22 to 1 sec (0.5 sec inhale, 0.5 sec exhale):
 
-.. code-block::
+.. code-block:: none
 
   [1] breathectrl > enbreathe 22 1000
   io = 22
@@ -114,7 +114,7 @@ The RED LED should have be breathing with approx 0.5 sec inhale, and 0.5 sec exh
 
 Read IO_22 breathe config:
 
-.. code-block::
+.. code-block:: none
   
   [1] breathectrl > getbreathe 22
   io = 22
@@ -123,7 +123,7 @@ Read IO_22 breathe config:
 
 To disable the breathing on IO_22:
 
-.. code-block::
+.. code-block:: none
 
   [1] breathectrl > disbreathe 22
   io = 22
@@ -132,7 +132,7 @@ The RED LED should have got turned off.
 
 Read IO_22 breathe config:
 
-.. code-block::
+.. code-block:: none
   
   [1] breathectrl > getbreathe 22
   io = 22
@@ -249,7 +249,7 @@ The first time the project is going to be used from VS Code, we need to do the f
 
    Ensure the following variables are correctly defined:
 
-   .. code-block::
+   .. code-block:: none
 
      "qorc_sdk_path" : "${workspaceFolder}/../..",
 
