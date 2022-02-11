@@ -32,8 +32,7 @@
             },
             "presentation": {
                 "reveal": "always",
-                "revealProblems": "onProblem",
-                "panel": "new",
+                "revealProblems": "never",
                 "close": true
             }
         },

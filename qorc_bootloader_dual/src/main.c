@@ -14,14 +14,9 @@
  * limitations under the License.
  *==========================================================*/
 
-/*==========================================================
- *
- *    File   : main.c
- *    Purpose:
- *
- *=========================================================*/
+#include "Fw_global_config.h"   // This defines application specific charactersitics
 
-#include "Fw_global_config.h"
+#include <stdio.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
@@ -46,22 +41,20 @@ static void nvic_init(void);
 extern void BL_Task_Init(void);
 void qorc_hardwareSetup(void);
 
-const char *SOFTWARE_VERSION_STR = "QF_BL 1.0";
+const char *SOFTWARE_VERSION_STR = "QORC BLDL 1.3";
 
 // The entry Function of the BL when the system boots up.
 int main(void)
 {
-#if defined(__ICCARM__)
+
     SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc-bootloader-dual";
-#elif defined(__GNUC__)
-    SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc-bootloader-dual";
-#endif
+
 
     qorc_hardwareSetup();
 
     dbg_str("\n\n");
     dbg_str("##########################\n");
-    dbg_str("QORC ONION Bootloader-Dual\n");
+    dbg_str("ONION Bootloader-Dual\n");
     dbg_str("SW Version: ");
     dbg_str(SOFTWARE_VERSION_STR);
     dbg_str("\n");
