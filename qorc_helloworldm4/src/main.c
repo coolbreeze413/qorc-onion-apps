@@ -60,12 +60,12 @@ int main(void)
 
     SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc_helloworldm4";
     
-    qf_hardwareSetup();
+    qorc_hardwareSetup();
     nvic_init();
 
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "QORC ONION HELLO WORLD M4\n");
+    dbg_str( "ONION HELLO WORLD M4\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
