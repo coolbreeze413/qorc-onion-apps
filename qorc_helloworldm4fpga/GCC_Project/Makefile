@@ -101,6 +101,14 @@ clean_Libraries:
 
 CLEAN_TARGET += Libraries
 
+.PHONY:s3gw_drivers
+s3gw_drivers:
+	make -f makefiles/Makefile_s3gw_drivers
+clean_s3gw_drivers:
+	make -f makefiles/Makefile_s3gw_drivers clean
+
+CLEAN_TARGET += s3gw_drivers
+
 DELETEME=
 DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*)
 DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)*.o)
