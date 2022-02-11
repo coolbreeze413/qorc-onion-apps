@@ -79,7 +79,7 @@ Before clean/build/load/flash, ensure that the bash environment is setup by doin
 
 1. Ensure that QORC-SDK is initialized and ready:
 
-   ::
+   .. code-block:: bash
 
      source <QORC_SDK_PATH>/envsetup.sh
 
@@ -99,7 +99,7 @@ Clean/Build/Load/Flash (Command Line)
 
   (assumes the board has been booted in DEBUG mode)
 
-  ::
+  .. code-block:: bash
       
     make load-jlink
 
@@ -107,7 +107,7 @@ Clean/Build/Load/Flash (Command Line)
 
   (assumes the board has been booted in DEBUG mode)
 
-  ::
+  .. code-block:: bash
 
     export QORC_OCD_IF_CFG=/path/to/inteface/cfg    # needs to be done only once in the current shell
     make load-openocd
@@ -127,7 +127,7 @@ Clean/Build/Load/Flash (Command Line)
   
   (assumes the board is put into :code:`programming` mode)
 
-  ::
+  .. code-block:: bash
 
     export QORC_PORT=/path/to/serial/port   # needs to be done only once in current shell
     make flash
@@ -146,7 +146,7 @@ Dependencies
   | why: C/C++ Intellisense, Debugging
   |
 
-- | VS Code Extension: :code: `marus25.cortex-debug`
+- | VS Code Extension: :code:`marus25.cortex-debug`
   | link: https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug
   | why: Cortex-M Debug Launch Configuration
   |
@@ -166,7 +166,7 @@ The first time the project is going to be used from VS Code, we need to do the f
 
    Ensure the following variables are correctly defined:
 
-   ::
+   .. code-block:: none
 
      "qorc_sdk_path" : "${workspaceFolder}/../..",
 
