@@ -42,7 +42,7 @@ extern const struct cli_cmd_entry my_main_menu[];
 
 const char *SOFTWARE_VERSION_STR;
 
-extern void qf_hardwareSetup();
+extern void qorc_hardwareSetup();
 static void nvic_init(void);
 
 

@@ -337,92 +337,91 @@ void Ffe0_Handler(void) {
 //	HAL_SPI_IRQHandler(&SpiHandle);
 	//while(1);
 }
-HAL_FBISRfunction FB_ISR [MAX_FB_INTERRUPTS]={NULL,NULL,NULL,NULL};
+
+
+HAL_FBISRfunction FB_ISR[MAX_FB_INTERRUPTS] = {NULL, NULL, NULL, NULL};
 
 void FbMsg_Handler(void) {
 
 #if ( configSAVE_IRQ_HISTORY==1 )
-        sec_save_irq_history("FbMsg\0", xTaskGetTickCountFromISR());
+    sec_save_irq_history("FbMsg\0", xTaskGetTickCountFromISR());
 #endif
 
-// detect which one of the FB generators inetrrupted
-  if ( INTR_CTRL->FB_INTR_RAW & FB_0_INTR_RAW)
-  {
-    // call that particualr ISR
-    if (FB_ISR[FB_INTERRUPT_0])
-    FB_ISR[FB_INTERRUPT_0]();
-    // clear that interrupt at FB level
-    INTR_CTRL->FB_INTR = (FB_0_INTR_DETECT);
-  }
-  if ( INTR_CTRL->FB_INTR_RAW & FB_1_INTR_RAW)
-  {
-    // call that particualr ISR
-   if (FB_ISR[FB_INTERRUPT_1])
-    FB_ISR[FB_INTERRUPT_1]();
-    // clear that interrupt at FB level
-    INTR_CTRL->FB_INTR = (FB_1_INTR_DETECT);
-  }
-  if ( INTR_CTRL->FB_INTR_RAW & FB_2_INTR_RAW)
-  {
-    // call that particualr ISR
-    if (FB_ISR[FB_INTERRUPT_2])
-    FB_ISR[FB_INTERRUPT_2]();
-    // clear that interrupt at FB level
-    INTR_CTRL->FB_INTR = (FB_2_INTR_DETECT);
-  }
- if ( INTR_CTRL->FB_INTR_RAW & FB_3_INTR_RAW)
-  {
-    // call that particualr ISR
-    if (FB_ISR[FB_INTERRUPT_3])
-    FB_ISR[FB_INTERRUPT_3]();
-    // clear that interrupt at FB level
-   INTR_CTRL->FB_INTR = (FB_3_INTR_DETECT);
-  }
+    // detect which one of the FB generators interrupted
+    if (INTR_CTRL->FB_INTR_RAW & FB_0_INTR_RAW)
+    {
+        // call that particualr ISR
+        if (FB_ISR[FB_INTERRUPT_0])
+            FB_ISR[FB_INTERRUPT_0]();
+        // clear that interrupt at FB level
+        INTR_CTRL->FB_INTR = (FB_0_INTR_DETECT);
+    }
+    if (INTR_CTRL->FB_INTR_RAW & FB_1_INTR_RAW)
+    {
+        // call that particualr ISR
+        if (FB_ISR[FB_INTERRUPT_1])
+            FB_ISR[FB_INTERRUPT_1]();
+        // clear that interrupt at FB level
+        INTR_CTRL->FB_INTR = (FB_1_INTR_DETECT);
+    }
+    if (INTR_CTRL->FB_INTR_RAW & FB_2_INTR_RAW)
+    {
+        // call that particualr ISR
+        if (FB_ISR[FB_INTERRUPT_2])
+            FB_ISR[FB_INTERRUPT_2]();
+        // clear that interrupt at FB level
+        INTR_CTRL->FB_INTR = (FB_2_INTR_DETECT);
+    }
+    if (INTR_CTRL->FB_INTR_RAW & FB_3_INTR_RAW)
+    {
+        // call that particualr ISR
+        if (FB_ISR[FB_INTERRUPT_3])
+            FB_ISR[FB_INTERRUPT_3]();
+        // clear that interrupt at FB level
+        INTR_CTRL->FB_INTR = (FB_3_INTR_DETECT);
+    }
 }
-
-
 
 void FB_RegisterISR(UINT32_t fbIrq, HAL_FBISRfunction ISRfn)
 {
-  if (fbIrq< MAX_FB_INTERRUPTS){
-    FB_ISR [fbIrq] = ISRfn;
-  }
- }
-
-void FB_ConfigureInterrupt ( UINT32_t fbIrq, UINT8_t type, UINT8_t polarity, UINT8_t destAP,UINT8_t destM4 )
-{
-  //Edege or level and polarity
-  if ( type == FB_INTERRUPT_TYPE_LEVEL){
-    INTR_CTRL->FB_INTR_TYPE &= ~( 1<< fbIrq);
-    if ( polarity == FB_INTERRUPT_POL_LEVEL_LOW)
-      INTR_CTRL->FB_INTR_POL &= ~(1<<fbIrq);
-    else
-      INTR_CTRL->FB_INTR_POL |=( 1<< fbIrq);
-  }
-  else{
-    INTR_CTRL->FB_INTR_TYPE |=  ( 1<< fbIrq);
-    if ( polarity == FB_INTERRUPT_POL_EDGE_FALL)
-      INTR_CTRL->FB_INTR_POL &= ~(1<<fbIrq);
-    else
-      INTR_CTRL->FB_INTR_POL |=( 1<< fbIrq);
-  }
-
-  // Destination AP
-  if ( destAP == FB_INTERRUPT_DEST_AP_DISBLE)
-    INTR_CTRL->FB_INTR_EN_AP &= ~( 1<< fbIrq);
-  else
-    INTR_CTRL->FB_INTR_EN_AP |= ( 1<< fbIrq);
-
-  // Destination M4
-  if ( destM4 == FB_INTERRUPT_DEST_M4_DISBLE)
-    INTR_CTRL->FB_INTR_EN_M4 &= ~( 1<< fbIrq);
-  else
-    INTR_CTRL->FB_INTR_EN_M4 |= ( 1<< fbIrq);
+    if (fbIrq < MAX_FB_INTERRUPTS)
+    {
+        FB_ISR[fbIrq] = ISRfn;
+    }
 }
 
+void FB_ConfigureInterrupt(UINT32_t fbIrq, UINT8_t type, UINT8_t polarity, UINT8_t destAP, UINT8_t destM4)
+{
+    //edge or level and polarity
+    if (type == FB_INTERRUPT_TYPE_LEVEL)
+    {
+        INTR_CTRL->FB_INTR_TYPE &= ~(1 << fbIrq);
+        if (polarity == FB_INTERRUPT_POL_LEVEL_LOW)
+            INTR_CTRL->FB_INTR_POL &= ~(1 << fbIrq);
+        else
+            INTR_CTRL->FB_INTR_POL |= (1 << fbIrq);
+    }
+    else
+    {
+        INTR_CTRL->FB_INTR_TYPE |= (1 << fbIrq);
+        if (polarity == FB_INTERRUPT_POL_EDGE_FALL)
+            INTR_CTRL->FB_INTR_POL &= ~(1 << fbIrq);
+        else
+            INTR_CTRL->FB_INTR_POL |= (1 << fbIrq);
+    }
 
+    // Destination AP
+    if (destAP == FB_INTERRUPT_DEST_AP_DISBLE)
+        INTR_CTRL->FB_INTR_EN_AP &= ~(1 << fbIrq);
+    else
+        INTR_CTRL->FB_INTR_EN_AP |= (1 << fbIrq);
 
-
+    // Destination M4
+    if (destM4 == FB_INTERRUPT_DEST_M4_DISBLE)
+        INTR_CTRL->FB_INTR_EN_M4 &= ~(1 << fbIrq);
+    else
+        INTR_CTRL->FB_INTR_EN_M4 |= (1 << fbIrq);
+}
 
 void SensorGpio_Handler(void) 
 {

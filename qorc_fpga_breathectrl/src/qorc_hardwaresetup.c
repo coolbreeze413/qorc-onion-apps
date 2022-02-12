@@ -33,7 +33,7 @@ extern int sizeof_pincfg_table;
 extern int sizeof_gpiocfg_table;
 
 static void ldo_init(void);
-static void system_init(void);
+void system_init(void);
 static void uart_setup(void);
 static void SPIM_Setup(void);
 
@@ -51,7 +51,7 @@ void qorc_hardwareSetup(void)
 }
 
 // Initialize all System Clocks,Gate settings and  used Power Resources
-static void system_init(void)
+void system_init(void)
 {
     S3x_Clk_Enable(S3X_M4_S0_S3_CLK);
     S3x_Clk_Enable(S3X_M4_S4_S7_CLK);
@@ -59,7 +59,9 @@ static void system_init(void)
     S3x_Clk_Enable(S3X_M4_S12_S15_CLK);
 
     /* FPU settings ------------------------------------------------------------*/
-    SCB->CPACR |= ((3UL << 10 * 2) | (3UL << 11 * 2)); /* set CP10 and CP11 Full Access */
+#if (__FPU_PRESENT == 1) && (__FPU_USED == 1)
+    SCB->CPACR |= ((3UL << 10*2)|(3UL << 11*2));  /* set CP10 and CP11 Full Access */
+#endif
 
     /* Configure Memory to support light sleep and retention mode */
     PMU->M4SRAM_SSW_LPMF = 0xFFFF;

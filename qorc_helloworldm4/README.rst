@@ -1,4 +1,4 @@
-QORC HelloWorld M4  Application
+QORC HelloWorld M4 Application
 ===============================
 
 Intro
