@@ -1,59 +1,112 @@
-qorc-onion-apps
+QORC ONION Apps
 ===============
 
-experimental stuff that can be run with the qorc-sdk.
+Experimental stuff that can be run with the QORC SDK.
+
+
+Flashloaders
+------------
+
+1. "DUAL" Flashloader : used to prep a new board with EOSS3 and SPI Flash to flash the bootloader, bootfpga, appfpga and m4app, or to 'reinitialize' a board
+   with updated binaries of bootloader/bootfpga.
+
+   Listens to both USBSERIAL, as well as the EOSS3 UART at IO_44/IO_45, so either USB port on the board, or external USB-UART cable can be used to flash the images.
+   
+   Loading this can be done via JLink/OpenOCD, and then the board can be prepped by using a simple 'flash-initialize' to flash the set of bootloader, 
+   bootfpga (usb-serial fpga image), m4app, appfpga images (simple helloworld).
+
+   refer : `qorc_loadflash_dual <./qorc_loadflash_dual>`__
 
 Bootloaders
 ------------
 
-1. "DUAL" Bootloader : listens to both EOSS3 UART and the USBSERIAL, HOST can flash the 
-   images using either port - useful for situations when the USBSERIAL does not work on certain 
-   HOST machines.
+1. "DUAL" Bootloader : used to flash m4 and/or fpga images onto the SPI Flash, and load them from SPI Flash.
 
-   https://github.com/coolbreeze413/qorc-onion-apps/tree/master/qorc_bootloader_dual
+   Listens to both USBSERIAL, as well as the EOSS3 UART at IO_44/IO_45, so either USB port on the board, or external USB-UART cable can be used to flash the images.
+
+   refer : `qorc_bootloader_dual <./qorc_bootloader_dual>`__
 
 2. "CLI" Bootloader : exposes a CLI interface on the USBSERIAL to have a menu-driven BL, 
    expanding the applications beyond flash/load.
+   
    :code:`warning: UNSTABLE`
+
+   refer : `qorc_bootloader_cli <./qorc_bootloader_cli>`__
+
+
+Templates
+---------
+
+A set of projects for different scenarios that be used as a 'template' to create a new project painlessly and then add any features needed, without
+needing to worry about changes in the build/flash/load/debug infrastructure.
+
+1. `qorc_helloworldm4 <./qorc_helloworldm4>`__ : project which uses only the Cortex-M4 core of the EOSS3
+
+2. `qorc_helloworldfpga <./qorc_helloworldfpga>`__ : project which uses only the eFPGA core of the EOSS3
+
+3. `qorc_helloworldm4fpga <./qorc_helloworldm4fpga>`__ : project which uses both the Cortex-M4 core and eFPGA core of the EOSS3 (without communication between M4 and eFPGA cores)
+
+4. `qorc_helloworldm4fpgaheader <./qorc_helloworldm4fpgaheader>`__ : project which uses both the Cortex-M4 core and eFPGA core of the EOSS3 (without communication between M4 and eFPGA cores)
+   
+   The difference in this project vs (3) is that, the fpga code is built to generate a 'C Header' with an binary array containing the FPGA bitstream instead of a separate binary image.
+
+   This 'C Header' is included as regular C code and compiled into a single binary for the Cortex-M4, but contains code for both the Cortex-M4 as well as the eFPGA.
+
+   This is more of a legacy method, and can be used if needed.
+
+   :code:`TODO`
+
 
 FPGA Standalone Examples
 -------------------------
 
-1. Simple PWM Module Example
+1. Simple "PWM" Module Example
 
-   https://github.com/coolbreeze413/qorc-onion-apps/tree/master/qorc_fpga_pwm
+   `qorc_fpga_pwm <./qorc_fpga_pwm>`__
 
 2. Simple "BREATHE" Module Example
 
-   https://github.com/coolbreeze413/qorc-onion-apps/tree/master/qorc_fpga_breathe
+   `qorc_fpga_breathe <./qorc_fpga_breathe>`__
 
 
 FPGA + M4 Combined Examples
-----------------------------
+---------------------------
 
 1. Simple GPIO CONTROLLER Example : control all EOSS3 IOs using FPGA, from M4
 
-   https://github.com/coolbreeze413/qorc-onion-apps/tree/master/qorc_fpga_gpioctrl
+   `qorc_fpga_gpioctrl <./qorc_fpga_gpioctrl>`__
 
 2. Simple PWM CONTROLLER Example : built on top of the PWM example, use from M4
    
-   https://github.com/coolbreeze413/qorc-onion-apps/tree/master/qorc_fpga_pwmctrl
+   `qorc_fpga_pwmctrl <./qorc_fpga_pwmctrl>`__
 
 3. Simple BREATHE CONTROLLER Example : built on top of the BREATHE example, use from M4
 
-   https://github.com/coolbreeze413/qorc-onion-apps/tree/master/qorc_fpga_breathectrl
+   `qorc_fpga_breathectrl <./qorc_fpga_breathectrl>`__
 
 4. Simple TIMER CONTROLLER Example : use TIMER on FPGA, use from M4, provides Interrupt on 
    Timer Expiry from FPGA to M4, illustrates both Wishbone access and Interrupt Path
 
-   https://github.com/coolbreeze413/qorc-onion-apps/tree/master/qorc_fpga_timerctrl
+   `qorc_fpga_timerctrl <./qorc_fpga_timerctrl>`__
 
 5. Composite FPGA_IP with all of the above to illustrate a building-block method of having 
    multiple Functional Blocks in the design, all accessible from the M4, and co-operatively 
    sharing the IOs
 
-   https://github.com/coolbreeze413/qorc-onion-apps/tree/master/qorc_fpga_compositeGPBctrl
+   `qorc_fpga_compositeGPBctrl <./qorc_fpga_compositeGPBctrl>`__
 
+
+Experimental
+------------
+
+1. Dynamically load FPGA images as and when needed:
+   
+   - `qorc_fpgareload_flash <./qorc_fpgareload_flash>`__ : demo for loading different FPGA bitstreams stored in SPI flash.
+   - `qorc_fpgareload_header <./qorc_fpgareload_header>`__ : demo for loading different FPGA bitstreams built into the Cortex-M4 binary (legacy 'C Header' FPGA bitstreams)
+
+2. Pygmy Test:
+
+   - `qorc_pygmy_test <./qorc_pygmy_test>`__ : a test code to verify various peripherals attached to the Pygmy-based boards from OptimusLogic.
 
 Useful Links
 ------------
