@@ -1,13 +1,51 @@
 {
     "version": "0.2.0",
     "configurations": [
-        // Debug - JLink GDB Server - JLink Probe
         {
+            // Debug - OpenOCD GDB Server - selectable probe
+            "name": "Debug (OpenOCD)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/GCC_Project/output/bin/${workspaceFolderBasename}.elf",
+            "runToEntryPoint": "main",
+            "interface": "swd",
+            // gdb server
+            "servertype": "openocd",
+            "serverpath": "${config:qorc_openocd_server_path}",
+            "openOCDLaunchCommands": [
+                "init",
+                "reset halt"
+            ],
+            "searchDir": [
+                "${config:qorc_openocd_scripts_path}"
+            ],
+            "configFiles": [
+                "${input:openocdProbe}",
+                "target/eos_s3.cfg"
+            ],
+            // gdb
+            "armToolchainPath": "${config:qorc_arm_toolchain_path}",
+            "armToolchainPrefix": "arm-none-eabi",
+            // svd
+            //"svdFile": "${config:qorc_svd_file_path}",
+            "postLaunchCommands": [
+            ],
+            // same thing goes for postRestartCommands, which is when we do a restart in the debug session
+            // as we need to load the fpga before restarting the m4 code as well.
+            "postRestartCommands": [
+            ],
+            "preLaunchTask": "build-m4",
+            // enable this to debug gdb output if any issues
+            "showDevDebugOutput": "none"
+        },
+        {
+            // Debug - JLink GDB Server - JLink probe
             "name": "Debug (JLink)",
             "type": "cortex-debug",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "executable": "GCC_Project/output/bin/${workspaceFolderBasename}.elf",
+            "executable": "${workspaceFolder}/GCC_Project/output/bin/${workspaceFolderBasename}.elf",
             "runToEntryPoint": "main",
             "interface": "swd",
             // gdb server
@@ -18,115 +56,24 @@
             "armToolchainPath": "${config:qorc_arm_toolchain_path}",
             "armToolchainPrefix": "arm-none-eabi",
             // svd
-            "svdFile": "${config:qorc_svd_file_path}",
-            // do we want to run anything before launching debug?
-            //"preLaunchTask": "build", // refer to this 'label' in tasks.json
+            //"svdFile": "${config:qorc_svd_file_path}",
+            "preLaunchTask": "build-m4",
+            // enable this to debug gdb output if any issues
+            "showDevDebugOutput": "none"
         },
-        // Attach - JLink GDB Server - JLink Probe
+    ],
+    "inputs": [
         {
-            "name": "Attach (JLink)",
-            "type": "cortex-debug",
-            "request": "attach",
-            "cwd": "${workspaceFolder}",
-            "executable": "GCC_Project/output/bin/${workspaceFolderBasename}.elf",
-            //"runToEntryPoint": "main",
-            "interface": "swd",
-            // gdb server
-            "servertype": "jlink",
-            "serverpath": "${config:qorc_jlink_server_path}",
-            "device": "Cortex-M4",
-            // gdb
-            "armToolchainPath": "${config:qorc_arm_toolchain_path}",
-            "armToolchainPrefix": "arm-none-eabi",
-            // svd
-            "svdFile": "${config:qorc_svd_file_path}",
-        },
-        // Debug - OpenOCD GDB Server - FT2232H Probe
-        {
-            "name": "Debug (OpenOCD) FT2232H",
-            "type": "cortex-debug",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "executable": "GCC_Project/output/bin/${workspaceFolderBasename}.elf",
-            "runToEntryPoint": "main",
-            "interface": "swd",
-            // gdb server
-            "servertype": "openocd",
-            "serverpath": "${config:qorc_openocd_server_path}",
-            "openOCDLaunchCommands": [
-                "init",
-                "reset halt"
+            "id": "openocdProbe",
+            "description": "select debug probe to use with OpenOCD",
+            "type": "pickString",
+            "options": [
+                ".scaffolding/jlink_swd.cfg",
+                ".scaffolding/ft2232h_swd.cfg",
+                "interface/stlink-v2.cfg",
+                "interface/cmsis-dap.cfg"
             ],
-            "searchDir": [
-                "${config:qorc_openocd_scripts_path}"
-            ],
-            "configFiles": [
-                "interface/ft2232h_swd.cfg",
-                "target/eos_s3.cfg"
-            ],
-            // gdb
-            "armToolchainPath": "${config:qorc_arm_toolchain_path}",
-            "armToolchainPrefix": "arm-none-eabi",
-            // svd
-            "svdFile": "${config:qorc_svd_file_path}",
-        },
-        // Debug - OpenOCD GDB Server - STLink(x) Probe
-        {
-            "name": "Debug (OpenOCD) STLINK-v2",
-            "type": "cortex-debug",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "executable": "GCC_Project/output/bin/${workspaceFolderBasename}.elf",
-            "runToEntryPoint": "main",
-            "interface": "swd",
-            // gdb server
-            "servertype": "openocd",
-            "serverpath": "${config:qorc_openocd_server_path}",
-            "openOCDLaunchCommands": [
-                "init",
-                "reset halt"
-            ],
-            "searchDir": [
-                "${config:qorc_openocd_scripts_path}"
-            ],
-            "configFiles": [
-                "interface/stlink-v2-1.cfg",
-                "target/eos_s3.cfg"
-            ],
-            // gdb
-            "armToolchainPath": "${config:qorc_arm_toolchain_path}",
-            "armToolchainPrefix": "arm-none-eabi",
-            // svd
-            "svdFile": "${config:qorc_svd_file_path}",
-        },
-        // Debug - OpenOCD GDB Server - JLink Probe (experimental)
-        {
-            "name": "Debug (OpenOCD) JLink",
-            "type": "cortex-debug",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "executable": "GCC_Project/output/bin/${workspaceFolderBasename}.elf",
-            "runToEntryPoint": "main",
-            "interface": "swd",
-            // gdb server
-            "servertype": "openocd",
-            "serverpath": "${config:qorc_openocd_server_path}",
-            "openOCDLaunchCommands": [
-                "init",
-                "reset halt"
-            ],
-            "searchDir": [
-                "${config:qorc_openocd_scripts_path}"
-            ],
-            "configFiles": [
-                "interface/jlink_swd.cfg",
-                "target/eos_s3.cfg"
-            ],
-            // gdb
-            "armToolchainPath": "${config:qorc_arm_toolchain_path}",
-            "armToolchainPrefix": "arm-none-eabi",
-            // svd
-            "svdFile": "${config:qorc_svd_file_path}",
-        },
+            "default": ".scaffolding/jlink_swd.cfg",
+        }
     ]
 }

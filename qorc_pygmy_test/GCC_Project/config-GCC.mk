@@ -1,9 +1,4 @@
 #
-# Symbiflow options for QORK SDK
-#
-export RTL_TOP_MODULE=helloworldfpga
-
-#
 # GCC Configuration options for QORC SDK
 #
 
@@ -16,7 +11,7 @@ export AS_FLAGS= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfpu=
 
 #Preprocessor macros
 
-export MACROS=-D__FPU_USED=1 -D__FPU_USED=1 \
+export MACROS=-D__FPU_USED=1 \
         -D__M4_DEBUG \
         -D__EOSS3_CHIP \
         -D__RTOS \
@@ -70,10 +65,11 @@ export CFLAGS= $(MACROS) \
 export LD_FLAGS_1= -mcpu=cortex-m4 -mthumb -mlittle-endian -mfloat-abi=hard -mfpu=fpv4-sp-d16 \
             ${DASH_O} $(OPT_FLAGS) -fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections  \
             ${DASH_G} -T "$(PROJ_DIR)/quickfeather.ld" -Xlinker --gc-sections -Wall -Werror \
-	-Wl,--fatal-warnings -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
+            -Wl,--fatal-warnings -Wl,-Map,"$(OUTPUT_PATH)/$(OUTPUT_FILE).map" \
+            -Wl,--print-memory-usage \
             --specs=nano.specs --specs=nosys.specs -Wl,--no-wchar-size-warning \
-            -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" -lm\
-    -L$(LIBCMSIS_GCC_DIR) -larm_cortexM4lf_math -u _printf_float
+            -o "$(OUTPUT_PATH)/$(OUTPUT_FILE).elf" -lm \
+    	    -L$(LIBCMSIS_GCC_DIR) -larm_cortexM4lf_math -u _printf_float
 
 
 export ELF2BIN_OPTIONS=-O binary
@@ -82,22 +78,21 @@ export ELF2BIN_OPTIONS=-O binary
 # Export the files and Directoris that work for both Windows and Linux
 # The DIR_SEP is needed only for OS specific command, whereas make can deal with any
 #
-export COMMON_STUB =$(PROJ_DIR)$(DIR_SEP)makefiles$(DIR_SEP)Makefile_common
+export COMMON_STUB          = $(PROJ_DIR)$(DIR_SEP)makefiles$(DIR_SEP)Makefile_common
 
-export BSP_DIR        = $(PROJ_ROOT)$(DIR_SEP)BSP$(DIR_SEP)quickfeather$(DIR_SEP)src
-export HAL_DIR        = $(PROJ_ROOT)$(DIR_SEP)HAL$(DIR_SEP)src
-export FREERTOS_DIR   = $(PROJ_ROOT)$(DIR_SEP)FreeRTOS
-export LIB_DIR        = $(PROJ_ROOT)$(DIR_SEP)Libraries
-
-export POWER_DIR        = $(LIB_DIR)$(DIR_SEP)Power$(DIR_SEP)src
-export SYSFLASH_DIR     = $(LIB_DIR)$(DIR_SEP)SysFlash$(DIR_SEP)src
-export UTILS_DIR        = $(LIB_DIR)$(DIR_SEP)Utils$(DIR_SEP)src
-export FPGA_DIR       		= $(LIB_DIR)$(DIR_SEP)FPGA$(DIR_SEP)src
-export CLI_DIR        		= $(LIB_DIR)$(DIR_SEP)cli$(DIR_SEP)src
-export MAIN_DIR       		= $(APP_DIR)$(DIR_SEP)src
-export MAIN_FPGA_RTL_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)rtl
-export MAIN_FPGA_SRC_DIR	= $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)src
-export S3GW_DRIVERS_DIR     = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
+export BSP_DIR              = $(PROJ_ROOT)$(DIR_SEP)BSP$(DIR_SEP)quickfeather$(DIR_SEP)src
+export HAL_DIR              = $(PROJ_ROOT)$(DIR_SEP)HAL$(DIR_SEP)src
+export FREERTOS_DIR         = $(PROJ_ROOT)$(DIR_SEP)FreeRTOS
+export LIB_DIR              = $(PROJ_ROOT)$(DIR_SEP)Libraries
+export POWER_DIR            = $(LIB_DIR)$(DIR_SEP)Power$(DIR_SEP)src
+export SYSFLASH_DIR         = $(LIB_DIR)$(DIR_SEP)SysFlash$(DIR_SEP)src
+export UTILS_DIR            = $(LIB_DIR)$(DIR_SEP)Utils$(DIR_SEP)src
+#export FPGA_DIR       	    = $(LIB_DIR)$(DIR_SEP)FPGA$(DIR_SEP)src
+export CLI_DIR              = $(LIB_DIR)$(DIR_SEP)cli$(DIR_SEP)src
+export MAIN_DIR             = $(APP_DIR)$(DIR_SEP)src
+#export MAIN_FPGA_SRC_DIR   = $(APP_DIR)$(DIR_SEP)fpga$(DIR_SEP)src
+#export MAIN_FPGA_SRC_DIR   = $(PROJ_ROOT)$(DIR_SEP)s3-gateware$(DIR_SEP)usb2serial$(DIR_SEP)src
+#export S3GW_DRIVERS_DIR    = $(PROJ_ROOT)$(DIR_SEP)freertos_gateware$(DIR_SEP)src
 export MAIN_DRIVERS_BMA400             = $(APP_DIR)$(DIR_SEP)drivers$(DIR_SEP)bma400$(DIR_SEP)src
 export MAIN_DRIVERS_BMX160             = $(APP_DIR)$(DIR_SEP)drivers$(DIR_SEP)bmx160$(DIR_SEP)src
 export MAIN_DRIVERS_DPS310             = $(APP_DIR)$(DIR_SEP)drivers$(DIR_SEP)dps310$(DIR_SEP)src

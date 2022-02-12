@@ -1,6 +1,17 @@
 #
-# Makefile for Quick-AI SDK
+# Makefile for QORC SDK
 #
+
+
+# for all targets, check whether the QORC SDK environment has been setup first.
+ifndef QORC_SDK_PATH
+$(info )
+$(info QORC_SDK_PATH is not set in the environment, is the QORC SDK initialized?)
+$(info initialize with: 'source envsetup.sh' from the QORC SDK directory in the current shell)
+$(info )
+$(error QORC_SDK_PATH not defined)
+endif
+
 
 include config.mk
 
@@ -24,7 +35,7 @@ _makedirs_:
 
 
 .PHONY: external_srcs
-external_srcs: Startup HAL FreeRTOS Libraries BSP
+external_srcs: Startup HAL FreeRTOS Libraries
 	@echo "External sources built"
 
 .PHONY: appdir
@@ -75,13 +86,13 @@ clean_FreeRTOS:
 
 CLEAN_TARGET += FreeRTOS
 
-.PHONY:BSP
-BSP:
-	make -f makefiles/Makefile_quickfeather_BSP
-clean_BSP:
-	make -f makefiles/Makefile_quickfeather_BSP clean
+# .PHONY:BSP
+# BSP:
+# 	make -f makefiles/Makefile_quickfeather_BSP
+# clean_BSP:
+# 	make -f makefiles/Makefile_quickfeather_BSP clean
 
-CLEAN_TARGET += BSP
+# CLEAN_TARGET += BSP
 
 .PHONY:Libraries
 Libraries:
@@ -90,7 +101,6 @@ clean_Libraries:
 	make -f makefiles/Makefile_Libraries clean
 
 CLEAN_TARGET += Libraries
-
 
 DELETEME=
 DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*)

@@ -14,13 +14,6 @@
  * limitations under the License.
  *==========================================================*/
 
-/*==========================================================
- *
- *    File   : main.c
- *    Purpose: main for QuickFeather helloworldsw and LED/UserButton test
- *                                                          
- *=========================================================*/
-
 #include "Fw_global_config.h"   // This defines application specific charactersitics
 
 #include <stdio.h>
@@ -47,16 +40,9 @@
 
 extern const struct cli_cmd_entry my_main_menu[];
 
-
 const char *SOFTWARE_VERSION_STR;
 
-
-/*
- * Global variable definition
- */
-
-
-extern void qf_hardwareSetup();
+extern void qorc_hardwareSetup();
 static void nvic_init(void);
 
 #define BANNER_NUM_LINES    15
@@ -95,7 +81,7 @@ int main(void)
 
     SOFTWARE_VERSION_STR = "qorc_pygmy_test_1.0.0";
 
-    qf_hardwareSetup();
+    qorc_hardwareSetup();
     nvic_init();
     HAL_Delay_Init();
 
@@ -149,6 +135,7 @@ int main(void)
     while(1);
 }
 
+
 static void nvic_init(void)
  {
     // To initialize system, this interrupt should be triggered at main.
@@ -160,10 +147,9 @@ static void nvic_init(void)
     NVIC_SetPriority(FbMsg_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
  }    
 
+
 //needed for startup_EOSS3b.s asm file
 void SystemInit(void)
 {
 
 }
-
-
