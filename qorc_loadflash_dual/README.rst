@@ -110,7 +110,7 @@ Clean/Build/Load/Flash (Command Line)
      - build the `qorc_helloworldm4fpga <../qorc_helloworldm4fpga/README.rst>`__ and copy the m4app and appfpga binaries to `initialize/ <./initialize/>`__
      - flashes all of the binaries on the board using qfprog
      
-     Makefile can be referred to for implementation: `Makefile/ <./Makefile>`__
+     Makefile can be referred to for implementation: `Makefile <./Makefile>`__
 
 
 VS Code Usage
