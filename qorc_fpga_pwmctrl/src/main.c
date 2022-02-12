@@ -14,13 +14,6 @@
  * limitations under the License.
  *==========================================================*/
 
-/*==========================================================
- *
- *    File   : main.c
- *    Purpose: qorc_pwmctrl main
- *                                                          
- *=========================================================*/
-
 #include "Fw_global_config.h"   // This defines application specific charactersitics
 
 #include <stdio.h>
@@ -42,6 +35,7 @@
 
 #include "cli.h"
 
+#include "hal_fpga_onion.h"
 #include "hal_fpga_onion_pwmctrl.h"
 
 
@@ -56,7 +50,7 @@ const char *SOFTWARE_VERSION_STR;
  */
 
 
-extern void qf_hardwareSetup();
+void qorc_hardwareSetup(void);
 static void nvic_init(void);
 
 int main(void)
@@ -64,7 +58,7 @@ int main(void)
 
     SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc_fpga_pwmctrl";
     
-    qf_hardwareSetup();
+    qorc_hardwareSetup();
     nvic_init();
 
     dbg_str("\n\n");
@@ -160,5 +154,3 @@ void SystemInit(void)
 {
 
 }
-
-
