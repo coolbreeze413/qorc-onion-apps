@@ -28,59 +28,92 @@ How To
 Command Line Usage
 ~~~~~~~~~~~~~~~~~~
 
-Note that, all the commands below are run from the root of this directory.
+:code:`note: all the commands below are run from the root of this directory.`
 
 Initialize Environment
 **********************
 
 Before clean/build/load/flash, ensure that the bash environment is setup by doing the below:
 
-1. Ensure that QORC-SDK is initialized and ready (to use :code:`JLinkExe` or :code:`OpenOCD` for loading, :code:`qfprog` for flashing):
+1. Ensure that QORC-SDK is initialized and ready:
 
-   ::
+   .. code-block:: bash
 
-     cd <QORC_SDK_PATH> && source envsetup.sh && cd -
+     source <QORC_SDK_PATH>/envsetup.sh
 
 
 Clean/Build/Load/Flash (Command Line)
 *************************************
 
-- Clean the design using: :code:`.scaffolding/clean_fpga.sh`
+- Clean using:
 
-- Build the design using: :code:`.scaffolding/build_fpga.sh`
+  fpga: :code:`make clean` -or- :code:`make clean-fpga`
 
-- Load and run the design on the board using JLinkExe, using: :code:`.scaffolding/load_fpga_jlink.sh`
+- Build using:
+
+  fpga: :code:`make` -or- :code:`make fpga`
+
+- Load and run the design on the board using JLinkExe, using:
 
   (assumes the board has been booted in DEBUG mode)
+
+  .. code-block:: bash
+      
+    make load-jlink
 
 - Load and run the design on the board using OpenOCD, using:
 
   (assumes the board has been booted in DEBUG mode)
 
-  ::
+  .. code-block:: bash
 
-    .scaffolding/load_fpga_openocd_gdb.sh --openocd-if-cfg=<PATH_TO_INTERFACE_CFG>
+    export QORC_OCD_IF_CFG=/path/to/inteface/cfg    # needs to be done only once in the current shell
+    make load-openocd
 
-  The INTERFACE_CFG file depends on the debug adapter chosen.
+  The interface cfg file depends on the debug adapter chosen.
 
   Here are a few common adapters that can be used with the EOS_S3:
   
-  1. JLink Adapters: :code:`--openocd-if-cfg=.scaffolding/jlink_swd.cfg` (available in the current dir)
-  2. FT2232H Boards: :code:`--openocd-if-cfg=.scaffolding/ft2232h_swd.cfg` (available in the current dir)
-  3. STLinkv2 Adapters: :code:`--openocd-if-cfg=interface/stlink-v2.cfg` (available in the OpenOCD install scripts dir)
-  4. DAPLink Adapters: :code:`--openocd-if-cfg=interface/cmsis-dap.cfg` (available in the OpenOCD install scripts dir)
+  1. JLink Adapters: :code:`export QORC_OCD_IF_CFG=.scaffolding/jlink_swd.cfg` (available in the current dir)
+  2. FT2232H Boards: :code:`export QORC_OCD_IF_CFG=.scaffolding/ft2232h_swd.cfg` (available in the current dir)
+  3. STLinkv2 Adapters: :code:`export QORC_OCD_IF_CFG=interface/stlink-v2.cfg` (available in the OpenOCD install scripts dir)
+  4. DAPLink Adapters: :code:`export QORC_OCD_IF_CFG=interface/cmsis-dap.cfg` (available in the OpenOCD install scripts dir)
 
   Practically, any adapter that supports OpenOCD and SWD can be used with the appropriate cfg file passed in.
 
-- Flash and run the design on the board using qfprog: :code:`.scaffolding/flash_fpga.sh --port=/dev/ttyACM0`
-
+- Flash and run the design on the board using qfprog:
+  
   (assumes the board is put into :code:`programming` mode)
 
-  Change the serial port as applicable.
+  .. code-block:: bash
+
+    export QORC_PORT=/path/to/serial/port   # needs to be done only once in current shell
+    make flash
+
+  Set the serial port as applicable, this is generally :code:`export QORC_PORT=/dev/ttyACM0`
 
 
 VS Code Usage
 ~~~~~~~~~~~~~
+
+Dependencies
+************
+
+- | VS Code Extension: :code:`ms-vscode.cpptools`
+  | link: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools
+  | why: C/C++ Intellisense, Debugging
+  |
+
+- | VS Code Extension: :code:`marus25.cortex-debug`
+  | link: https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug
+  | why: Cortex-M Debug Launch Configuration
+  |
+
+- | VS Code Extension: :code:`augustocdias.tasks-shell-input`
+  | link: https://marketplace.visualstudio.com/items?itemName=augustocdias.tasks-shell-input
+  | why: Scan serial-ports for :code:`flash` task, Select FPGA '.openocd' file for :code:`Debug (OpenOCD)` debug launch config
+  |
+
 
 Initialize Project Configuration
 ********************************
@@ -91,7 +124,7 @@ The first time the project is going to be used from VS Code, we need to do the f
 
    Ensure the following variables are correctly defined:
 
-   ::
+   .. code-block:: none
 
      "qorc_sdk_path" : "${workspaceFolder}/../..",
 
@@ -105,9 +138,12 @@ The first time the project is going to be used from VS Code, we need to do the f
 
 2. Open the current directory in VS Code using :code:`File > Open Folder` menu
    
-   - To be able to run the 'flash' task, remember to install the extension: :code:`augustocdias.tasks-shell-input`
+   - To be able to run the 'flash' task or 'Debug (OpenOCD)' launch config, remember to install the extension: :code:`augustocdias.tasks-shell-input`
      
-     Also, the 'flash' task needs to scan for available serial ports in the system, so python, and pySerial need to be installed.
+   - To be able to 'debug' the code with gdb, remember to install the extension: :code:`marus25.cortex-debug`
+
+   On opening the folder, VS Code should prompt to install these "recommended extensions", if not already installed, 
+   select :code:`Install All` to automatically install them.
 
 
 Clean/Build/Load/Flash (VS Code)
@@ -119,30 +155,30 @@ Any "task" can be run in VS Code using the :code:`Terminal > Run Task` menu, whi
 
 Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, which shows a drop down list of tasks
 
-- Clean the design using:
+- Clean using:
   
-  :code:`clean-fpga` task
+  - fpga: run the :code:`clean-fpga` task
 
-- Build the design using:
+- Build using:
 
-  :code:`build-fpga` task
+  - fpga: run the :code:`build-fpga` task
 
 - Load and run the design on the board using JLinkExe, using:
-
+  
   (assumes the board has been booted in DEBUG mode)
 
-  :code:`load-fpga (JLink)` task
+  run the :code:`load (JLink)` task
 
 - Load and run the design on the board using OpenOCD, using:
 
   (assumes the board has been booted in DEBUG mode)
 
-  :code:`load-fpga (OpenOCD)` task
+  run the :code:`load (OpenOCD)` task
 
   This will show a drop down menu with the options of debug adapters currently tested:
 
-  - JLink Adapters :code:`jlink_swd.cfg`
-  - FT2232H Boards :code:`ft2232h_swd.cfg`
+  - JLink Adapters :code:`.scaffolding/jlink_swd.cfg`
+  - FT2232H Boards :code:`.scaffolding/ft2232h_swd.cfg`
   - STLinkv2 Adapters :code:`interface/stlink-v2.cfg`
   - DAPLink Adapters :code:`interface/cmsis-dap.cfg`
 
@@ -152,8 +188,21 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
 
   (assumes the board is put into :code:`programming` mode)
 
-  :code:`flash-fpga` task
+  run the :code:`flash` task
 
-  This will show a drop down menu with the available serial ports in the system, select the appropriate one.
+  This will show a 'pickstring' drop down menu with the available serial ports in the system, select the appropriate one.
   
   (This is usually :code:`/dev/ttyACM0`)
+
+
+- :code:`x-get-ports` : this is an **internal** task, which is used by the :code:`flash` task to obtain a list of
+  available serial ports on the system to use for flashing. This list is displayed to the user as a 'pickstring'
+  dropdown menu, as described in the :code:`flash` task above.
+
+
+References
+~~~~~~~~~~
+
+1. https://code.visualstudio.com/docs/editor/debugging
+2. https://marketplace.visualstudio.com/items?itemName=marus25.cortex-debug
+3. https://mcuoneclipse.com/2021/05/09/visual-studio-code-for-c-c-with-arm-cortex-m-part-4/
