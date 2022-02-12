@@ -227,7 +227,7 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
      - build the `qorc_helloworldm4fpga <../qorc_helloworldm4fpga/README.rst>`__ and copy the m4app and appfpga binaries to `initialize/ <./initialize/>`__
      - flashes all of the binaries on the board using qfprog
      
-     Makefile can be referred to for implementation: `Makefile/ <./Makefile>`__
+     Makefile can be referred to for implementation: `Makefile <./Makefile>`__
 
 - :code:`x-get-ports` : this is an **internal** task, which is used by the :code:`flash` task to obtain a list of
   available serial ports on the system to use for flashing. This list is displayed to the user as a 'pickstring'
