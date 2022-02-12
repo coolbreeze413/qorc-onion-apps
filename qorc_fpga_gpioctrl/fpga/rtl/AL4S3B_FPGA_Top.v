@@ -28,10 +28,10 @@ inout   wire    [31:0]   io_pad ;
 wire            CLK_IP          ; // Selected FPGA Clock
 wire            RST_IP          ; // Selected FPGA Reset
 
-wire            Sys_Clk0        ;
+wire            Sys_Clk0        ; // a.k.a C16
 wire            Sys_Clk0_Rst    ;
 
-wire            Sys_Clk1        ;
+wire            Sys_Clk1        ; // a.k.a C21
 wire            Sys_Clk1_Rst    ;
 
 // Wishbone Bus Signals
@@ -58,7 +58,7 @@ wire    [15:0]  Device_ID       ; // Provide DEVICE_ID output [to S3B Cell Macro
 // if Wishbone Slave interface is being used in the FPGA IP, then:
 // 1. use Sys_Clk0 as the clock input for the WBs block
 // 2. use Sys_Clk0 as the clocking for other logic in the FPGA IP
-// Sys_Clk1 can also be used as clocking for the IP as needed.
+// We could use Sys_Clk1 for the IP clocking too, here we use same for both WB and IP logic.
 
 // reset the FPGA IP on either the AHB domain or clock domain reset signals.
 gclkbuff u_gclkbuff_reset ( .A(Sys_Clk0_Rst | WB_RST) , .Z(WB_RST_FPGA) );

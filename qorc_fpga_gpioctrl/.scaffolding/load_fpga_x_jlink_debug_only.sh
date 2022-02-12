@@ -1,19 +1,17 @@
 #!/bin/bash
 
-
-# fpga-m4 load:
-# load fpga design, m4 code, or both using JLink Commander
-# we check if the current project has an fpga design (fpga/ dir), m4 code (GCC_Project/ dir) and accordingly
-#    generate a 'combined' JLink Commander Script which loads the project onto the EOS-S3
+# fpga-load-quit: m4+fpga debugging usage only!
+# load fpga design using JLink Commander and quit
+# we check if the current project has an fpga design (fpga/ dir) and accordingly
+#    generate a 'custom' JLink Commander Script which loads the design onto the EOS-S3 and quits
 # the fpga design is loaded using the generated (*.jlink) script file from the Symbiflow tooling.
-# the m4 code is loaded using the binary (*.bin) generated from gcc
-# ELF files cannot be loaded using JLink Commander!
+# this is a HELPER SCRIPT to be used only while debugging an fpga + m4 project using JLink (VS Code)
+# details:
+# Because the Symbiflow tooling only generates a JLink Commander Script, which can only be run
+#   using the JLink Commander, and not gdb, we cannot ask gdb to load this automatically.
+#   So, once the m4 code is loaded, and we reach the breakpoint at main(), we use this script
+#   to load the fpga design, and then 'resume' debugging.
 
-# summary: create combined jlink commander script to load fpga design jlink script and the m4 binary, and invoke jlink commander.
-# we stay in JLink Commander so user can further debug stuff.
-
-# note that the entire sequence is done using the JLink Commander itself, without gdb, due to the scripting interface it exposes.
-# alternatively, it can also be done with gdb script, talking to the JLink GDB Server in the future.
 
 # REQ:
 # 1. JLink probe is connected to EOS-S3 and the EOS-S3 is booted in DEBUG mode
@@ -30,6 +28,7 @@ JLINK_EXE_PATH=$(which JLinkExe)
 if [ -z "$JLINK_EXE_PATH" ] ; then
     printf "\nERROR: JLINK_EXE_PATH is not defined!\n"
     printf "\nJLinkExe should be on the path, is the QORC SDK initialized with 'source envsetup.sh'?\n"
+    usage
     exit 1
 fi
 
@@ -40,20 +39,7 @@ printf "\n"
 
 
 PROJECT_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
-PROJECT_M4_DIR="${PROJECT_DIR}/GCC_Project"
 PROJECT_FPGA_DIR="${PROJECT_DIR}/fpga"
-
-
-# check if we have m4 code in the current project
-PROJECT_M4_BIN=
-if [ -d "$PROJECT_M4_DIR" ] ; then
-    PROJECT_OUTPUT_BIN_DIR="${PROJECT_DIR}/GCC_Project/output/bin"
-    PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin)
-    if [ ! -f "$PROJECT_M4_BIN" ] ; then
-        printf "\nERROR: m4 binary does not exist! (is build done?)\n"
-        exit 1
-    fi
-fi
 
 
 # check if we have fpga design in the current project
@@ -65,46 +51,25 @@ if [ -d "$PROJECT_FPGA_DIR" ] ; then
         printf "\nERROR: fpga .jlink does not exist! (is build done?)\n"
         exit 1
     fi
-fi
-
-
-# sanity: atleast one of m4 code, or fpga design should exist.
-if [ ! -d "$PROJECT_M4_DIR" ] && [ ! -d "$PROJECT_FPGA_DIR" ] ; then
-    printf "\nERROR: neither 'GCC_Project/', nor 'fpga/' directories exist!\n"
-    printf "check the code structure!\n\n"
-    exit 1
+else
+    printf "\nThis project does not have an 'fpga/' directory\n\n!"
+    exit 0
 fi
 
 
 # generate a 'custom' jlink script to:
-# [step 1] init the EOS_S3 (reset)
-# [step 2] load the m4 binary into SRAM
-# [step 3] load the fpga design (.jlink generated)
-# [step 4] run the m4 code now
+# load the fpga design (.jlink generated), quit jlink commander
 
-CUSTOM_JLINK_SCRIPT="custom_eoss3_m4_fpga.jlink"
-CUSTOM_JLINK_SCRIPT_LOG="custom_eoss3_m4_fpga.jlink.log"
+CUSTOM_JLINK_SCRIPT="custom_eoss3_fpga.jlink"
+CUSTOM_JLINK_SCRIPT_LOG="custom_eoss3_fpga.jlink.log"
 
 # [step 0]
 # write "NOTHING" into file, i.e. reset the contents, faster than delete + touch.
 #https://askubuntu.com/a/549672
 : > "$CUSTOM_JLINK_SCRIPT"
 
-# [step 1] init the EOS_S3 (reset)
-echo "connect" >> "$CUSTOM_JLINK_SCRIPT"
-echo "RSetType 3" >> "$CUSTOM_JLINK_SCRIPT"
-echo "r" >> "$CUSTOM_JLINK_SCRIPT"
-echo "" >> "$CUSTOM_JLINK_SCRIPT"
 
-# [step 2] load the m4 binary into SRAM
-if [ -f "$PROJECT_M4_BIN" ] ; then
-    echo "loadbin $PROJECT_M4_BIN, 0x0" >> "$CUSTOM_JLINK_SCRIPT"
-    echo "r" >> "$CUSTOM_JLINK_SCRIPT"
-    echo "" >> "$CUSTOM_JLINK_SCRIPT"
-fi
-
-
-# [step 3] load the fpga design (.jlink generated)
+# [step 1] load the fpga design (.jlink generated)
 # copy the contents of the generated .jlink as is
 if [ -f "$PROJECT_FPGA_DESIGN_JLINK" ] ; then
     cat "$PROJECT_FPGA_DESIGN_JLINK" >> "$CUSTOM_JLINK_SCRIPT"
@@ -112,15 +77,9 @@ if [ -f "$PROJECT_FPGA_DESIGN_JLINK" ] ; then
     echo "" >> "$CUSTOM_JLINK_SCRIPT"
 fi
 
-# [step 4] run the m4 code, stay in the jlink commander for further debugging
-if [ -f "$PROJECT_M4_BIN" ] ; then
-    echo "g" >> "$CUSTOM_JLINK_SCRIPT"
-    echo "" >> "$CUSTOM_JLINK_SCRIPT"
-fi
-
-# note we can automatically quit jlink after this point, uncomment the below line if this is needed.
-#echo "q" >> "$CUSTOM_JLINK_SCRIPT"
-#echo "" >> "$CUSTOM_JLINK_SCRIPT"
+# [step 2] quit jlink
+echo "q" >> "$CUSTOM_JLINK_SCRIPT"
+echo "" >> "$CUSTOM_JLINK_SCRIPT"
 
 
 # moar: https://wiki.segger.com/J-Link_Commander
