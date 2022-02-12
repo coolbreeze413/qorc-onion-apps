@@ -1,5 +1,5 @@
-QORC HelloWorld FPGA Application
-================================
+ONION HelloWorld FPGA Application
+=================================
 
 Intro
 -----
