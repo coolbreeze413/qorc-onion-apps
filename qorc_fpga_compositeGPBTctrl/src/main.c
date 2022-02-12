@@ -14,13 +14,6 @@
  * limitations under the License.
  *==========================================================*/
 
-/*==========================================================
- *
- *    File   : main.c
- *    Purpose: qorc_breathectrl main
- *                                                          
- *=========================================================*/
-
 #include "Fw_global_config.h"   // This defines application specific charactersitics
 
 #include <stdio.h>
@@ -59,7 +52,7 @@ const char *SOFTWARE_VERSION_STR;
  */
 
 
-extern void qf_hardwareSetup();
+void qorc_hardwareSetup(void);
 static void nvic_init(void);
 
 int main(void)
@@ -67,7 +60,7 @@ int main(void)
 
     SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc_fpga_compositeGPBTctrl";
     
-    qf_hardwareSetup();
+    qorc_hardwareSetup();
     nvic_init();
 
     dbg_str("\n\n");
