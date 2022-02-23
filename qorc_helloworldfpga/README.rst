@@ -65,7 +65,41 @@ Before clean/build/load/flash, ensure that the bash environment is setup by doin
 
    .. code-block:: bash
 
+     source ../../envsetup.sh
+
+   .. code-block:: none
+
+     note: assumes this repo 'qorc-onion-apps' is cloned into the QORC SDK dir, at the same level as qf_apps
+
+   In general, use:
+
+   .. code-block:: none
+
      source <QORC_SDK_PATH>/envsetup.sh
+
+2. [Only] If you are using the RP2040/Pico as a debugger (picoprobe), then ensure that the RaspberryPi
+   flavor of OpenOCD is initialized and ready:
+
+   .. code-block:: bash
+
+     source .scaffolding/onion_openocd_picoprobe_setup.sh
+
+3. If you want to use the SVD file for EOS-S3 to watch registers while debugging, then ensure that
+   the SVD file is initialized and ready:
+
+   .. code-block:: bash
+
+     source .scaffolding/onion_svd_setup.sh
+
+   .. code-block:: none
+
+     note: the SVD file is in very early alpha and missing many registers, use with discretion!
+
+   To force download of latest SVD file from repo and replace the existing one, use:
+
+   .. code-block:: bash
+
+     source .scaffolding/onion_svd_setup.sh force
 
 
 Clean/Build/Load/Flash (Command Line)
@@ -104,6 +138,7 @@ Clean/Build/Load/Flash (Command Line)
   2. FT2232H Boards: :code:`export QORC_OCD_IF_CFG=.scaffolding/ft2232h_swd.cfg` (available in the current dir)
   3. STLinkv2 Adapters: :code:`export QORC_OCD_IF_CFG=interface/stlink-v2.cfg` (available in the OpenOCD install scripts dir)
   4. DAPLink Adapters: :code:`export QORC_OCD_IF_CFG=interface/cmsis-dap.cfg` (available in the OpenOCD install scripts dir)
+  5. picoprobe: :code:`export QORC_OCD_IF_CFG=interface/picoprobe.cfg` (available in the OpenOCD install scripts dir, only if RaspberryPi flavor OpenOCD has been initialized)
 
   Practically, any adapter that supports OpenOCD and SWD can be used with the appropriate cfg file passed in.
 
@@ -209,6 +244,12 @@ Using keyboard shortcuts: :code:`ctrl+p` and then type :code:`task<space>`, whic
   - DAPLink Adapters :code:`interface/cmsis-dap.cfg`
 
   select the appropriate one.
+
+- Load and run the design on the board using OpenOCD and picoprobe, using:
+
+  (assumes the board has been booted in DEBUG mode)
+
+  run the :code:`load (OpenOCD-picoprobe)` task
 
 - Flash and run the design on the board using qfprog:
 

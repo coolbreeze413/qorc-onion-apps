@@ -138,10 +138,10 @@ CUSTOM_OPENOCD_GDB_LOG="custom_eoss3_m4_fpga.openocd.log"
 # [step 1]run openocd (background, suppress output)
 if [ -f "$PROJECT_FPGA_DESIGN_OPENOCD" ] ; then
     # pass in the fpga generated .openocd cfg script, and the debug adapter 'interface' cfg script
-    "$OPENOCD_PATH" -f "$OPENOCD_INTERFACE_CFG" -f target/eos_s3.cfg -f "$PROJECT_FPGA_DESIGN_OPENOCD" > "$CUSTOM_OPENOCD_GDB_LOG" 2>&1 &
+    "$OPENOCD_PATH" -f "$OPENOCD_INTERFACE_CFG" -f target/eos_s3.cfg -f "$PROJECT_FPGA_DESIGN_OPENOCD" -c "init" -c "reset halt" > "$CUSTOM_OPENOCD_GDB_LOG" 2>&1 &
 else
     # pass in the debug adapter 'interface' cfg script
-    "$OPENOCD_PATH" -f "$OPENOCD_INTERFACE_CFG" -f target/eos_s3.cfg > "$CUSTOM_OPENOCD_GDB_LOG" 2>&1 &
+    "$OPENOCD_PATH" -f "$OPENOCD_INTERFACE_CFG" -f target/eos_s3.cfg > "$CUSTOM_OPENOCD_GDB_LOG" -c "init" -c "reset halt" 2>&1 &
 fi
 
 # [step 2] wait a second for the openocd server to startup
@@ -165,7 +165,7 @@ if [ -f "$PROJECT_FPGA_DESIGN_OPENOCD" ] && [ -f "$PROJECT_M4_ELF" ] ; then
         -q \
         -x "$SCRIPT_DIR/load_fpga_m4_openocd_gdbinit" \
         -ex "target extended-remote localhost:3333" \
-        -ex "monitor init" \
+        -ex "load" \
         -ex "monitor reset halt" \
         -ex "monitor load_bitstream" \
         -ex "monitor resume" \
@@ -181,8 +181,6 @@ elif [ -f "$PROJECT_FPGA_DESIGN_OPENOCD" ] ; then
         -q \
         -x "$SCRIPT_DIR/load_fpga_m4_openocd_gdbinit" \
         -ex "target extended-remote localhost:3333" \
-        -ex "monitor init" \
-        -ex "monitor reset halt" \
         -ex "monitor load_bitstream" \
         -ex "monitor mdw 0x40005484" \
         -ex "monitor echo \"use 'q' or 'quit' to exit gdb session\n\"" \
@@ -196,7 +194,7 @@ elif [ -f "$PROJECT_M4_ELF" ] ; then
         -q \
         -x "$SCRIPT_DIR/load_fpga_m4_openocd_gdbinit" \
         -ex "target extended-remote localhost:3333" \
-        -ex "monitor init" \
+        -ex "load" \
         -ex "monitor reset halt" \
         -ex "monitor resume" \
         -ex "monitor echo \"running m4 code...\"" \

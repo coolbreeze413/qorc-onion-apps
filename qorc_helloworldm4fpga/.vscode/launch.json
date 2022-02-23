@@ -17,9 +17,10 @@
                 "init",
                 "reset halt"
             ],
-            "searchDir": [
-                "${config:qorc_openocd_scripts_path}"
-            ],
+            // use for custom searchDir(s): default install scripts path is already builtin to openocd
+            // "searchDir": [
+            //     "${config:qorc_openocd_scripts_path}"
+            // ],
             "configFiles": [
                 //"${workspaceFolder}/fpga/rtl/AL4S3B_FPGA_Top.openocd", // replaced by 'auto' select using 'input' below
                 "${input:openocdFPGAcfg}",
@@ -30,7 +31,52 @@
             "armToolchainPath": "${config:qorc_arm_toolchain_path}",
             "armToolchainPrefix": "arm-none-eabi",
             // svd
-            //"svdFile": "${config:qorc_svd_file_path}",
+            "svdFile": "${config:qorc_svd_file_path}",
+            // call the load_bitstream proc from gdb to program fpga right after launch sequence is complete
+            // just before cortex-debug session is about to start -> postLaunchCommands
+            "postLaunchCommands": [
+                "monitor load_bitstream"
+            ],
+            // same thing goes for postRestartCommands, which is when we do a restart in the debug session
+            // as we need to load the fpga before restarting the m4 code as well.
+            "postRestartCommands": [
+                "monitor load_bitstream"
+            ],
+            "preLaunchTask": "build",
+            // enable this to debug gdb output if any issues
+            "showDevDebugOutput": "none"
+        },
+        {
+            // Debug - OpenOCD GDB Server - picoprobe
+            "name": "Debug (OpenOCD-picoprobe)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/GCC_Project/output/bin/${workspaceFolderBasename}.elf",
+            "runToEntryPoint": "main",
+            "interface": "swd",
+            // gdb server
+            "servertype": "openocd",
+            "serverpath": "${config:qorc_openocd_picoprobe_server_path}",
+            "openOCDLaunchCommands": [
+                "init",
+                "reset halt"
+            ],
+            // use for custom searchDir(s): default install scripts path is already builtin to openocd
+            // "searchDir": [
+            //     "${config:qorc_openocd_scripts_path}"
+            // ],
+            "configFiles": [
+                //"${workspaceFolder}/fpga/rtl/AL4S3B_FPGA_Top.openocd", // replaced by 'auto' select using 'input' below
+                "${input:openocdFPGAcfg}",
+                "interface/picoprobe.cfg",
+                "target/eos_s3.cfg"
+            ],
+            // gdb
+            "armToolchainPath": "${config:qorc_arm_toolchain_path}",
+            "armToolchainPrefix": "arm-none-eabi",
+            // svd
+            "svdFile": "${config:qorc_svd_file_path}",
             // call the load_bitstream proc from gdb to program fpga right after launch sequence is complete
             // just before cortex-debug session is about to start -> postLaunchCommands
             "postLaunchCommands": [
@@ -65,7 +111,7 @@
             "armToolchainPath": "${config:qorc_arm_toolchain_path}",
             "armToolchainPrefix": "arm-none-eabi",
             // svd
-            //"svdFile": "${config:qorc_svd_file_path}",
+            "svdFile": "${config:qorc_svd_file_path}",
             "preLaunchTask": "build",
             // enable this to debug gdb output if any issues
             "showDevDebugOutput": "none"

@@ -55,7 +55,7 @@ $(info )
 .PHONY: all
 all: $(FPGA_RTL_BIN_OBJ)
 
-$(FPGA_RTL_BIN_OBJ): $(FPGA_RTL_SRC_PATHS)
+$(FPGA_RTL_BIN_OBJ): $(FPGA_RTL_SRC_PATHS) $(QORC_FPGA_RTL_DIR)/$(QORC_FPGA_PCF_FILE)
 	@time ql_symbiflow -compile -src $(QORC_FPGA_RTL_DIR) -d $(QORC_FPGA_DEVICE) -t $(QORC_FPGA_TOP_MODULE) -v $(FPGA_RTL_SRCS) -p $(QORC_FPGA_PCF_FILE) -P $(QORC_FPGA_PACKAGE) -dump binary openocd jlink
 
 
