@@ -57,8 +57,6 @@ needing to worry about changes in the build/flash/load/debug infrastructure.
 
    This is more of a legacy method, and can be used if needed.
 
-   :code:`TODO`
-
 
 FPGA Standalone Examples
 -------------------------
