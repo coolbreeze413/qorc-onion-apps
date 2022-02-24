@@ -152,6 +152,9 @@ sleep 1
 # ref: https://stackoverflow.com/a/46867839
 # use -q to suppress banner: https://stackoverflow.com/a/61473013, but still enter the gdb shell after that.
 # use -batch to fully automate the steps and close gdb automatically
+# when using batch, also send "monitor shutdown" at the end to close the openocd server as well.
+# batch + shutdown is used here in loadflash, as we want to run it and exit, and then
+# flash images onto the board.
 # note that we use a gdbinit script, passed in using -x to:
 #   define a hook for quit, which will also close the openocd server.
 #   set pagination off
@@ -173,7 +176,8 @@ if [ -f "$PROJECT_FPGA_DESIGN_OPENOCD" ] && [ -f "$PROJECT_M4_ELF" ] ; then
         -ex "monitor echo \"running m4 code...\"" \
         -ex "monitor mdw 0x40005484" \
         -ex "monitor echo \"use 'q' or 'quit' to exit gdb session\n\"" \
-        -ex "monitor echo \"use 'ctrl+z' for the nuclear option and kill openocd and arm-none-eabi-gdb\n\""
+        -ex "monitor echo \"use 'ctrl+z' for the nuclear option and kill openocd and arm-none-eabi-gdb\n\"" \
+        -ex "monitor shutdown"
 
 elif [ -f "$PROJECT_FPGA_DESIGN_OPENOCD" ] ; then
 
@@ -186,7 +190,8 @@ elif [ -f "$PROJECT_FPGA_DESIGN_OPENOCD" ] ; then
         -ex "monitor load_bitstream" \
         -ex "monitor mdw 0x40005484" \
         -ex "monitor echo \"use 'q' or 'quit' to exit gdb session\n\"" \
-        -ex "monitor echo \"use 'ctrl+z' for the nuclear option and kill openocd and arm-none-eabi-gdb\n\""
+        -ex "monitor echo \"use 'ctrl+z' for the nuclear option and kill openocd and arm-none-eabi-gdb\n\"" \
+        -ex "monitor shutdown"
 
 elif [ -f "$PROJECT_M4_ELF" ] ; then
 
@@ -203,7 +208,8 @@ elif [ -f "$PROJECT_M4_ELF" ] ; then
         -ex "monitor echo \"running m4 code...\"" \
         -ex "monitor mdw 0x40005484" \
         -ex "monitor echo \"use 'q' or 'quit' to exit gdb session\n\"" \
-        -ex "monitor echo \"use 'ctrl+z' for the nuclear option and kill openocd and arm-none-eabi-gdb\n\""
+        -ex "monitor echo \"use 'ctrl+z' for the nuclear option and kill openocd and arm-none-eabi-gdb\n\"" \
+        -ex "monitor shutdown"
 
 fi
 
