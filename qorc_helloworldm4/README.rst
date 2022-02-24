@@ -134,7 +134,7 @@ Clean/Build/Load/Flash (Command Line)
   (assumes the board has been booted in DEBUG mode)
 
   .. code-block:: bash
-      
+
     make load-jlink
 
 - Load and run the code on the board using OpenOCD, using:
