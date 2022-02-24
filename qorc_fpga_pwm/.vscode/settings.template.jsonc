@@ -4,9 +4,16 @@
 // second, fill in the appropriate paths below as applicable:
 // qorc_sdk_path : relative or abs path to the qorc-sdk repo                [if this app is 2 levels down from qorc-sdk, leave as is]
 // qorc_arm_toolchain_path : path to toolchain binaries                     [if using 'envsetup.sh' leave as is]
-// if using OpenOCD : openocd binary path and openocd script dir path       [if using 'envsetup.sh', leave as is]
-// if using JLink : JLinkGDBServerCLExe binary path                         [if using 'envsetup.sh', leave as is]
-// if using svd : eos_s3 svd file path                                      []
+// if using OpenOCD
+//     qorc_openocd_server_path : openocd binary path                       [if using 'envsetup.sh', leave as is]
+// if using OpenOCD-picoprobe
+//     qorc_openocd_picoprobe_server_path : openocd binary path             [if using 'onion_openocd_picoprobe_setup.sh', leave as is]
+// if using custom OpenOCD scripts dir
+//     qorc_openocd_scripts_path : openocd scripts dir path                 [if you need this, you know what you are doing :)]
+// if using JLink
+//     qorc_jlink_commander_path : JLinkGDBServerCLExe binary path          [if using 'envsetup.sh', leave as is]
+// if using svd
+//     qorc_svd_file_path : eos_s3 svd file path                            [if using 'onion_svd_setup.sh', leave as is]
 
 {
     // path to the qorc-sdk
@@ -18,8 +25,11 @@
     // path to the OpenOCD gdb-server if using OpenOCD
     "qorc_openocd_server_path" : "${config:qorc_sdk_path}/openocd_install/xpack-openocd-0.11.0-3/bin/openocd",
 
-    // path to the OpenOCD scripts dir if using OpenOCD
-    "qorc_openocd_scripts_path" : "${config:qorc_sdk_path}/openocd_install/xpack-openocd-0.11.0-3/scripts",
+    // path to the OpenOCD-picoprobe gdb-server if using OpenOCD-picoprobe
+    "qorc_openocd_picoprobe_server_path" : "${config:qorc_sdk_path}/openocd_install/openocd-picoprobe/bin/openocd",
+
+    // path to the OpenOCD scripts dir if using OpenOCD, and have custom scripts
+    //"qorc_openocd_scripts_path" : "${config:qorc_sdk_path}/openocd_install/xpack-openocd-0.11.0-3/scripts",
 
     // path to the JLink Commander if using JLink
     "qorc_jlink_commander_path" : "${config:qorc_sdk_path}/jlink_install/JLink_Linux_V760d_x86_64/JLinkExe",
@@ -28,7 +38,8 @@
     "qorc_jlink_server_path" : "${config:qorc_sdk_path}/jlink_install/JLink_Linux_V760d_x86_64/JLinkGDBServerCLExe",
     
     // svd file path is optional, can be used to view device registers in peripherals view
-    "qorc_svd_file_path": "${config:qorc_sdk_path}/eos_s3.svd"
+    "qorc_svd_file_path": "${config:qorc_sdk_path}/arm_toolchain_install/eos_s3.svd"
+
 }
 // Why is this file called jsonc?
 // VSCode treats settings.json (and other specific files) as a jsonc file, but not any other.

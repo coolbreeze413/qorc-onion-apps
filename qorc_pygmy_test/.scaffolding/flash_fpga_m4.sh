@@ -89,7 +89,7 @@ fi
 
 
 # check if we have fpga design in the current project
-PROJECT_FPGA_DESIGN_JLINK=
+PROJECT_FPGA_DESIGN_BIN=
 if [ -d "$PROJECT_FPGA_DIR" ] ; then
     PROJECT_RTL_DIR="${PROJECT_FPGA_DIR}/rtl"
     PROJECT_FPGA_DESIGN_BIN=$(ls "$PROJECT_RTL_DIR"/*.bin)

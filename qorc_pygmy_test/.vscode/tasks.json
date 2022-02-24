@@ -93,10 +93,29 @@
             }
         },
         {
-            // load (OpenOCD) : load the fpga, m4, or both images into EOS_S3 using OpenOCD and a selectable probe
+            // load (OpenOCD) : load the fpga, m4, or both images into EOS-S3 using OpenOCD and a selectable probe
             "label": "load (OpenOCD)",
             "type": "shell",
             "command": "source ${config:qorc_sdk_path}/envsetup.sh && make load-openocd QORC_OCD_IF_CFG=${input:openocdProbe}",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "revealProblems": "onProblem",
+                "close": true
+            },
+            "dependsOrder": "parallel",
+            "dependsOn":[
+                "build-m4",
+            ]
+        },
+        {
+            // load (OpenOCD-picoprobe) : load the fpga, m4, or both images into EOS-S3 using OpenOCD and picoprobe
+            "label": "load (OpenOCD-picoprobe)",
+            "type": "shell",
+            "command": "source ${config:qorc_sdk_path}/envsetup.sh && source ${workspaceFolder}/.scaffolding/onion_openocd_picoprobe_setup.sh && make load-openocd QORC_OCD_IF_CFG=interface/picoprobe.cfg",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
