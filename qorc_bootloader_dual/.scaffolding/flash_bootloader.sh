@@ -106,7 +106,7 @@ PROJECT_M4_DIR="${PROJECT_DIR}/GCC_Project"
 PROJECT_M4_BIN=
 if [ -d "$PROJECT_M4_DIR" ] ; then
     PROJECT_OUTPUT_BIN_DIR="${PROJECT_DIR}/GCC_Project/output/bin"
-    PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin)
+    PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin 2>/dev/null)
     if [ ! -f "$PROJECT_M4_BIN" ] ; then
         printf "\nERROR: m4 binary does not exist! (is build done?)\n"
         exit 1

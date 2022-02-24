@@ -3,6 +3,9 @@ QORC ONION Apps
 
 Experimental stuff that can be run with the QORC SDK.
 
+Additionally, the applications support makefile usage for all tasks - clean/build/flash/load(JLink/OpenOCD) 
+as well as VSCode support out of the box for all of the above, as well as Debug(JLink/OpenOCD).
+
 
 Flashloaders
 ------------
@@ -13,7 +16,7 @@ Flashloaders
    Listens to both USBSERIAL, as well as the EOSS3 UART at IO_44/IO_45, so either USB port on the board, or external USB-UART cable can be used to flash the images.
    
    Loading this can be done via JLink/OpenOCD, and then the board can be prepped by using a simple 'flash-initialize' to flash the set of bootloader, 
-   bootfpga (usb-serial fpga image), m4app, appfpga images (simple helloworld).
+   bootfpga (usb-serial fpga image), m4app, appfpga images (simple helloworld m4+fpga).
 
    refer : `qorc_loadflash_dual <./qorc_loadflash_dual>`__
 
@@ -48,9 +51,9 @@ needing to worry about changes in the build/flash/load/debug infrastructure.
 
 4. `qorc_helloworldm4fpgaheader <./qorc_helloworldm4fpgaheader>`__ : project which uses both the Cortex-M4 core and eFPGA core of the EOSS3 (without communication between M4 and eFPGA cores)
    
-   The difference in this project vs (3) is that, the fpga code is built to generate a 'C Header' with an binary array containing the FPGA bitstream instead of a separate binary image.
+   The difference in this project vs (3) is that, the fpga code is built to generate a 'C Header' with a binary array containing the FPGA bitstream instead of a separate binary image.
 
-   This 'C Header' is included as regular C code and compiled into a single binary for the Cortex-M4, but contains code for both the Cortex-M4 as well as the eFPGA.
+   This 'C Header' is included as regular C code and compiled into a single binary for the Cortex-M4, but contains code for both the Cortex-M4 as well as the FPGA.
 
    This is more of a legacy method, and can be used if needed.
 
@@ -100,6 +103,8 @@ Experimental
 ------------
 
 1. Dynamically load FPGA images as and when needed:
+
+   :code:`warning: UNSTABLE`
    
    - `qorc_fpgareload_flash <./qorc_fpgareload_flash>`__ : demo for loading different FPGA bitstreams stored in SPI flash.
    - `qorc_fpgareload_header <./qorc_fpgareload_header>`__ : demo for loading different FPGA bitstreams built into the Cortex-M4 binary (legacy 'C Header' FPGA bitstreams)

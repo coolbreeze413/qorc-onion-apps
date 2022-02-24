@@ -110,8 +110,8 @@ PROJECT_FPGA_DIR="${PROJECT_DIR}/fpga"
 PROJECT_M4_ELF=
 if [ -d "$PROJECT_M4_DIR" ] ; then
     PROJECT_OUTPUT_BIN_DIR="${PROJECT_DIR}/GCC_Project/output/bin"
-    PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin)
-    PROJECT_M4_ELF=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.elf)
+    PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin 2>/dev/null)
+    PROJECT_M4_ELF=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.elf 2>/dev/null)
     if [ ! -f "$PROJECT_M4_ELF" ] ; then
         printf "\nERROR: m4 elf does not exist! (is build done?)\n"
         exit 1
@@ -125,7 +125,7 @@ if [ -d "$PROJECT_FPGA_DIR" ] ; then
     PROJECT_RTL_DIR="${PROJECT_FPGA_DIR}/rtl"
     # note: the openocd script generated, exposes a jim-tcl proc(edure) called 'load_bitstream' that can be executed to load the fpga.
     # this should be passed in to openocd
-    PROJECT_FPGA_DESIGN_OPENOCD=$(ls "$PROJECT_RTL_DIR"/*.openocd)
+    PROJECT_FPGA_DESIGN_OPENOCD=$(ls "$PROJECT_RTL_DIR"/*.openocd 2>/dev/null)
     if [ ! -f "$PROJECT_FPGA_DESIGN_OPENOCD" ] ; then
         printf "\nERROR: fpga .openocd does not exist! (is build done?)\n"
         exit 1

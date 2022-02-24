@@ -80,7 +80,7 @@ PROJECT_FPGA_DIR="${PROJECT_DIR}/fpga"
 PROJECT_M4_BIN=
 if [ -d "$PROJECT_M4_DIR" ] ; then
     PROJECT_OUTPUT_BIN_DIR="${PROJECT_DIR}/GCC_Project/output/bin"
-    PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin)
+    PROJECT_M4_BIN=$(ls "$PROJECT_OUTPUT_BIN_DIR"/*.bin 2>/dev/null)
     if [ ! -f "$PROJECT_M4_BIN" ] ; then
         printf "\nERROR: m4 binary does not exist! (is build done?)\n"
         exit 1
@@ -92,7 +92,7 @@ fi
 PROJECT_FPGA_DESIGN_BIN=
 if [ -d "$PROJECT_FPGA_DIR" ] ; then
     PROJECT_RTL_DIR="${PROJECT_FPGA_DIR}/rtl"
-    PROJECT_FPGA_DESIGN_BIN=$(ls "$PROJECT_RTL_DIR"/*.bin)
+    PROJECT_FPGA_DESIGN_BIN=$(ls "$PROJECT_RTL_DIR"/*.bin 2>/dev/null)
     if [ ! -f "$PROJECT_FPGA_DESIGN_BIN" ] ; then
         printf "\nERROR: fpga .bin does not exist! (is build done?)\n"
         exit 1
