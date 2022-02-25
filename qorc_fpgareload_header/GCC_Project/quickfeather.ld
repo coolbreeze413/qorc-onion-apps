@@ -3,11 +3,8 @@ OUTPUT_FORMAT ("elf32-littlearm", "elf32-bigarm", "elf32-littlearm")
 ENTRY(Reset_Handler)
 MEMORY
 {
-	rom (rx)  : ORIGIN = 0x00000000, LENGTH = 0x00041000
-	ram (rwx) : ORIGIN = 0x20041000, LENGTH = 0x0002c800
-	spiram (rw) : ORIGIN = 0x20063800, LENGTH = 0x0000800
-	HWA (rw)  : ORIGIN = 0x20064000, LENGTH = 0x00018000
-	shm       : ORIGIN = 0x2007C000, LENGTH = 0x00004000
+	rom (rx)  : ORIGIN = 0x00000000, LENGTH = 0x00047000
+	ram (rwx) : ORIGIN = 0x20047000, LENGTH = 0x0001c800
 }
 
 SECTIONS
@@ -95,12 +92,6 @@ SECTIONS
 		_edata = __data_end__;
 	} > ram AT > rom
 
-	.Hardware (NOLOAD) :
-	{
-	  __hwa_start__ = .;  /* create symbol for start of section */
-	  *(*HWA*)            /* keep my variable even if not referenced */
-	  __hwa_end__ = .;   /* create symbol for end of section */
-	} > HWA
 
 	.bss :
 	{
@@ -123,18 +114,6 @@ SECTIONS
         __rtos_end__ = .;
         _ertos = __rtos_end__;
     } > ram
-
-    /* SPI shared addresses are fixed: */
-    .BLE_SPI_TX_LOCATION 0x20063800 (NOLOAD) :
-    {
-        . = ALIGN(4);
-        KEEP(*(.BLE_SPI_TX_LOCATION)) /* keep it even if not referenced */
-    } > spiram
-    .BLE_SPI_RX_LOCATION  0x20063C00 (NOLOAD) :
-    {
-        . = ALIGN(4);
-        KEEP(*(.BLE_SPI_RX_LOCATION)) /* keep it even if not referenced */
-    } > spiram
 
 	.heap (COPY):
 	{

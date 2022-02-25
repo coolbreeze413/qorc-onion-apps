@@ -1,12 +1,23 @@
 #
-# Makefile for Quick-AI SDK
+# Makefile for QORC SDK
 #
+
+
+# for all targets, check whether the QORC SDK environment has been setup first.
+ifndef QORC_SDK_PATH
+$(info )
+$(info QORC_SDK_PATH is not set in the environment, is the QORC SDK initialized?)
+$(info initialize with: 'source envsetup.sh' from the QORC SDK directory in the current shell)
+$(info )
+$(error QORC_SDK_PATH not defined)
+endif
+
 
 include config.mk
 
 VPATH:=$(OUTPUT_PATH)
 
-all: _makedirs_ external_srcs appfpga appdir
+all: _makedirs_ external_srcs appdir appfpga
 	-${HIDE}$(RM) $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*
 	make -f makefiles/Makefile_output
 	-${HIDE}$(MKDIR) $(OUTPUT_PATH)$(DIR_SEP)bin
@@ -24,7 +35,7 @@ _makedirs_:
 
 
 .PHONY: external_srcs
-external_srcs: Startup HAL FreeRTOS Libraries BSP FPGA
+external_srcs: Startup HAL FreeRTOS Libraries
 	@echo "External sources built"
 
 .PHONY: appfpga
@@ -34,7 +45,7 @@ clean_appfpga:
 	make -f makefiles/Makefile_appfpga clean
 	
 CLEAN_TARGET += appfpga
-	
+
 .PHONY: appdir
 appdir:
 	make -f makefiles/Makefile_appdir
@@ -74,13 +85,13 @@ clean_FreeRTOS:
 
 CLEAN_TARGET += FreeRTOS
 
-.PHONY:BSP
-BSP:
-	make -f makefiles/Makefile_quickfeather_BSP
-clean_BSP:
-	make -f makefiles/Makefile_quickfeather_BSP clean
+# .PHONY:BSP
+# BSP:
+# 	make -f makefiles/Makefile_quickfeather_BSP
+# clean_BSP:
+# 	make -f makefiles/Makefile_quickfeather_BSP clean
 
-CLEAN_TARGET += BSP
+# CLEAN_TARGET += BSP
 
 .PHONY:Libraries
 Libraries:
@@ -90,13 +101,13 @@ clean_Libraries:
 
 CLEAN_TARGET += Libraries
 
-.PHONY:FPGA
-FPGA:
-	make -f makefiles/Makefile_FPGA
-clean_FPGA:
-	make -f makefiles/Makefile_FPGA clean
-
-CLEAN_TARGET += BSP
+#.PHONY:s3gw_drivers
+#s3gw_drivers:
+#	make -f makefiles/Makefile_s3gw_drivers
+#clean_s3gw_drivers:
+#	make -f makefiles/Makefile_s3gw_drivers clean
+#
+#CLEAN_TARGET += s3gw_drivers
 
 DELETEME=
 DELETEME += $(wildcard $(OUTPUT_PATH)$(DIR_SEP)bin$(DIR_SEP)$(OUTPUT_FILE).*)

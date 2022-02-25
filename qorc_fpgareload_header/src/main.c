@@ -14,15 +14,7 @@
  * limitations under the License.
  *==========================================================*/
 
-/*==========================================================
- *
- *    File   : main.c
- *    Purpose: main for advancedfpga example using ledctlr.v
- *                                                          
- *=========================================================*/
-
-#include "Fw_global_config.h"
-#include "Bootconfig.h"
+#include "Fw_global_config.h"   // This defines application specific charactersitics
 
 #include <stdio.h>
 #include "FreeRTOS.h"
@@ -31,7 +23,7 @@
 #include "timers.h"
 #include "RtosTask.h"
 
-/*    Include the generic headers required for sensorHub */
+/*    Include the generic headers required for QORC */
 #include "eoss3_hal_gpio.h"
 #include "eoss3_hal_rtc.h"
 
@@ -40,16 +32,20 @@
 #include "s3x_clock.h"
 #include "s3x_pi.h"
 #include "dbg_uart.h"
-#include "eoss3_hal_spi.h"
+
 #include "cli.h"
 
 extern const struct cli_cmd_entry my_main_menu[];
 
-//#include "fpga_loader.h"        	// API for loading FPGA
+// #include "fpga_loader.h"
+// #include <stdint.h>
 // #include "AL4S3B_FPGA_Top_bit.h"
-// #include "AL4S3B_FPGA_Top_bit_onion_breathe.h"  // FPGA bitstream to load into FPGA
-// #include "AL4S3B_FPGA_Top_bit_onion_pwm.h"  // FPGA bitstream to load into FPGA
+// #include "AL4S3B_FPGA_Top_bit_onion_breathe.h"
+// #include "AL4S3B_FPGA_Top_bit_onion_pwm.h"
 // #include "helloworldfpga_bit.h"
+//extern uint32_t axFPGABitStream [];
+//extern uint32_t axFPGAMemInit [];
+//extern uint32_t axFPGAIOMuxInit [];
 
 
 const char *SOFTWARE_VERSION_STR;
@@ -60,68 +56,52 @@ const char *SOFTWARE_VERSION_STR;
  */
 
 
-extern void qf_hardwareSetup();
+void qorc_hardwareSetup(void);
 static void nvic_init(void);
 
 int main(void)
 {
-	int i=0;
+    int i=0;
 
-    SOFTWARE_VERSION_STR = "qorc-sdk/qf_apps/qf_fpgareload";
+    SOFTWARE_VERSION_STR = "qorc-onion-apps/qorc_fpgareload_header";
     
-    qf_hardwareSetup();                                     // Note: pincfg_table.c has been updated to give FPGA control of LEDs
+    qorc_hardwareSetup();
     nvic_init();
     HAL_Delay_Init();
 
-#if 0 // QUICKIE TEST
-    S3x_Clk_Disable(S3X_FB_21_CLK);
-    S3x_Clk_Disable(S3X_FB_16_CLK);
-    S3x_Clk_Enable(S3X_A1_CLK);
-    S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
-    load_fpga(sizeof(axFPGABitStream3),axFPGABitStream3);     // Load bitstream into FPGA
-    // fpga_ledctlr_init();								    // Start FPGA clock
-
-    // wait some time for fpga to run pulse
-        for (i=0;i<50000000; i++) {
-        	PMU->GEN_PURPOSE_1  = i << 4;
-    }
-
-    S3x_Clk_Disable(S3X_FB_21_CLK);
-    S3x_Clk_Disable(S3X_FB_16_CLK);
-    (*( volatile unsigned int *) (0x400044a4)) = 0x2;
-    (*( volatile unsigned int *) (0x40004600)) = 0x2;
-    // wait some time for fpga to get reset pulse
-    for (i=0;i<50000000; i++) {
-    	PMU->GEN_PURPOSE_1  = i << 4;
-    }
-
-    S3x_Clk_Disable(S3X_FB_21_CLK);
-    S3x_Clk_Disable(S3X_FB_16_CLK);
-    S3x_Clk_Enable(S3X_A1_CLK);
-    S3x_Clk_Enable(S3X_CFG_DMA_A1_CLK);
-    load_fpga(sizeof(axFPGABitStream1),axFPGABitStream1);     // Load bitstream into FPGA
-#endif
-    
     dbg_str("\n\n");
     dbg_str( "##########################\n");
-    dbg_str( "Quicklogic QuickFeather FPGA reload Example\n");
+    dbg_str( "Onion FPGA reload Example\n");
     dbg_str( "SW Version: ");
     dbg_str( SOFTWARE_VERSION_STR );
     dbg_str( "\n" );
     dbg_str( __DATE__ " " __TIME__ "\n" );
     dbg_str( "##########################\n\n");
         
-    dbg_str("\r\n!!Remove the bootstraps from IO_19 and IO_20 if mounted!!\r\n");
+    dbg_str("\n\n");
+    dbg_str("FPGA Reconfiguration involves a power cycle of the power domain\r\n");
+    dbg_str("This *requires* that IO_19 be pulled *LOW*\r\n");
+    dbg_str("\n\n");
+    dbg_str("If there are jumpers on the board, remove them\r\n");
+    dbg_str("\n\n");
+    dbg_str("If there are pullups on the board (pygmy-stamp based)\r\n");
+    dbg_str("short the IO_19 to a GND pin using a jumper wire\r\n");
+    dbg_str("\n\n");
+    dbg_str("side note: if this application is being run via debugger\r\n");
+    dbg_str("           ensure IO_19 is *HIGH* if(and until) the board is reset\r\n");
+    dbg_str("           so that the EOS-S3 boots up in DEBUGGER mode, \r\n");
+    dbg_str("           and then change it later to be *LOW* when changing the FPGA images \r\n");
+    dbg_str("\n\n");
       
     CLI_start_task( my_main_menu );
-        
+
     /* Start the tasks and timer running. */
     vTaskStartScheduler();
     dbg_str("\n");
-      
-    while(1);
 
+    while(1);
 }
+
 
 static void nvic_init(void)
  {
@@ -132,12 +112,11 @@ static void nvic_init(void)
     NVIC_SetPriority(CfgDma_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
     NVIC_SetPriority(Uart_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
     NVIC_SetPriority(FbMsg_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
- }    
+ }
+
 
 //needed for startup_EOSS3b.s asm file
 void SystemInit(void)
 {
 
 }
-
-
