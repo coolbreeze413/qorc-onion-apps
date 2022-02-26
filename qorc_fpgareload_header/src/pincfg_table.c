@@ -37,9 +37,6 @@ PadConfig pincfg_table[] =
     .ucMode = PAD_MODE_INPUT_EN,
     .ucPull = PAD_NOPULL,
   },
-
-
-
   { // setup debug input pins Pad 14 - S3_SW_DP_CLK
     .ucMode = PAD_MODE_INPUT_EN,
     .ucCtrl = PAD_CTRL_SRC_OTHER,
@@ -75,6 +72,7 @@ PadConfig pincfg_table[] =
     .ucSmtTrg = PAD_SMT_TRIG_DIS
   },
   
+  #if 0
   {  // configure SCL0
     .ucPin = PAD_0,
     .ucFunc = PAD0_FUNC_SEL_SCL_0,
@@ -139,7 +137,7 @@ PadConfig pincfg_table[] =
     .ucSpeed = PAD_SLEW_RATE_SLOW,
     .ucSmtTrg = PAD_SMT_TRIG_DIS
   },
-
+  #endif
   
    { // Pad 33 -- Test clock
     .ucPin = PAD_33,

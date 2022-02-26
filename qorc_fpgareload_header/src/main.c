@@ -37,17 +37,6 @@
 
 extern const struct cli_cmd_entry my_main_menu[];
 
-// #include "fpga_loader.h"
-// #include <stdint.h>
-// #include "AL4S3B_FPGA_Top_bit.h"
-// #include "AL4S3B_FPGA_Top_bit_onion_breathe.h"
-// #include "AL4S3B_FPGA_Top_bit_onion_pwm.h"
-// #include "helloworldfpga_bit.h"
-//extern uint32_t axFPGABitStream [];
-//extern uint32_t axFPGAMemInit [];
-//extern uint32_t axFPGAIOMuxInit [];
-
-
 const char *SOFTWARE_VERSION_STR;
 
 
@@ -80,17 +69,17 @@ int main(void)
         
     dbg_str("\n\n");
     dbg_str("FPGA Reconfiguration involves a power cycle of the power domain\r\n");
-    dbg_str("This *requires* that IO_19 be pulled *LOW*\r\n");
+    dbg_str("This *requires* that IO_19 be pulled *LOW*.\r\n");
     dbg_str("\n\n");
-    dbg_str("If there are jumpers on the board, remove them\r\n");
+    dbg_str("If there are jumpers for IO_19 on the board, remove them.\r\n");
     dbg_str("\n\n");
-    dbg_str("If there are pullups on the board (pygmy-stamp based)\r\n");
-    dbg_str("short the IO_19 to a GND pin using a jumper wire\r\n");
+    dbg_str("If there are pull-ups for IO_19 on the board (pygmy-stamp based)\r\n");
+    dbg_str("short the IO_19 to a GND pin using a jumper wire.\r\n");
     dbg_str("\n\n");
     dbg_str("side note: if this application is being run via debugger\r\n");
     dbg_str("           ensure IO_19 is *HIGH* if(and until) the board is reset\r\n");
     dbg_str("           so that the EOS-S3 boots up in DEBUGGER mode, \r\n");
-    dbg_str("           and then change it later to be *LOW* when changing the FPGA images \r\n");
+    dbg_str("           and then change it later to be *LOW* once reset is released. \r\n");
     dbg_str("\n\n");
       
     CLI_start_task( my_main_menu );
